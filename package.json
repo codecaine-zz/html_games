@@ -1,0 +1,19 @@
+{
+  "name": "adventures-of-lolo-cyberpunk-remaster",
+  "version": "1.0.0",
+  "description": "Next-Gen Grid-Based Cyberpunk Action-Puzzle Engine with 100 Solvable Stages",
+  "main": "lolo/adventures_of_lolo_cyberpunk_remaster.html",
+  "scripts": {
+    "test": "node lolo/verify_html.js"
+  },
+  "keywords": [
+    "html5-game",
+    "cyberpunk",
+    "sokoban",
+    "puzzle-game",
+    "canvas",
+    "lolo"
+  ],
+  "author": "",
+  "license": "MIT"
+}
