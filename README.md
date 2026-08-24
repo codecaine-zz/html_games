@@ -1,0 +1,185 @@
+# Adventures of Lolo: Cyberpunk Remaster
+
+> **Next-Gen Grid-Based Cyberpunk Action-Puzzle Engine**  
+> Fusing classic top-down Sokoban mechanics with real-time hazard avoidance, 90° optical laser deflection, phase-permeable barriers, multi-directional turrets, procedural Sokoban generation, an integrated Level Editor & Chamber Vault, and an A* priority queue mathematical solvability engine.
+
+![HTML5 Canvas](https://img.shields.io/badge/Engine-HTML5%20Canvas%20%2F%20Vanilla%20JS-cyan?style=for-the-badge&logo=html5)
+![Zero External Assets](https://img.shields.io/badge/Audio-Web%20Audio%20API%20Synthesizer-pink?style=for-the-badge)
+![100 Solvable Stages](https://img.shields.io/badge/Campaign-100%20Unique%20Solvable%20Stages-emerald?style=for-the-badge)
+![Level Editor](https://img.shields.io/badge/Cyber%20Architect-Integrated%20Level%20Editor-amber?style=for-the-badge)
+
+---
+
+## 🎮 Game Overview
+
+**Adventures of Lolo: Cyberpunk Remaster** reimagine the timeless 1989 HAL Laboratory classic *Adventures of Lolo* in a sleek neon-lit synthwave aesthetic. 
+
+As Operative Lolo, your mission is to navigate through security sectors, outsmart automated killer sentries, manipulate high-tech tactical push-blocks, collect Energy Cores to unlock Data Chests, and extract via the Cyber Gateway.
+
+---
+
+## 📸 Screenshots & Visual Tour
+
+### 1. Main Campaign Gameplay (Stage 1 — Introductory Training Protocol)
+*Standard 11×11 grid with Tactical Dossier telemetry, Hazard Scanner, Virtual Gamepad, and real-time canvas rendering.*
+
+![Stage 1 Intro Gameplay](screenshots/gameplay_stage1.png)
+
+---
+
+### 2. Tactical Mid-Campaign Puzzle (Stage 45 — Prism Deflection Matrix)
+*Expanded 13×13 grid featuring Reflector Prisms deflecting line-of-sight laser sentries and multi-directional turrets.*
+
+![Stage 45 Prism Deflection](screenshots/gameplay_stage45.png)
+
+---
+
+### 3. Apex Cyber Fortress (Stage 98 — High-Density Grandmaster Chamber)
+*Maximum 19×19 grid featuring dense security corridors, Don Medusa patrols, Quantum Portals, and multi-block Sokoban covers.*
+
+![Stage 98 Apex Cyber Fortress](screenshots/gameplay_stage98.png)
+
+---
+
+### 4. Cyber Architect Studio (Integrated Level Editor)
+*Full-featured level editor with symmetry tools, drawing tools (Pencil, Fill, Box, Eraser), tile/block/enemy palettes, live telemetry, A* solver integration, and JSON import/export.*
+
+![Cyber Architect Studio](screenshots/cyber_architect_editor.png)
+
+---
+
+### 5. Cyber Protocol Lab (Procedural Sokoban Generator)
+*Procedural generator capable of synthesizing 100% mathematically proven solvable Sokoban chambers based on seed, grid size (9×9 to 17×17), difficulty, and hazard filters.*
+
+![Procedural Sokoban Lab](screenshots/random_sokoban_lab.png)
+
+---
+
+### 6. 100-Stage Cyber Vault Matrix
+*Interactive stage browser and unlock system covering all 100 handcrafted campaign levels.*
+
+![100-Stage Cyber Vault](screenshots/level_selector.png)
+
+---
+
+## 🔥 Key Features
+
+- **100-Stage Handcrafted Campaign**:
+  - **Dynamic Board Scaling**: Progressively scales grid dimensions ($9\times 9$, $11\times 11$, $13\times 13$, $15\times 15$, $17\times 17$, $19\times 19$) as security sectors increase in threat level.
+  - **100% Unique & Solvability-Proven**: Every layout is mathematically guaranteed solvable by the built-in $A^*$ solver engine.
+
+- **13 Hostile Enemy AI Archetypes**:
+  | Hostile Unit | Name | Threat Profile | Behavior / Mechanics |
+  | :--- | :--- | :--- | :--- |
+  | 🐍 | **Serpent Drone** | Passive | Stationary drone; shootable into a pushable Bio-Egg to bridge water/plasma canals. |
+  | 🎯 | **Cardinal Sentry (Medusa)** | High (Kill-on-Sight) | Fires instant line-of-sight laser beams along 4 orthogonal axes (+). Blocked by push-blocks/trees. |
+  | ✕ | **Diagonal Sentry** | High (Kill-on-Sight) | Fires instant line-of-sight laser beams along 4 diagonal axes (✕). |
+  | ★ | **Omni Sentry** | Extreme (Kill-on-Sight) | Fires 360° laser beams across all 8 directions. |
+  | ⚙️ | **Multi-Directional Turret** | Configurable | Emitter firing customizable 1-way to 8-way directional lasers (`1-up`, `2-horiz`, `4-cross`, `8-omni`). |
+  | 🐲 | **Dragon Mech (Gol)** | Awakening Hazard | Slumbers until all cores are gathered; shoots lethal fireballs down its line-of-sight when awake. |
+  | 🚓 | **Patrol Sentinel (Don Medusa)** | Extreme (Kill-on-Sight) | Patrols continuously along horizontal or vertical tracks while maintaining crossfire lasers. |
+  | 💤 | **EMP Nanobot (Leeper)** | Area Denial | Relentlessly chases Lolo; upon reaching adjacent tile, permanently freezes into an impassable block. |
+  | 💀 | **Charger Skull** | Awakening Chaser | Slumbers while cores remain; charges straight at Lolo upon core collection. |
+  | 🪚 | **Buzzsaw Bot (Alma)** | Real-Time Chaser | Continuously pathfinds toward Lolo in real time across walkable floor tiles. |
+  | 🚜 | **Hydraulic Golem (Rocky)** | Physical Threat | Aggressively charges and physically shoves Lolo backward on contact. |
+  | 🌀 | **Vortex Leviathan (Moby)** | Pull Hazard | Emits a tractor vortex across water channels, pulling Lolo into the current. |
+  | 🦗 | **Beetle Hopper** | Jumping Chaser | Chases Lolo by leaping over low obstacles, push-blocks, and cyber trees. |
+
+- **9 Tactical Push-Block Archetypes**:
+  - **Alloy Shield (`alloy`)**: Standard 1-tile push block; blocks entity movement & laser beams.
+  - **Heavy Titanium (`heavy`)**: Immovable heavy barrier; blocks all lasers and paths.
+  - **Prism Reflector (`reflector`)**: Deflects lasers at 90° angles based on 4 mirror orientations ($\nearrow, \searrow, \swarrow, \nwarrow$). Supports up to 4 chained reflections.
+  - **Holo Barrier (`holo`)**: Permeable to optical lasers and blaster shots, but physically blocks Lolo and hostiles.
+  - **Plasma Bomb (`bomb`)**: Explodes on shot or damage, detonating a $3\times 3$ area clearing cracked walls, fragile blocks, and hostiles.
+  - **Mag-Lev Polar (`magnetic`)**: Glides frictionless on Mag-Lev Ice tracks until colliding with solid barriers.
+  - **Adhesive Gel (`sticky`)**: Nanite bonding locks permanently to floor after a single push.
+  - **Glass Crystal (`fragile`)**: Shatters permanently upon collision, heavy pushes, or blaster impacts.
+  - **Decoy Hologram (`decoy`)**: Emits an operative hologram signal that redirects enemy aim beams and chaser aggro away from Lolo.
+
+- **Mathematical A* Solvability Engine (`LoloMathSolver`)**:
+  - Utilizes a MinHeap Priority Queue with canonical block state serialization to evaluate solution paths across multi-block Sokoban arrangements in under 100 state evaluations ($<1\text{ms}$).
+  - Integrated directly into the gameplay interface via the **Hint (H)** button to assist stuck players.
+
+- **Cyber Architect Studio (Level Editor)**:
+  - Full-featured canvas level editor with Symmetry toggles (Horizontal, Vertical, 4-Way Radial), Pencil, Bucket Fill, Box Select, and Eraser.
+  - Object Telemetry dashboard showing block counts, core requirements, hazard density, and built-in Math Check solvability verification.
+  - Local Chamber Vault for saving, loading, and exporting custom levels via JSON format.
+
+- **Zero-Asset Web Audio API Sound Synthesizer**:
+  - Synthesizes 18 dynamic sound effects (laser humming, blaster fire, core pickup, block sliding, bomb detonation, portal warping) and 3 retro synthwave BGM tracks in real-time. Zero external `.mp3` or `.wav` dependencies!
+
+- **Cyberpunk AAA Visual Polish**:
+  - Dynamic CRT scanline glow overlays, screen shake trauma decay, hit-stop frame freezing, particle bursts, fluid movement lerp, and responsive high-contrast UI.
+
+---
+
+## 🕹️ Controls & Shortcuts
+
+| Action | Primary Key | Alternate Key | Touch / Gamepad |
+| :--- | :--- | :--- | :--- |
+| **Move Operative** | `W` `A` `S` `D` | `Up` `Left` `Down` `Right` | D-Pad Buttons |
+| **Fire Cyber Blaster** | `Space` | — | `SHOOT` Button |
+| **Undo Move** | `Z` | `U` | `Undo (Z)` Button |
+| **Restart Chamber** | `R` | — | `Restart (R)` Button |
+| **Get Solver Hint** | `H` | — | `Hint (H)` Button |
+| **Toggle Level Editor** | — | — | `Architect` Header Button |
+| **Toggle Stage Vault** | — | — | `Stages (100)` Header Button |
+| **Toggle Random Lab** | — | — | `Random Lab` Header Button |
+
+---
+
+## 🚀 Quick Start / How to Run
+
+1. **No Installation Required**: Simply double-click or open `adventures_of_lolo_cyberpunk_remaster.html` in any modern web browser (Google Chrome, Mozilla Firefox, Apple Safari, Microsoft Edge).
+2. **Local HTTP Server (Optional)**:
+   ```bash
+   python3 -m http.server 8000
+   # Open http://localhost:8000/adventures_of_lolo_cyberpunk_remaster.html
+   ```
+
+### 🔗 Direct URL Query Parameters (Deep Linking)
+
+You can launch directly into specific levels, views, or generated seeds using URL parameters:
+
+- **Launch Stage N (1–100)**: `adventures_of_lolo_cyberpunk_remaster.html?stage=45`
+- **Open Level Editor**: `adventures_of_lolo_cyberpunk_remaster.html?view=editor`
+- **Open 100-Stage Vault Matrix**: `adventures_of_lolo_cyberpunk_remaster.html?view=levels`
+- **Unlock All 100 Stages in Vault**: `adventures_of_lolo_cyberpunk_remaster.html?view=levels&unlock=1`
+- **Open Random Generator Lab**: `adventures_of_lolo_cyberpunk_remaster.html?view=random`
+- **Load Specific Procedural Seed**: `adventures_of_lolo_cyberpunk_remaster.html?seed=CYBER-7749&diff=hard&grid=15`
+
+---
+
+## 📐 Architecture & Mechanics Matrix
+
+```mermaid
+flowchart TD
+    A[Operative Input / Direction Key] --> B{Collision Check}
+    B -- Floor / Grass / Sand / Ice --> C[Lerp Move Operative]
+    B -- Energy / Ammo Core --> D[Collect Core + Grant Ammo]
+    B -- Push Block --> E{Can Push Block?}
+    E -- Yes --> F[Slide Block / Reflect Lasers / Activate Mag-Lev]
+    E -- No --> G[Block Movement]
+    B -- Bio-Egg --> H[Push Bio-Egg into Plasma Water -> Create Bridge]
+    
+    I[Laser Raycasting Loop] --> J{Intersects Entity}
+    J -- Block Reflector --> K[Deflect 90° Vector]
+    J -- Holo Barrier --> L[Pass Ray Through]
+    J -- Operative Lolo --> M[Trigger Elimination / Restart]
+    J -- Solid Wall / Heavy Block --> N[Terminate Ray]
+```
+
+---
+
+## 📜 Technical Stack & Invariants
+
+- **Language & Framework**: Vanilla JavaScript (ES6+), HTML5 Canvas 2D API, Tailwind CSS utilities.
+- **Audio Engine**: Web Audio API oscillator synthesis with gain envelopes and high-pass filters.
+- **Solver Algorithm**: A* Search with MinHeap priority queue, state canonicalization, and flood-fill reachability analysis.
+- **Asset Overhead**: 0 KB external images or audio files (100% self-contained code).
+
+---
+
+## 📄 License & Credits
+
+*Adventures of Lolo: Cyberpunk Remaster* © 2026. Built with passion for retro Sokoban action-puzzles and cyberpunk aesthetics. Original *Adventures of Lolo* game concept created by HAL Laboratory.
