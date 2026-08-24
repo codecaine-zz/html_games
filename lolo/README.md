@@ -1,19 +1,20 @@
 # Adventures of Lolo: Cyberpunk Remaster
 
 > **Next-Gen Grid-Based Cyberpunk Action-Puzzle Engine**  
-> Fusing classic top-down Sokoban mechanics with real-time hazard avoidance, 90° optical laser deflection, phase-permeable barriers, multi-directional turrets, procedural Sokoban generation, an integrated Level Editor & Chamber Vault, and an A* priority queue mathematical solvability engine.
+> Fusing classic top-down Sokoban mechanics with real-time hazard avoidance, 90° optical laser deflection, phase-permeable barriers, multi-directional turrets, procedural Sokoban generation, an integrated Level Editor & Chamber Vault, an A* priority queue mathematical solvability engine, dynamic 3-Star performance ratings, multi-theme aesthetics, and persistent audio save states.
 
 ![HTML5 Canvas](https://img.shields.io/badge/Engine-HTML5%20Canvas%20%2F%20Vanilla%20JS-cyan?style=for-the-badge&logo=html5)
-![Zero External Assets](https://img.shields.io/badge/Audio-Web%20Audio%20API%20Synthesizer-pink?style=for-the-badge)
+![Zero External Assets](https://img.shields.io/badge/Audio-8--Track%20Web%20Audio%20Synthesizer-pink?style=for-the-badge)
 ![100 Solvable Stages](https://img.shields.io/badge/Campaign-100%20Unique%20Solvable%20Stages-emerald?style=for-the-badge)
-![Level Editor](https://img.shields.io/badge/Cyber%20Architect-Integrated%20Level%20Editor-amber?style=for-the-badge)
+![3-Star Rating System](https://img.shields.io/badge/Rating-3--Star%20Par%20Scoring%20(300%20Stars)-amber?style=for-the-badge)
+![Level Editor](https://img.shields.io/badge/Cyber%20Architect-Integrated%20Level%20Editor-purple?style=for-the-badge)
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)
 
 ---
 
 ## 🎮 Game Overview
 
-**Adventures of Lolo: Cyberpunk Remaster** reimagine the timeless 1989 HAL Laboratory classic *Adventures of Lolo* in a sleek neon-lit synthwave aesthetic. 
+**Adventures of Lolo: Cyberpunk Remaster** reimagines the timeless 1989 HAL Laboratory classic *Adventures of Lolo* in a sleek neon-lit synthwave aesthetic with modern puzzle depth and quality-of-life enhancements.
 
 As Operative Lolo, your mission is to navigate through security sectors, outsmart automated killer sentries, manipulate high-tech tactical push-blocks, collect Energy Cores to unlock Data Chests, and extract via the Cyber Gateway.
 
@@ -22,7 +23,7 @@ As Operative Lolo, your mission is to navigate through security sectors, outsmar
 ## 📸 Screenshots & Visual Tour
 
 ### 1. Main Campaign Gameplay (Stage 1 — Introductory Training Protocol)
-*Standard 11×11 grid with Tactical Dossier telemetry, Hazard Scanner, Virtual Gamepad, and real-time canvas rendering.*
+*Standard 11×11 grid with Tactical Dossier telemetry, Hazard Scanner, Virtual Gamepad, Live HUD Star Rating, and real-time canvas rendering.*
 
 ![Stage 1 Intro Gameplay](screenshots/gameplay_stage1.png)
 
@@ -56,8 +57,8 @@ As Operative Lolo, your mission is to navigate through security sectors, outsmar
 
 ---
 
-### 6. 100-Stage Cyber Vault Matrix
-*Interactive stage browser and unlock system covering all 100 handcrafted campaign levels.*
+### 6. 100-Stage Cyber Vault Matrix with 3-Star Badges
+*Interactive stage browser and unlock system covering all 100 handcrafted campaign levels, showing earned star ratings and gold mastery borders.*
 
 ![100-Stage Cyber Vault](screenshots/level_selector.png)
 
@@ -65,8 +66,43 @@ As Operative Lolo, your mission is to navigate through security sectors, outsmar
 
 ## 🔥 Key Features
 
+- **🏆 3-Star Performance Rating System (300 Stars Total)**:
+  - Evaluates your move efficiency against the mathematical optimal par move count ($M_{par}$) determined by the $A^*$ solver:
+    - **★★★ (Gold Cyber Master)**: Cleared in $\le M_{par} + 2$ moves.
+    - **★★☆ (Silver Operative)**: Cleared in $\le \lceil M_{par} \times 1.5 \rceil$ moves.
+    - **★☆☆ (Bronze Recon Clear)**: Stage completed.
+  - **Live Combat HUD Badge (`#hud-stars`)**: Displays active stage rating (`★ ★ ★` / `☆☆☆`) directly during gameplay.
+  - **Header Cumulative Stars Badge (`#header-stars-badge`)**: Displays total campaign stars (`⭐ X / 300`) with real-time sync.
+  - **Stage Clear Victory Modal**: Displays earned neon stars, player moves vs par moves, and elapsed time in seconds.
+  - **100-Stage Vault Badges**: Visual mini-stars and glowing gold borders on cleared stage buttons.
+
+- **🎨 5 Cyberpunk Color Themes & CRT Overlay Controls**:
+  - **Synthwave Cyan**: Default vibrant cyan, magenta & hot pink neon glow.
+  - **Matrix Green**: Phosphor green terminal code aesthetic.
+  - **Vaporwave Sunset**: Purple, gold & neon rose ambient flow.
+  - **Obsidian Dark**: Minimal high-contrast dark slate & sky blue.
+  - **Neon Hotline**: Hot pink, violet & cyber gold glow.
+  - **CRT Preset Modes**: Toggle between **CRT: Subtle** (90% scanlines), **CRT: Heavy** (100% scanlines), and **CRT: Off**.
+
+- **💾 Full Save State Persistence (`localStorage`)**:
+  - **Audio Settings**: Active BGM track selection (Tracks 1–8), play/pause mute state, and SFX toggle preference automatically persist and restore upon boot.
+  - **Theme & VFX Settings**: Selected color theme and CRT overlay preference.
+  - **Campaign Records**: Unlocked levels (1–100), stars earned per stage (1–3), personal best moves, and best completion times.
+
+- **🎵 8-Track Web Audio Synthesizer**:
+  - 8 switchable procedurally synthesized synthwave tracks (zero external `.mp3` or `.wav` dependencies):
+    1. *Cyber Pulse* (128 BPM driving synthwave)
+    2. *Quantum Rush* (140 BPM puzzle bounce)
+    3. *Synth Chill* (105 BPM atmospheric chill)
+    4. *Neon Overdrive* (136 BPM cyberpunk electro)
+    5. *Hypergrid Arc* (124 BPM melodic synth)
+    6. *Matrix Solace* (110 BPM dark ambient)
+    7. *Retro Byte Surge* (145 BPM chip-synth surge)
+    8. *Orbital Protocol* (118 BPM progressive sci-fi pulse)
+  - 18 synthesized dynamic sound effects (lasers, blaster shots, core chimes, portal warps, crystal shatters, bomb explosions).
+
 - **100-Stage Handcrafted Campaign**:
-  - **Dynamic Board Scaling**: Progressively scales grid dimensions ($9\times 9$, $11\times 11$, $13\times 13$, $15\times 15$, $17\times 17$, $19\times 19$) as security sectors increase in threat level.
+  - **Dynamic Board Scaling**: Scales grid dimensions ($9\times 9$, $11\times 11$, $13\times 13$, $15\times 15$, $17\times 17$, $19\times 19$) as security sectors increase in threat level.
   - **100% Unique & Solvability-Proven**: Every layout is mathematically guaranteed solvable by the built-in $A^*$ solver engine.
 
 - **13 Hostile Enemy AI Archetypes**:
@@ -131,12 +167,6 @@ As Operative Lolo, your mission is to navigate through security sectors, outsmar
   - Object Telemetry dashboard showing block counts, core requirements, hazard density, and built-in Math Check solvability verification.
   - Local Chamber Vault for saving, loading, and exporting custom levels via JSON format.
 
-- **Zero-Asset Web Audio API Sound Synthesizer**:
-  - Synthesizes 18 dynamic sound effects (laser humming, blaster fire, core pickup, block sliding, bomb detonation, portal warping) and 3 retro synthwave BGM tracks in real-time. Zero external `.mp3` or `.wav` dependencies!
-
-- **Cyberpunk AAA Visual Polish**:
-  - Dynamic CRT scanline glow overlays, screen shake trauma decay, hit-stop frame freezing, particle bursts, fluid movement lerp, and responsive high-contrast UI.
-
 ---
 
 ## 🕹️ Controls & Shortcuts
@@ -200,14 +230,15 @@ flowchart TD
 ## 📜 Technical Stack & Invariants
 
 - **Language & Framework**: Vanilla JavaScript (ES6+), HTML5 Canvas 2D API, Tailwind CSS utilities.
-- **Audio Engine**: Web Audio API oscillator synthesis with gain envelopes and high-pass filters.
+- **Audio Engine**: 8-Track Web Audio API oscillator synthesis with gain envelopes and high-pass filters.
 - **Solver Algorithm**: A* Search with MinHeap priority queue, state canonicalization, and flood-fill reachability analysis.
+- **Save Engine**: High-performance `localStorage` engine persisting star scores, unlocked levels, active audio presets, theme palette, and CRT modes.
 - **Asset Overhead**: 0 KB external images or audio files (100% self-contained code).
 
 ---
 
 ## 📄 License & Credits
 
-Distributed under the **MIT License**. See [`LICENSE`](../LICENSE) for more information.
+Distributed under the **MIT License**.
 
 *Adventures of Lolo: Cyberpunk Remaster* © 2026. Built with passion for retro Sokoban action-puzzles and cyberpunk aesthetics. Original *Adventures of Lolo* game concept created by HAL Laboratory.

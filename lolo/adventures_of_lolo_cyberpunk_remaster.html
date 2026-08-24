@@ -139,6 +139,28 @@
                 <span>Click / Press Key to Start Audio</span>
             </div>
 
+            <!-- Total Campaign Stars Badge -->
+            <div id="header-stars-badge"
+                class="flex items-center gap-1.5 bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[11px] font-bold px-2.5 py-1.5 rounded-xl shadow-md shadow-amber-500/10"
+                title="Total Campaign Stars Earned (Out of 300)">
+                <i class="fa-solid fa-star text-amber-400 text-xs"></i>
+                <span id="header-stars-text" class="orbitron-font">0 / 300</span>
+            </div>
+
+            <!-- Theme Palette Switcher -->
+            <div
+                class="flex items-center bg-slate-900/90 border border-cyan-500/30 rounded-xl px-2.5 py-1.5 space-x-1.5 shadow-inner">
+                <i class="fa-solid fa-palette text-cyan-400 text-xs pl-1"></i>
+                <select id="select-theme"
+                    class="bg-transparent text-xs font-bold text-cyan-300 focus:outline-none cursor-pointer pr-1">
+                    <option value="synthwave" class="bg-slate-900 text-cyan-300">Theme: Synthwave</option>
+                    <option value="matrix" class="bg-slate-900 text-emerald-300">Theme: Matrix Green</option>
+                    <option value="vaporwave" class="bg-slate-900 text-purple-300">Theme: Vaporwave</option>
+                    <option value="obsidian" class="bg-slate-900 text-slate-300">Theme: Obsidian Dark</option>
+                    <option value="hotline" class="bg-slate-900 text-pink-300">Theme: Neon Hotline</option>
+                </select>
+            </div>
+
             <!-- Music Track Switcher -->
             <div
                 class="flex items-center bg-slate-900/90 border border-pink-500/30 rounded-xl px-2.5 py-1.5 space-x-1.5 shadow-inner">
@@ -172,9 +194,9 @@
             <!-- AAA CRT / Cyber Bloom VFX Toggle -->
             <button id="btn-vfx-toggle"
                 class="btn-action bg-slate-800/90 hover:bg-slate-700 text-pink-300 text-xs font-bold px-3 py-2 rounded-xl border border-pink-500/30 flex items-center gap-1.5"
-                title="Toggle AAA CRT / Neon Bloom VFX">
+                title="Toggle CRT Scanline Overlay Presets (Subtle / Heavy / Off)">
                 <i id="icon-vfx" class="fa-solid fa-tv"></i>
-                <span class="hidden sm:inline">CRT / Bloom</span>
+                <span id="label-vfx" class="hidden sm:inline">CRT: Subtle</span>
             </button>
 
             <!-- Random Stage Generator Modal Toggle -->
@@ -238,6 +260,11 @@
                         class="flex justify-between items-center bg-slate-900/80 p-2 rounded-xl border border-slate-800">
                         <span class="text-slate-400">Chamber Grid Scale:</span>
                         <span id="intel-grid-scale" class="font-bold text-amber-300 orbitron-font">11 × 11</span>
+                    </div>
+                    <div
+                        class="flex justify-between items-center bg-slate-900/80 p-2 rounded-xl border border-slate-800">
+                        <span class="text-slate-400">Personal Record:</span>
+                        <span id="intel-personal-best" class="font-bold text-amber-300 orbitron-font">☆☆☆ (None)</span>
                     </div>
                 </div>
 
@@ -303,6 +330,13 @@
                     class="flex items-center space-x-2 bg-slate-900/90 px-3 py-1.5 rounded-xl border border-emerald-500/30">
                     <span class="text-slate-400 text-[10px] font-bold orbitron-font">MOVES</span>
                     <span id="hud-moves" class="rajdhani-font font-bold text-base text-emerald-400">0</span>
+                </div>
+
+                <div
+                    class="flex items-center space-x-1.5 bg-slate-900/90 px-2.5 py-1.5 rounded-xl border border-amber-500/30"
+                    title="Personal Best Rating for Active Stage">
+                    <i class="fa-solid fa-star text-amber-400 text-xs"></i>
+                    <span id="hud-stars" class="font-mono text-xs font-bold text-amber-300">☆☆☆</span>
                 </div>
             </div>
 
@@ -1024,19 +1058,30 @@
                 <h2
                     class="orbitron-font text-xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-emerald-300 to-pink-400 font-extrabold">
                     PROTOCOL COMPLETED!</h2>
-                <p id="victory-random-subtitle" class="text-xs text-slate-300 font-mono mt-1">Random Stage Cleared
-                    Successfully</p>
+                <p id="victory-random-subtitle" class="text-xs text-slate-300 font-mono mt-1">Stage Cleared Successfully</p>
             </div>
 
+            <!-- Earned Stars Rating Display -->
+            <div id="victory-stars-container" class="flex items-center justify-center gap-2 text-2xl my-0.5">
+                <i id="victory-star-1" class="fa-solid fa-star text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]"></i>
+                <i id="victory-star-2" class="fa-solid fa-star text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]"></i>
+                <i id="victory-star-3" class="fa-solid fa-star text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]"></i>
+            </div>
+            <p id="victory-rating-text" class="text-xs font-bold text-amber-300 orbitron-font">★★★ GOLD CYBER MASTER ★★★</p>
+
             <div
-                class="w-full bg-slate-950/90 border border-cyan-500/30 rounded-2xl p-4 grid grid-cols-2 gap-3 text-xs font-mono">
-                <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
-                    <span class="text-slate-400 block text-[10px]">YOUR MOVES</span>
-                    <span id="victory-player-moves" class="text-emerald-400 font-bold text-base">28</span>
+                class="w-full bg-slate-950/90 border border-cyan-500/30 rounded-2xl p-4 grid grid-cols-3 gap-2 text-xs font-mono">
+                <div class="bg-slate-900/80 p-2 rounded-xl border border-slate-800">
+                    <span class="text-slate-400 block text-[9px]">YOUR MOVES</span>
+                    <span id="victory-player-moves" class="text-emerald-400 font-bold text-sm">28</span>
                 </div>
-                <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
-                    <span class="text-slate-400 block text-[10px]">OPTIMAL MATH PATH</span>
-                    <span id="victory-optimal-moves" class="text-cyan-300 font-bold text-base">24</span>
+                <div class="bg-slate-900/80 p-2 rounded-xl border border-slate-800">
+                    <span class="text-slate-400 block text-[9px]">PAR MATH PATH</span>
+                    <span id="victory-optimal-moves" class="text-cyan-300 font-bold text-sm">24</span>
+                </div>
+                <div class="bg-slate-900/80 p-2 rounded-xl border border-slate-800">
+                    <span class="text-slate-400 block text-[9px]">TIME TAKEN</span>
+                    <span id="victory-time-taken" class="text-amber-300 font-bold text-sm">00:12.4</span>
                 </div>
             </div>
 
@@ -1071,6 +1116,31 @@
                 this.currentBgmTrack = 0;
                 this.bgmTimer = null;
                 this.bgmStep = 0;
+                this.loadSettings();
+            }
+
+            saveSettings() {
+                try {
+                    localStorage.setItem('lolo_cyber_audio_settings', JSON.stringify({
+                        bgmEnabled: this.bgmEnabled,
+                        sfxEnabled: this.sfxEnabled,
+                        trackIndex: this.currentBgmTrack
+                    }));
+                } catch (e) {}
+            }
+
+            loadSettings() {
+                try {
+                    const saved = localStorage.getItem('lolo_cyber_audio_settings');
+                    if (saved) {
+                        const parsed = JSON.parse(saved);
+                        if (typeof parsed.bgmEnabled === 'boolean') this.bgmEnabled = parsed.bgmEnabled;
+                        if (typeof parsed.sfxEnabled === 'boolean') this.sfxEnabled = parsed.sfxEnabled;
+                        if (typeof parsed.trackIndex === 'number' || typeof parsed.trackIndex === 'string') {
+                            this.currentBgmTrack = parseInt(parsed.trackIndex, 10) || 0;
+                        }
+                    }
+                } catch (e) {}
             }
 
             init() {
@@ -3754,6 +3824,7 @@
 
                 this.isDead = false;
                 this.killer = null;
+                this.stageStartTime = Date.now();
 
                 this.updateHUD();
             }
@@ -3827,6 +3898,17 @@
                 const movesEl = document.getElementById('hud-moves');
                 if (movesEl) movesEl.innerText = this.movesCount;
 
+                const levelKey = this.currentMode === 'campaign' ? `campaign_${this.currentLevelIndex + 1}` : `random_${this.randomSeed}`;
+                const stats = typeof getLevelStats === 'function' ? getLevelStats(levelKey) : { stars: 0 };
+                const hudStarsEl = document.getElementById('hud-stars');
+                if (hudStarsEl) {
+                    hudStarsEl.innerText = stats.stars > 0 ? ('★'.repeat(stats.stars) + '☆'.repeat(3 - stats.stars)) : '☆☆☆';
+                }
+
+                if (typeof updateTotalStarsDisplay === 'function') {
+                    updateTotalStarsDisplay();
+                }
+
                 // Update Left Tactical Intel Panel
                 const modeBadge = document.getElementById('intel-mode-badge');
                 if (modeBadge) {
@@ -3868,6 +3950,19 @@
                 if (gridScaleEl) {
                     const size = (this.grid && this.grid.length) || GRID_SIZE;
                     gridScaleEl.innerText = `${size} × ${size}`;
+                }
+
+                const pbEl = document.getElementById('intel-personal-best');
+                if (pbEl) {
+                    const levelKey = this.currentMode === 'campaign' ? `campaign_${this.currentLevelIndex + 1}` : `random_${this.randomSeed}`;
+                    const stats = getLevelStats(levelKey);
+                    if (stats && stats.stars > 0) {
+                        const starStr = '★'.repeat(stats.stars) + '☆'.repeat(3 - stats.stars);
+                        const timeSec = (stats.bestTime / 1000).toFixed(1);
+                        pbEl.innerText = `${starStr} (${stats.bestMoves}m / ${timeSec}s)`;
+                    } else {
+                        pbEl.innerText = '☆☆☆ (None)';
+                    }
                 }
 
                 // Update Hazard Scanner Threat Roster
@@ -4270,6 +4365,13 @@
                 }
 
                 audio.playClear();
+
+                // Auto-trigger stage completion & victory sequence after celebration
+                setTimeout(() => {
+                    if (!this.isDead) {
+                        this.nextLevel();
+                    }
+                }, 1000);
             }
 
             detonateBomb(bomb) {
@@ -4404,26 +4506,20 @@
             }
 
             nextLevel() {
-                if (this.currentMode === 'random') {
-                    if (window.showRandomVictory) {
-                        window.showRandomVictory(this);
-                    }
-                    return;
-                }
-
                 if (this.currentLevelIndex + 2 > this.unlockedLevel) {
                     this.unlockedLevel = Math.min(100, this.currentLevelIndex + 2);
                     this.saveProgress();
                 }
-                if (typeof window.render100GridGlobal === 'function') {
-                    window.render100GridGlobal();
-                }
 
-                if (this.currentLevelIndex < 99) {
-                    this.loadLevel(this.currentLevelIndex + 1);
-                } else {
-                    alert('CONGRATULATIONS! You completed all 100 Cyber Stages of Lolo!');
-                    this.loadLevel(0);
+                if (typeof window.showVictoryModal === 'function') {
+                    window.showVictoryModal(this);
+                } else if (this.currentMode === 'campaign') {
+                    if (this.currentLevelIndex < 99) {
+                        this.loadLevel(this.currentLevelIndex + 1);
+                    } else {
+                        alert('CONGRATULATIONS! You completed all 100 Cyber Stages of Lolo!');
+                        this.loadLevel(0);
+                    }
                 }
             }
 
@@ -7438,6 +7534,138 @@
             }
         }
 
+        // ==========================================
+        // THEME & CRT SAVE STATE ENGINE (OPTION B)
+        // ==========================================
+        const THEMES = {
+            synthwave: {
+                name: 'Synthwave Cyan',
+                bodyBg: 'radial-gradient(circle at 50% 10%, rgba(0, 240, 255, 0.12) 0%, transparent 60%), radial-gradient(circle at 80% 90%, rgba(255, 0, 127, 0.08) 0%, transparent 50%), linear-gradient(to bottom, #05070e, #0a0e1a)',
+                primary: '#00f0ff',
+                secondary: '#ff007f',
+                accent: '#ffd700'
+            },
+            matrix: {
+                name: 'Matrix Green',
+                bodyBg: 'radial-gradient(circle at 50% 10%, rgba(16, 185, 129, 0.15) 0%, transparent 60%), radial-gradient(circle at 80% 90%, rgba(52, 211, 153, 0.1) 0%, transparent 50%), linear-gradient(to bottom, #020d08, #051a10)',
+                primary: '#10b981',
+                secondary: '#34d399',
+                accent: '#a7f3d0'
+            },
+            vaporwave: {
+                name: 'Vaporwave Sunset',
+                bodyBg: 'radial-gradient(circle at 50% 10%, rgba(168, 85, 247, 0.18) 0%, transparent 60%), radial-gradient(circle at 80% 90%, rgba(244, 63, 94, 0.12) 0%, transparent 50%), linear-gradient(to bottom, #0d0614, #180927)',
+                primary: '#c084fc',
+                secondary: '#fb7185',
+                accent: '#fde047'
+            },
+            obsidian: {
+                name: 'Obsidian Stealth',
+                bodyBg: 'radial-gradient(circle at 50% 10%, rgba(148, 163, 184, 0.1) 0%, transparent 60%), linear-gradient(to bottom, #090a0f, #11131c)',
+                primary: '#38bdf8',
+                secondary: '#94a3b8',
+                accent: '#f8fafc'
+            },
+            hotline: {
+                name: 'Neon Hotline',
+                bodyBg: 'radial-gradient(circle at 50% 10%, rgba(236, 72, 153, 0.18) 0%, transparent 60%), radial-gradient(circle at 80% 90%, rgba(234, 179, 8, 0.12) 0%, transparent 50%), linear-gradient(to bottom, #120309, #240614)',
+                primary: '#f43f5e',
+                secondary: '#eab308',
+                accent: '#06b6d4'
+            }
+        };
+
+        function applyTheme(themeKey) {
+            const theme = THEMES[themeKey] || THEMES.synthwave;
+            document.body.style.backgroundImage = theme.bodyBg;
+            try {
+                localStorage.setItem('lolo_cyber_active_theme', themeKey);
+            } catch (e) {}
+        }
+
+        function applyCrtMode(mode) {
+            const wrapper = document.getElementById('canvas-container-wrapper');
+            if (!wrapper) return;
+            wrapper.classList.remove('crt-overlay');
+            if (mode === 'heavy') {
+                wrapper.classList.add('crt-overlay');
+                wrapper.style.opacity = '1';
+            } else if (mode === 'subtle') {
+                wrapper.classList.add('crt-overlay');
+                wrapper.style.opacity = '0.9';
+            } else {
+                wrapper.style.opacity = '1';
+            }
+            try {
+                localStorage.setItem('lolo_cyber_crt_mode', mode);
+            } catch (e) {}
+        }
+
+        // ==========================================
+        // 3-STAR RATING & STATS ENGINE (OPTION A)
+        // ==========================================
+        const LEVEL_STATS_KEY = 'lolo_cyber_level_stats';
+
+        function getLevelStatsMap() {
+            try {
+                return JSON.parse(localStorage.getItem(LEVEL_STATS_KEY) || '{}');
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function getLevelStats(levelId) {
+            const map = getLevelStatsMap();
+            if (map[levelId]) return map[levelId];
+            if (typeof levelId === 'string' && levelId.startsWith('campaign_')) {
+                const stageNum = parseInt(levelId.replace('campaign_', ''), 10);
+                const unlocked = parseInt(localStorage.getItem('lolo_cyber_unlocked') || '1', 10);
+                if (stageNum < unlocked) {
+                    return { stars: 1, bestMoves: 20, bestTime: 12000 };
+                }
+            }
+            return { stars: 0, bestMoves: Infinity, bestTime: Infinity };
+        }
+
+        function calculateStars(moves, optimalMoves) {
+            const par = optimalMoves || 15;
+            if (moves <= par + 2) return 3;
+            if (moves <= Math.ceil(par * 1.5)) return 2;
+            return 1;
+        }
+
+        function saveLevelStats(levelId, stars, moves, timeMs) {
+            const map = getLevelStatsMap();
+            const prev = map[levelId] || { stars: 0, bestMoves: Infinity, bestTime: Infinity };
+            map[levelId] = {
+                stars: Math.max(prev.stars || 0, stars),
+                bestMoves: Math.min(prev.bestMoves || Infinity, moves),
+                bestTime: Math.min(prev.bestTime || Infinity, timeMs),
+                lastCleared: Date.now()
+            };
+            try {
+                localStorage.setItem(LEVEL_STATS_KEY, JSON.stringify(map));
+            } catch (e) {}
+            updateTotalStarsDisplay();
+        }
+
+        function getTotalStars() {
+            let total = 0;
+            for (let i = 1; i <= 100; i++) {
+                const stats = getLevelStats(`campaign_${i}`);
+                if (stats && stats.stars) {
+                    total += stats.stars;
+                }
+            }
+            return total;
+        }
+
+        function updateTotalStarsDisplay() {
+            const total = getTotalStars();
+            const badge = document.getElementById('header-stars-text');
+            if (badge) badge.innerText = `${total} / 300`;
+        }
+
         function bootCyberGame() {
             if (window.__loloCyberBooted) return;
             window.__loloCyberBooted = true;
@@ -7568,17 +7796,52 @@
                 }
             });
 
-            // Music Controls
+            // Theme Switcher Listener
+            const themeSelect = document.getElementById('select-theme');
+            if (themeSelect) {
+                const savedTheme = localStorage.getItem('lolo_cyber_active_theme') || 'synthwave';
+                themeSelect.value = savedTheme;
+                applyTheme(savedTheme);
+                themeSelect.onchange = (e) => {
+                    applyTheme(e.target.value);
+                    e.target.blur();
+                };
+            }
+
+            // CRT Preset Toggle Listener (Subtle -> Heavy -> Off)
+            const btnVfx = document.getElementById('btn-vfx-toggle');
+            const labelVfx = document.getElementById('label-vfx');
+            let currentCrtMode = localStorage.getItem('lolo_cyber_crt_mode') || 'subtle';
+            applyCrtMode(currentCrtMode);
+            if (labelVfx) labelVfx.innerText = `CRT: ${currentCrtMode.charAt(0).toUpperCase() + currentCrtMode.slice(1)}`;
+
+            if (btnVfx) {
+                btnVfx.onclick = (e) => {
+                    if (currentCrtMode === 'subtle') currentCrtMode = 'heavy';
+                    else if (currentCrtMode === 'heavy') currentCrtMode = 'off';
+                    else currentCrtMode = 'subtle';
+
+                    applyCrtMode(currentCrtMode);
+                    if (labelVfx) labelVfx.innerText = `CRT: ${currentCrtMode.charAt(0).toUpperCase() + currentCrtMode.slice(1)}`;
+                    blurButtonEvent(e);
+                };
+            }
+
+            // Music Controls & Save State Persistence
             const bgmSelect = document.getElementById('select-bgm');
             if (bgmSelect) {
+                bgmSelect.value = audio.currentBgmTrack;
                 bgmSelect.onchange = function (e) {
                     audio.startBGM(e.target.value);
+                    audio.saveSettings();
                     e.target.blur();
                 };
             }
 
             const btnMusic = document.getElementById('btn-music-toggle');
             if (btnMusic) {
+                const iconMusic = document.getElementById('icon-music');
+                if (iconMusic) iconMusic.className = audio.bgmEnabled ? 'fa-solid fa-pause' : 'fa-solid fa-play';
                 btnMusic.onclick = function (e) {
                     audio.bgmEnabled = !audio.bgmEnabled;
                     if (audio.bgmEnabled) {
@@ -7586,7 +7849,8 @@
                     } else {
                         audio.stopBGM();
                     }
-                    document.getElementById('icon-music').className = audio.bgmEnabled ? 'fa-solid fa-pause' : 'fa-solid fa-play';
+                    audio.saveSettings();
+                    if (iconMusic) iconMusic.className = audio.bgmEnabled ? 'fa-solid fa-pause' : 'fa-solid fa-play';
                     blurButtonEvent(e);
                 };
             }
@@ -7598,7 +7862,7 @@
                     audioUnlocked = true;
                     audio.init();
                     if (audio.bgmEnabled) {
-                        audio.startBGM(bgmSelect ? bgmSelect.value : 0);
+                        audio.startBGM(bgmSelect ? bgmSelect.value : audio.currentBgmTrack);
                         const iconMusic = document.getElementById('icon-music');
                         if (iconMusic) iconMusic.className = 'fa-solid fa-pause';
                     }
@@ -7611,14 +7875,17 @@
 
             const btnSound = document.getElementById('btn-sound');
             if (btnSound) {
+                const iconSound = document.getElementById('icon-sound');
+                if (iconSound) iconSound.className = audio.sfxEnabled ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
                 btnSound.onclick = function (e) {
                     audio.sfxEnabled = !audio.sfxEnabled;
-                    document.getElementById('icon-sound').className = audio.sfxEnabled ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
+                    audio.saveSettings();
+                    if (iconSound) iconSound.className = audio.sfxEnabled ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
                     blurButtonEvent(e);
                 };
             }
 
-            // 100 Levels Modal Grid
+            // 100 Levels Modal Grid & Star Badges
             const modalLevels = document.getElementById('modal-levels');
             const grid100 = document.getElementById('grid-100-levels');
 
@@ -7634,47 +7901,51 @@
 
             function render100Grid() {
                 window.render100GridGlobal = render100Grid;
+                updateTotalStarsDisplay();
                 if (!grid100) return;
-                const existing = Array.from(grid100.children);
-                if (existing.length === 100) {
-                    for (let i = 0; i < existing.length; i++) {
-                        const btn = existing[i];
-                        const idx = i + 1;
-                        const isUnlocked = idx <= game.unlockedLevel;
-                        btn.className = `p-2 rounded-xl font-bold text-xs flex flex-col items-center justify-center transition-all ${isUnlocked
-                            ? 'bg-cyan-600/80 hover:bg-cyan-500 text-white border border-cyan-400/50 shadow-md shadow-cyan-500/20'
-                            : 'bg-slate-900/60 text-slate-600 cursor-not-allowed border border-slate-800'
-                            }`;
-                        btn.innerHTML = isUnlocked ? `<span>${idx}</span>` : `<i class="fa-solid fa-lock text-[10px]"></i>`;
-                        btn.disabled = !isUnlocked;
-                        btn.onclick = isUnlocked ? () => {
-                            game.loadLevel(idx - 1);
-                            modalLevels.classList.add('hidden');
-                        } : null;
-                    }
-                } else {
-                    grid100.innerHTML = '';
-                    for (let i = 1; i <= 100; i++) {
-                        const btn = document.createElement('button');
-                        const isUnlocked = i <= game.unlockedLevel;
-                        btn.className = `p-2 rounded-xl font-bold text-xs flex flex-col items-center justify-center transition-all ${isUnlocked
-                            ? 'bg-cyan-600/80 hover:bg-cyan-500 text-white border border-cyan-400/50 shadow-md shadow-cyan-500/20'
-                            : 'bg-slate-900/60 text-slate-600 cursor-not-allowed border border-slate-800'
-                            }`;
-                        btn.innerHTML = isUnlocked ? `<span>${i}</span>` : `<i class="fa-solid fa-lock text-[10px]"></i>`;
-                        btn.disabled = !isUnlocked;
 
-                        if (isUnlocked) {
-                            btn.onclick = () => {
-                                game.loadLevel(i - 1);
-                                modalLevels.classList.add('hidden');
-                            };
-                        }
-                        grid100.appendChild(btn);
+                grid100.innerHTML = '';
+                for (let i = 1; i <= 100; i++) {
+                    const btn = document.createElement('button');
+                    const isUnlocked = i <= game.unlockedLevel;
+                    const stats = getLevelStats(`campaign_${i}`);
+                    const stars = stats.stars || 0;
+
+                    let starStr = '';
+                    if (isUnlocked) {
+                        if (stars === 3) starStr = '<span class="text-amber-400 text-[9px] font-mono leading-none mt-0.5">★★★</span>';
+                        else if (stars === 2) starStr = '<span class="text-amber-300/80 text-[9px] font-mono leading-none mt-0.5">★★☆</span>';
+                        else if (stars === 1) starStr = '<span class="text-cyan-300/80 text-[9px] font-mono leading-none mt-0.5">★☆☆</span>';
+                        else starStr = '<span class="text-slate-600 text-[9px] font-mono leading-none mt-0.5">☆☆☆</span>';
                     }
+
+                    let btnStyle = 'bg-slate-900/60 text-slate-600 cursor-not-allowed border border-slate-800';
+                    if (isUnlocked) {
+                        if (stars === 3) {
+                            btnStyle = 'bg-amber-950/40 hover:bg-amber-900/60 text-amber-300 border border-amber-500/50 shadow-md shadow-amber-500/20';
+                        } else {
+                            btnStyle = 'bg-cyan-600/80 hover:bg-cyan-500 text-white border border-cyan-400/50 shadow-md shadow-cyan-500/20';
+                        }
+                    }
+
+                    btn.className = `p-1.5 rounded-xl font-bold text-xs flex flex-col items-center justify-center transition-all ${btnStyle}`;
+                    btn.innerHTML = isUnlocked ? `<span>${i}</span>${starStr}` : `<i class="fa-solid fa-lock text-[10px]"></i>`;
+                    btn.disabled = !isUnlocked;
+
+                    if (isUnlocked) {
+                        btn.onclick = () => {
+                            game.loadLevel(i - 1);
+                            modalLevels.classList.add('hidden');
+                        };
+                    }
+                    grid100.appendChild(btn);
                 }
+
                 const progressText = document.getElementById('levels-progress-text');
-                if (progressText) progressText.innerText = `Unlocked: ${game.unlockedLevel} / 100`;
+                if (progressText) {
+                    const totalStars = getTotalStars();
+                    progressText.innerText = `Unlocked: ${game.unlockedLevel} / 100 • ⭐ Campaign Stars: ${totalStars} / 300`;
+                }
             }
 
             render100Grid();
@@ -8489,26 +8760,89 @@
             };
 
             // ==========================================
-            // RANDOM LEVEL VICTORY MODAL LOGIC
+            // VICTORY MODAL & 3-STAR RATING SYSTEM (OPTION A)
             // ==========================================
             const modalVictory = document.getElementById('modal-victory-random');
-            const victorySubtitle = document.getElementById('victory-random-subtitle');
-            const victoryPlayerMoves = document.getElementById('victory-player-moves');
-            const victoryOptimalMoves = document.getElementById('victory-optimal-moves');
 
-            window.showRandomVictory = function (gameInstance) {
-                if (modalVictory) {
-                    const diffName = gameInstance.randomDifficulty ? gameInstance.randomDifficulty.toUpperCase() : 'RANDOM';
-                    const seed = gameInstance.randomSeed || 'CYBER';
-                    victorySubtitle.innerText = `${diffName} PROTOCOL [${seed}] CLEARED`;
+            window.showVictoryModal = function (gameInstance) {
+                if (!modalVictory) return;
 
-                    victoryPlayerMoves.innerText = gameInstance.movesCount;
-                    const optimalMoves = (gameInstance.activeLevelData && gameInstance.activeLevelData.solverResult) ? gameInstance.activeLevelData.solverResult.moves : gameInstance.movesCount;
-                    victoryOptimalMoves.innerText = optimalMoves;
+                const isCampaign = gameInstance.currentMode === 'campaign';
+                const levelKey = isCampaign ? `campaign_${gameInstance.currentLevelIndex + 1}` : `random_${gameInstance.randomSeed}`;
+                const levelData = gameInstance.activeLevelData || ALL_100_LEVELS[gameInstance.currentLevelIndex];
+                const optimalMoves = (levelData && levelData.solverResult && levelData.solverResult.moves) ? levelData.solverResult.moves : (gameInstance.movesCount || 15);
+                const playerMoves = gameInstance.movesCount;
+                const elapsedMs = Math.max(500, Date.now() - (gameInstance.stageStartTime || Date.now()));
 
-                    modalVictory.classList.remove('hidden');
+                const starsEarned = calculateStars(playerMoves, optimalMoves);
+                saveLevelStats(levelKey, starsEarned, playerMoves, elapsedMs);
+
+                const subtitle = document.getElementById('victory-random-subtitle');
+                if (subtitle) {
+                    subtitle.innerText = isCampaign
+                        ? `Sector Stage ${gameInstance.currentLevelIndex + 1} Cleared!`
+                        : `${(gameInstance.randomDifficulty || 'MEDIUM').toUpperCase()} Protocol [${gameInstance.randomSeed}] Cleared!`;
                 }
+
+                const pMovesEl = document.getElementById('victory-player-moves');
+                if (pMovesEl) pMovesEl.innerText = playerMoves;
+
+                const optMovesEl = document.getElementById('victory-optimal-moves');
+                if (optMovesEl) optMovesEl.innerText = optimalMoves;
+
+                const timeEl = document.getElementById('victory-time-taken');
+                if (timeEl) {
+                    const sec = (elapsedMs / 1000).toFixed(1);
+                    timeEl.innerText = `${sec}s`;
+                }
+
+                // Render Earned Stars
+                const star1 = document.getElementById('victory-star-1');
+                const star2 = document.getElementById('victory-star-2');
+                const star3 = document.getElementById('victory-star-3');
+                const ratingText = document.getElementById('victory-rating-text');
+
+                if (star1) star1.className = starsEarned >= 1 ? 'fa-solid fa-star text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]' : 'fa-regular fa-star text-slate-600';
+                if (star2) star2.className = starsEarned >= 2 ? 'fa-solid fa-star text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]' : 'fa-regular fa-star text-slate-600';
+                if (star3) star3.className = starsEarned >= 3 ? 'fa-solid fa-star text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]' : 'fa-regular fa-star text-slate-600';
+
+                if (ratingText) {
+                    if (starsEarned === 3) ratingText.innerText = '★★★ GOLD CYBER MASTER ★★★';
+                    else if (starsEarned === 2) ratingText.innerText = '★★☆ SILVER OPERATIVE ★★☆';
+                    else ratingText.innerText = '★☆☆ BRONZE RECON CLEAR ★☆☆';
+                }
+
+                const btnNext = document.getElementById('btn-victory-next-random');
+                if (btnNext) {
+                    if (isCampaign) {
+                        btnNext.innerHTML = `<i class="fa-solid fa-forward-step"></i> NEXT CAMPAIGN STAGE`;
+                        btnNext.onclick = () => {
+                            modalVictory.classList.add('hidden');
+                            if (gameInstance.currentLevelIndex < 99) {
+                                gameInstance.loadLevel(gameInstance.currentLevelIndex + 1);
+                            } else {
+                                alert('CONGRATULATIONS! You completed all 100 Cyber Stages of Lolo!');
+                                gameInstance.loadLevel(0);
+                            }
+                        };
+                    } else {
+                        btnNext.innerHTML = `<i class="fa-solid fa-forward-step"></i> NEXT RANDOM PROTOCOL`;
+                        btnNext.onclick = () => {
+                            window.nextRandomProtocol();
+                        };
+                    }
+                }
+
+                if (typeof window.render100GridGlobal === 'function') {
+                    window.render100GridGlobal();
+                }
+
+                modalVictory.classList.remove('hidden');
+                if (audio && audio.playWin) audio.playWin();
             };
+
+            window.showRandomVictory = window.showVictoryModal;
+            window.showCampaignVictory = window.showVictoryModal;
 
             window.nextRandomProtocol = function () {
                 if (modalVictory) modalVictory.classList.add('hidden');
@@ -8522,10 +8856,6 @@
                 game.loadRandomLevel(nextDiff, generated.seed, nextLevel);
                 if (audio && audio.playWarp) audio.playWarp();
                 return generated;
-            };
-
-            document.getElementById('btn-victory-next-random').onclick = () => {
-                window.nextRandomProtocol();
             };
 
             document.getElementById('btn-victory-replay-random').onclick = () => {

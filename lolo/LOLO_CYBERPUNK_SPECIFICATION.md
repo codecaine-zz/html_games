@@ -1,6 +1,6 @@
 # Adventures of Lolo: Cyberpunk Remaster — Master Technical Specification
 
-> **Version**: 3.1.0 (Comprehensive Engine, Tactical Blocks, Optical Laser Deflection, A* Solvability Engine, Cyber Architect Studio & Heavy Sokoban Lab)  
+> **Version**: 3.2.0 (3-Star Performance Rating Engine, 5 Cyber Theme Palettes, 8-Track Synthesizer, Persistent Save States, Tactical Blocks, Optical Laser Deflection, A* Solvability Engine & Cyber Architect Studio)  
 > **Target Frameworks**: Vanilla HTML5/Canvas, Unity (C#), Godot (GDScript/C#), React Native, Unreal Engine (C++/Blueprints), WebGL / WebAssembly  
 > **Source Reference**: `adventures_of_lolo_cyberpunk_remaster.html`
 
@@ -8,7 +8,7 @@
 
 ## 1. System Overview
 
-*Adventures of Lolo: Cyberpunk Remaster* is a high-octane grid-based puzzle-action remaster that fuses classic top-down Sokoban mechanics with real-time hazard avoidance, 90° optical laser deflection, phase-permeable barriers, multi-directional aiming turrets (1–8 directions), an A* priority queue mathematical solvability engine, 13 enemy archetypes, 9 tactical push-block archetypes, 5 physics mechanics (portals, mag-lev ice, one-way gates, cracked walls, plasma bridges), a 100-stage campaign with progressive grid scaling ($9\times 9$ up to $19\times 19$), a procedural Sokoban heavy generator, and an integrated Level Editor & Chamber Vault (Cyber Architect).
+*Adventures of Lolo: Cyberpunk Remaster* is a high-octane grid-based puzzle-action remaster that fuses classic top-down Sokoban mechanics with real-time hazard avoidance, 90° optical laser deflection, phase-permeable barriers, multi-directional aiming turrets (1–8 directions), an A* priority queue mathematical solvability engine, 13 enemy archetypes, 9 tactical push-block archetypes, 5 physics mechanics (portals, mag-lev ice, one-way gates, cracked walls, plasma bridges), a 100-stage campaign with progressive grid scaling ($9\times 9$ up to $19\times 19$), a 3-Star Performance Rating Engine, 5 switchable cyberpunk color themes, an 8-track Web Audio synthesizer, a procedural Sokoban heavy generator, and an integrated Level Editor & Chamber Vault (Cyber Architect).
 
 ### 1.1 Verified Runtime Contracts & Invariants
 
@@ -17,13 +17,18 @@ All ports, engine implementations, and modifications must strictly satisfy these
 1. **Deterministic Single-Step Movement**: Player movement executes precisely 1 tile per keystroke with smooth interpolated rendering (`renderX`, `renderY` lerp); no tile skipping or ghost movements.
 2. **Strict Blocker State Enforcement**: Closed Data Chests (`TILE_CHEST_CLOSED`) and Exit Gateways (`TILE_DOOR_CLOSED`) are impassable collision barriers until heart/chest conditions are unlocked.
 3. **100% Campaign Uniqueness & Solvability**: All 100 campaign stages possess unique layout signatures (`getLevelLayoutSignature`) and are mathematically proven solvable by `LoloMathSolver`.
-4. **Progressive Board Scaling ($9\times 9$ to $19\times 19$)**: Board sizes adapt dynamically across difficulty tiers (Stage 1: $11\times 11$; Stages 2–20: $9\times 9$; Stages 21–40: $11\times 11$; Stages 41–65: $13\times 13$; Stages 66–85: $15\times 15$; Stages 86–95: $17\times 17$; Stages 96–100: $19\times 19$) without reading out-of-bounds rows or clipping canvas viewports.
-5. **Optical Laser Deflection**: Lasers intersecting Reflector Prisms (`BLOCK_REFLECTOR`) deflect 90° according to prism orientation ($\nearrow$, $\searrow$, $\swarrow$, $\nwarrow$) and support multi-bounce chained reflection up to 4 consecutive deflections.
-6. **Laser Phase Pass-Through**: Lasers and blaster shots pass through Holo Barriers (`BLOCK_HOLO`) unimpeded, while physical entities (Lolo, enemies, push blocks) are physically blocked.
-7. **Sokoban Multi-Block Generation**: The random generator with `blockDensity: 'heavy'` or `preset: 'sokoban'` generates 4 to 8 push blocks across symmetric corridor layouts with 100% verified solvability.
-8. **Mathematical A* Solver Performance**: Search uses an A* Priority Queue (`MinHeap`) with canonical block sorting, solving multi-block chambers in under 100 states ($<1\text{ms}$).
-9. **Zero-Asset Audio Synthesis**: All 18 SFX chimes and 3-track synthwave BGM songs are synthesized in real time via Web Audio API oscillators and gain envelopes with zero external asset dependencies.
-10. **AAA Visual Polish & Juice**: Screen shake trauma decay, hit-stop frame freezing, procedural squash & stretch rigs, dynamic CRT scanline glow overlays, and particle bursts on every interaction.
+4. **3-Star Move Par Scoring**: Earned stars are computed against the mathematical optimal par move count ($M_{par}$) from `LoloMathSolver`:
+   - $\star\star\star$ (**Gold Cyber Master**): $\text{Moves} \le M_{par} + 2$
+   - $\star\star\star$ (**Silver Operative**): $\text{Moves} \le \lceil M_{par} \times 1.5 \rceil$
+   - $\star\star\star$ (**Bronze Recon Clear**): Stage Completed.
+5. **Persistent Save State Management**: User progress (`lolo_cyber_unlocked`), per-stage star ratings (`lolo_cyber_level_stats`), active theme (`lolo_cyber_active_theme`), CRT mode (`lolo_cyber_crt_mode`), and active audio preferences (`lolo_cyber_audio_settings`) automatically persist in `localStorage`.
+6. **Progressive Board Scaling ($9\times 9$ to $19\times 19$)**: Board sizes adapt dynamically across difficulty tiers (Stage 1: $11\times 11$; Stages 2–20: $9\times 9$; Stages 21–40: $11\times 11$; Stages 41–65: $13\times 13$; Stages 66–85: $15\times 15$; Stages 86–95: $17\times 17$; Stages 96–100: $19\times 19$) without reading out-of-bounds rows or clipping canvas viewports.
+7. **Optical Laser Deflection**: Lasers intersecting Reflector Prisms (`BLOCK_REFLECTOR`) deflect 90° according to prism orientation ($\nearrow$, $\searrow$, $\swarrow$, $\nwarrow$) and support multi-bounce chained reflection up to 4 consecutive deflections.
+8. **Laser Phase Pass-Through**: Lasers and blaster shots pass through Holo Barriers (`BLOCK_HOLO`) unimpeded, while physical entities (Lolo, enemies, push blocks) are physically blocked.
+9. **Sokoban Multi-Block Generation**: The random generator with `blockDensity: 'heavy'` or `preset: 'sokoban'` generates 4 to 8 push blocks across symmetric corridor layouts with 100% verified solvability.
+10. **Mathematical A* Solver Performance**: Search uses an A* Priority Queue (`MinHeap`) with canonical block sorting, solving multi-block chambers in under 100 states ($<1\text{ms}$).
+11. **Zero-Asset Audio Synthesis**: All 18 SFX chimes and 8-track synthwave BGM songs are synthesized in real time via Web Audio API oscillators and gain envelopes with zero external asset dependencies.
+12. **AAA Visual Polish & Juice**: Screen shake trauma decay, hit-stop frame freezing, procedural squash & stretch rigs, dynamic CRT scanline glow overlays, and particle bursts on every interaction.
 
 ---
 
@@ -150,110 +155,44 @@ The raycasting engine supports up to **4 chained reflections (`maxReflections = 
 | `moby` | **Vortex Leviathan** | Pull Hazard | Emits a magnetic tractor vortex across water lanes and corridors, pulling Lolo toward it. |
 | `hopper` | **Beetle Hopper** | Jumping Chaser | Chases Lolo and leaps over obstacles, trees, and push blocks. |
 
-### 5.1 Enemy Shot Immunity & Blaster Mechanics
-- Medusas (`medusa`, `medusa_diag`, `medusa_omni`), Turrets (`turret`), and Don Medusa (`don_medusa`) possess **Heavy Deflector Shields** that ricochet blaster shots (`SHIELD DEFLECTED`).
-- Non-immune enemies (`snake`, `gol`, `leeper`, `skull`, `alma`, `rocky`, `moby`, `hopper`) get encased in an **Egg Capsule** (`playEggify()`) on the 1st shot, and are vaporized/ejected off-grid on the 2nd shot with a respawn cooldown.
-- Plasma Bomb detonations (`detonateBomb`) vaporize all non-immune hostiles within a $3\times 3$ area.
-- Decoy Holograms (`BLOCK_DECOY`) draw aim beams and aggro chasers toward the decoy rather than Lolo.
+---
+
+## 6. 3-Star Rating Engine & Storage Architecture
+
+### 6.1 Move Rating Formula
+
+Given player move count $M$ and optimal solver par move count $M_{par}$:
+
+$$\text{Stars}(M, M_{par}) = \begin{cases} 3 & \text{if } M \le M_{par} + 2 \\ 2 & \text{if } M \le \lceil M_{par} \times 1.5 \rceil \\ 1 & \text{otherwise} \end{cases}$$
+
+### 6.2 Local Storage Schema Specification
+
+| Storage Key | Type | Description |
+| :--- | :--- | :--- |
+| `lolo_cyber_unlocked` | `number` | Index of highest unlocked stage in campaign (1–100). |
+| `lolo_cyber_level_stats` | `Record<string, LevelStats>` | Object mapping stage keys (`campaign_1` to `campaign_100`, `random_SEED`) to performance records: `{ stars: number, bestMoves: number, bestTime: number, lastCleared: number }`. |
+| `lolo_cyber_audio_settings` | `AudioSettings` | Object persisting `{ currentBgmTrack: number, bgmEnabled: boolean, sfxEnabled: boolean }`. |
+| `lolo_cyber_active_theme` | `string` | Active theme identifier (`synthwave`, `matrix`, `vaporwave`, `obsidian`, `hotline`). |
+| `lolo_cyber_crt_mode` | `string` | Active CRT overlay preset (`subtle`, `heavy`, `off`). |
 
 ---
 
-## 6. Direction Vectors & Preset Compass System
-
-The engine defines 8 uniform 2D directional vectors:
-
-```javascript
-const DIR_MAP = {
-    'up':         { dx:  0, dy: -1, name: 'North' },
-    'up_right':   { dx:  1, dy: -1, name: 'North-East' },
-    'right':      { dx:  1, dy:  0, name: 'East' },
-    'down_right': { dx:  1, dy:  1, name: 'South-East' },
-    'down':       { dx:  0, dy:  1, name: 'South' },
-    'down_left':  { dx: -1, dy:  1, name: 'South-West' },
-    'left':       { dx: -1, dy:  0, name: 'West' },
-    'up_left':    { dx: -1, dy: -1, name: 'North-West' }
-};
-```
-
-### 6.1 Turret & Emitter Direction Presets
-- `1-up`: `['up']` (Single North emitter)
-- `2-horiz`: `['left', 'right']` (Horizontal dual beam)
-- `3-tup`: `['left', 'right', 'up']` (T-Shape 3-way emitter)
-- `4-cross`: `['up', 'down', 'left', 'right']` (Cardinal 4-way cross)
-- `4-diag`: `['up_left', 'up_right', 'down_left', 'down_right']` (Diagonal 4-way X)
-- `5-fan`: `['up_left', 'up', 'up_right', 'left', 'right']` (5-way upward fan)
-- `6-hex`: `['up_left', 'up', 'up_right', 'down_left', 'down', 'down_right']` (6-way hexagon emitter)
-- `8-omni`: `['up', 'up_right', 'right', 'down_right', 'down', 'down_left', 'left', 'up_left']` (Full 360° omnidirectional star)
-
----
-
-## 7. Mathematical A* Solvability Engine (`LoloMathSolver`)
-
-The solver mathematically proves whether any given stage is 100% beatable using an **A\* Priority Queue (`MinHeap`) Search** with canonical block sorting:
-
-### 7.1 State Serialization & Canonical Equivalence
-
-To eliminate factorial state-space explosion $O(N!)$ caused by identical push blocks in permuted array indices:
-
-$$\text{CanonicalBlocks} = \text{sort}(Blocks, (a, b) \implies a.y === b.y \;?\; a.x - b.x : a.y - b.y)$$
-
-$$\text{StateKey} = \text{lx},\text{ly} \mid \text{hMask} \mid \text{CanonicalBlocks} \mid \text{Enemies} \mid \text{Ammo} \mid \text{ChestState} \mid \text{DoorOpen} \mid \text{Bridges}$$
-
-### 7.2 Heuristic Function $h(s)$
-
-$$h(s) = (\text{RemainingCores} \times 100 + \min_{i \in \text{Uncollected}}(\text{ManhattanDist}(Lolo, Core_i))) + \text{ChestDist} + \text{DoorDist}$$
-
-### 7.3 Performance Benchmark
-
-- 8-Block Heavy Sokoban Puzzle: Solved in **58 states in 0.8ms** (vs. 75,000+ states in standard BFS).
-- 100 Campaign Stages: 100/100 verified in $< 1.2\text{s}$ total CPU time.
-
----
-
-## 8. Procedural Random Level Generator (`LoloRandomGenerator` & `SeededRNG`)
-
-### 8.1 Seed Format & LCG Random Engine
-- Seeds follow the format `CYBER-[TAG][NUM]-[TIME]` (e.g. `CYBER-XK482910-4821`).
-- Uses a deterministic Linear Congruential Generator (`SeededRNG`) providing reproducible pseudo-random numbers.
-
-### 8.2 Generation Architecture
-1. **Candidate Generation**: Generates terrain, corridor templates, energy cores, ammo pickups, dynamic obstacles, push blocks, and hostiles.
-2. **Mathematical Solvability Verification**: Invokes `LoloMathSolver.solve(level, 50000)` to ensure the layout is beatable.
-3. **Guaranteed Fallback**: If 12 randomized candidate attempts fail solver verification, creates a mathematically guaranteed solvable fallback layout.
-
-### 8.3 Presets & Architect Controls
-1. **Speedrun Blitz**: Minimal block count, wide open corridors, agile Serpents and Leepers.
-2. **Sokoban Chamber**: **Heavy Block Density (4–8 push blocks)**, Reflector Prisms, laser shield puzzles.
-3. **Quantum Flux**: Mandatory Dual Quantum Portals, Mag-Lev Ice slides, and One-Way Arrow gates.
-4. **Laser Gauntlet**: 6-Hex and 8-Star Turrets with Reflector Prism optical loops.
-5. **Apex Fortress**: All 13 enemy archetypes, 9 block types, and $15\times 15$ to $19\times 19$ fortress citadels.
-
----
-
-## 9. Level Editor & Chamber Vault (Cyber Architect)
-
-The built-in Cyber Architect studio provides a complete developer suite for designing, testing, and saving custom levels:
-
-1. **5 Palette Categories**:
-   - `TILES` (12 Tile Brushes: Floor, Wall, Tree, Water, Mag-Lev Ice, Cracked Barrier, Gate Up, Gate Down, Gate Left, Gate Right, Portal Alpha, Portal Beta).
-   - `BLOCKS` (9 Tactical Push Blocks: Alloy Shield, Heavy Titanium, Prism Reflector, Holo Barrier, Plasma Bomb, Mag-Lev Polar, Adhesive Gel, Glass Crystal, Decoy Hologram).
-   - `ITEMS` (5 Items: Energy Core, Ammo Core, Data Chest, Exit Gateway, Lolo Spawn).
-   - `HOSTILES` (13 Enemies: Serpent, Medusa (+), Diag (✕), Omni (★), Turret (1-8D), Dragon (Gol), Patrol Sentinel (Don Medusa), Leeper EMP, Skull, Alma Buzzsaw, Rocky Golem, Moby Vortex, Hopper Beetle).
-   - `PREFABS` (4 Multi-Tile Tactical Rooms: Laser Bunker, Prism Loop, Sokoban 4-Box, Quantum Gate).
-2. **4 Drawing Tools**: Pencil, Flood Fill (`Bucket`), Box / Rectangle Drag (`Rect`), Eraser.
-3. **4 Symmetry Modes**: Off, Horizontal (`↔`), Vertical (`↕`), 4-Way Quad (`✛`).
-4. **Optical Prism Angle Switcher**: $\nearrow 45^\circ$, $\searrow 135^\circ$, $\swarrow 225^\circ$, $\nwarrow 315^\circ$.
-5. **Multi-Directional Laser Emitter Compass**: 8 interactive direction toggles with 8 quick presets.
-6. **Live Telemetry & Solvability HUD**: Live block counter, core counter, hazard counter, portal counter, and instant mathematical solvability readout (`BEATABLE (Nm)` vs `UNSOLVABLE` vs `NO CORES`).
-7. **Solvability Test Runner**: Executes up to 75,000 states via `LoloMathSolver` displaying move count, states explored, and the first 15 move steps.
-8. **Chamber Vault & JSON Scheme**: LocalStorage save/load/delete management (`lolo_cyber_vault_stages`) with JSON import/export modal.
-
----
-
-## 10. Web Audio Synthesis Engine (`CyberAudioEngine`)
+## 7. Web Audio Synthesis Engine (`CyberAudioEngine`)
 
 Generated purely via native Web Audio API oscillators and gain nodes (zero external audio files):
 
+### 7.1 8-Track BGM Sequencer
+8 switchable 8th-note procedural synthwave tracks:
+- **Track 0 (*Cyber Pulse*)**: 128 BPM driving synthwave.
+- **Track 1 (*Quantum Rush*)**: 140 BPM high-energy puzzle bounce.
+- **Track 2 (*Synth Chill*)**: 105 BPM atmospheric futuristic flow.
+- **Track 3 (*Neon Overdrive*)**: 136 BPM cyberpunk electro bassline.
+- **Track 4 (*Hypergrid Arc*)**: 124 BPM melodic arpeggiator flow.
+- **Track 5 (*Matrix Solace*)**: 110 BPM dark techno ambient.
+- **Track 6 (*Retro Byte Surge*)**: 145 BPM chip-synth high-tempo drive.
+- **Track 7 (*Orbital Protocol*)**: 118 BPM progressive sci-fi pulse.
+
+### 7.2 Sound FX Synthesis Table
 | Function | Waveform & Envelopes | Audio Purpose |
 | :--- | :--- | :--- |
 | `playStep()` | Sine $160\text{Hz} \to 70\text{Hz}$, 60ms | Deterministic footstep |
@@ -275,25 +214,9 @@ Generated purely via native Web Audio API oscillators and gain nodes (zero exter
 | `playHit()` | Sawtooth $280\text{Hz} \to 70\text{Hz}$, 100ms | Shield deflection / impact |
 | `playPrismReflect()`| Triangle $880\text{Hz} \to 1760\text{Hz}$, 120ms | Laser optical deflection |
 
-### 10.1 BGM Sequencer
-3 switchable 8th-note synthwave tracks:
-- **Track 0 (*Cyber Pulse*)**: 128 BPM driving synthwave.
-- **Track 1 (*Quantum Rush*)**: 140 BPM high-energy puzzle bounce.
-- **Track 2 (*Synth Chill*)**: 105 BPM atmospheric futuristic flow.
-
 ---
 
-## 11. AAA Visual Effects & Juice Architecture
-
-- `ParticleSystem`: Procedural rendering of muzzle flashes, plasma blasts, shockwaves, scorch marks, floating combat text, diamond impact sparks, and energy rings.
-- `TraumaCamera`: Screen shake engine utilizing quadratic trauma decay (`trauma^2`).
-- `HitStopManager`: Micro-frame pauses on impactful collisions and detonations.
-- `SquashStretchRig`: Elastic procedural spring squash & stretch on moves, recoil, and block pushes.
-- `AtmosphereEngine`: Cyber ambient grid scanlines with optional CRT glow overlay (`btn-vfx-toggle`).
-
----
-
-## 12. Verification Suite
+## 8. Verification Suite
 
 Headless verification across all campaign stages and procedural generation can be executed with Node.js:
 
