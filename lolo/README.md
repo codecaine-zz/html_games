@@ -1,11 +1,12 @@
 # Adventures of Lolo: Cyberpunk Remaster
 
 > **Next-Gen Grid-Based Cyberpunk Action-Puzzle Engine**  
-> Fusing classic top-down Sokoban mechanics with real-time hazard avoidance, 90° optical laser deflection, phase-permeable barriers, multi-directional turrets, procedural Sokoban generation, an integrated Level Editor & Chamber Vault, an A* priority queue mathematical solvability engine, dynamic 3-Star performance ratings, multi-theme aesthetics, and persistent audio save states.
+> Fusing classic top-down Sokoban mechanics with real-time hazard avoidance, 90° optical laser deflection, phase-permeable barriers, multi-directional turrets, procedural Sokoban generation, a Daily Hack Protocol with 7-Day streak calendar, an integrated Level Editor & Chamber Vault, an A* priority queue mathematical solvability engine, dynamic 3-Star performance ratings, multi-theme aesthetics, dynamic tactical sector briefings, and persistent audio save states.
 
 ![HTML5 Canvas](https://img.shields.io/badge/Engine-HTML5%20Canvas%20%2F%20Vanilla%20JS-cyan?style=for-the-badge&logo=html5)
 ![Zero External Assets](https://img.shields.io/badge/Audio-8--Track%20Web%20Audio%20Synthesizer-pink?style=for-the-badge)
 ![100 Solvable Stages](https://img.shields.io/badge/Campaign-100%20Unique%20Solvable%20Stages-emerald?style=for-the-badge)
+![Daily Hack Protocol](https://img.shields.io/badge/Daily%20Protocol-24h%20UTC%20Streak%20Calendar-orange?style=for-the-badge)
 ![3-Star Rating System](https://img.shields.io/badge/Rating-3--Star%20Par%20Scoring%20(300%20Stars)-amber?style=for-the-badge)
 ![Level Editor](https://img.shields.io/badge/Cyber%20Architect-Integrated%20Level%20Editor-purple?style=for-the-badge)
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)
@@ -14,7 +15,7 @@
 
 ## 🎮 Game Overview
 
-**Adventures of Lolo: Cyberpunk Remaster** reimagines the timeless 1989 HAL Laboratory classic *Adventures of Lolo* in a sleek neon-lit synthwave aesthetic with modern puzzle depth and quality-of-life enhancements.
+**Adventures of Lolo: Cyberpunk Remaster** reimagines the timeless 1989 HAL Laboratory classic *Adventures of Lolo* in a sleek neon-lit synthwave aesthetic with modern puzzle depth, procedural generation, daily challenges, and quality-of-life enhancements.
 
 As Operative Lolo, your mission is to navigate through security sectors, outsmart automated killer sentries, manipulate high-tech tactical push-blocks, collect Energy Cores to unlock Data Chests, and extract via the Cyber Gateway.
 
@@ -43,21 +44,26 @@ As Operative Lolo, your mission is to navigate through security sectors, outsmar
 
 ---
 
-### 4. Cyber Architect Studio (Integrated Level Editor)
+### 4. Daily Hack Protocol & 7-Day Activity Calendar
+*Synchronized 24-hour UTC challenge with live streak tracking, difficulty scaling by day of week, and interactive 7-day replay calendar.*
+
+---
+
+### 5. Cyber Architect Studio (Integrated Level Editor)
 *Full-featured level editor with symmetry tools, drawing tools (Pencil, Fill, Box, Eraser), tile/block/enemy palettes, live telemetry, A* solver integration, and JSON import/export.*
 
 ![Cyber Architect Studio](screenshots/cyber_architect_editor.png)
 
 ---
 
-### 5. Cyber Protocol Lab (Procedural Sokoban Generator)
+### 6. Cyber Protocol Lab (Procedural Sokoban Generator)
 *Procedural generator capable of synthesizing 100% mathematically proven solvable Sokoban chambers based on seed, grid size (9×9 to 17×17), difficulty, and hazard filters.*
 
 ![Procedural Sokoban Lab](screenshots/random_sokoban_lab.png)
 
 ---
 
-### 6. 100-Stage Cyber Vault Matrix with 3-Star Badges
+### 7. 100-Stage Cyber Vault Matrix with 3-Star Badges
 *Interactive stage browser and unlock system covering all 100 handcrafted campaign levels, showing earned star ratings and gold mastery borders.*
 
 ![100-Stage Cyber Vault](screenshots/level_selector.png)
@@ -66,6 +72,13 @@ As Operative Lolo, your mission is to navigate through security sectors, outsmar
 
 ## 🔥 Key Features
 
+- **⚡ Daily Hack Protocol & 7-Day Streak Calendar**:
+  - Synthesizes a brand-new, mathematically guaranteed solvable chamber every 24 hours (UTC) using seed `DAILY-YYYYMMDD`.
+  - **Adaptive Grid Scaling**: Weekdays ($11\times 11$), Saturday ($13\times 13$), Sunday ($15\times 15$).
+  - **Live Streak Tracking**: Tracks `Current Streak` (🔥), `Best Streak` (⚡), and `Total Cleared` (🏆).
+  - **Interactive 7-Day Activity Calendar**: Click any past day in the activity log to replay previous daily protocols.
+  - **Custom Aesthetics**: Amber gold glowing border ring, gold particle ripples, and exclusive Daily Protocol trophies.
+
 - **🏆 3-Star Performance Rating System (300 Stars Total)**:
   - Evaluates your move efficiency against the mathematical optimal par move count ($M_{par}$) determined by the $A^*$ solver:
     - **★★★ (Gold Cyber Master)**: Cleared in $\le M_{par} + 2$ moves.
@@ -73,8 +86,13 @@ As Operative Lolo, your mission is to navigate through security sectors, outsmar
     - **★☆☆ (Bronze Recon Clear)**: Stage completed.
   - **Live Combat HUD Badge (`#hud-stars`)**: Displays active stage rating (`★ ★ ★` / `☆☆☆`) directly during gameplay.
   - **Header Cumulative Stars Badge (`#header-stars-badge`)**: Displays total campaign stars (`⭐ X / 300`) with real-time sync.
-  - **Stage Clear Victory Modal**: Displays earned neon stars, player moves vs par moves, and elapsed time in seconds.
-  - **100-Stage Vault Badges**: Visual mini-stars and glowing gold borders on cleared stage buttons.
+  - **Streamlined Victory Modal**: Displays earned neon stars, player moves vs par moves, elapsed time, and dedicated `NEXT STAGE` / `Replay` actions.
+
+- **📡 Dynamic Stage-by-Stage Tactical Dossiers**:
+  - Replaces generic text with **real-time chamber intelligence** on every level (Campaign Stages 1–100, Daily Hack, and Random Lab).
+  - Automatically identifies active enemies with quantities (`2× Cardinal Medusa Sentry, 1× Serpent Drone`).
+  - Lists environmental mechanics (Alloy Push-Blocks, 90° Optical Laser Prisms, Plasma Waterways, Mag-Lev Ice, Quantum Portals, Plasma Bombs).
+  - Formulates actionable puzzle-solving guidance tailored to the active chamber topology.
 
 - **🎨 5 Cyberpunk Color Themes & CRT Overlay Controls**:
   - **Synthwave Cyan**: Default vibrant cyan, magenta & hot pink neon glow.
@@ -85,7 +103,8 @@ As Operative Lolo, your mission is to navigate through security sectors, outsmar
   - **CRT Preset Modes**: Toggle between **CRT: Subtle** (90% scanlines), **CRT: Heavy** (100% scanlines), and **CRT: Off**.
 
 - **💾 Full Save State Persistence (`localStorage`)**:
-  - **Audio Settings**: Active BGM track selection (Tracks 1–8), play/pause mute state, and SFX toggle preference automatically persist and restore upon boot.
+  - **Daily Hack Progress**: Daily streaks, best records, and 7-day calendar activity stamps (`lolo_cyber_daily_v1`).
+  - **Audio Settings**: Active BGM track selection (Tracks 1–8), play/pause mute state, and SFX toggle preference.
   - **Theme & VFX Settings**: Selected color theme and CRT overlay preference.
   - **Campaign Records**: Unlocked levels (1–100), stars earned per stage (1–3), personal best moves, and best completion times.
 
@@ -174,13 +193,15 @@ As Operative Lolo, your mission is to navigate through security sectors, outsmar
 | Action | Primary Key | Alternate Key | Touch / Gamepad |
 | :--- | :--- | :--- | :--- |
 | **Move Operative** | `W` `A` `S` `D` | `Up` `Left` `Down` `Right` | D-Pad Buttons |
-| **Fire Cyber Blaster** | `Space` | — | `SHOOT` Button |
+| **Fire Cyber Blaster** | `Space` | `X` | `SHOOT` Button |
 | **Undo Move** | `Z` | `U` | `Undo (Z)` Button |
 | **Restart Chamber** | `R` | — | `Restart (R)` Button |
 | **Get Solver Hint** | `H` | — | `Hint (H)` Button |
+| **Daily Hack Protocol** | — | — | `Daily Hack` Header Button |
 | **Toggle Level Editor** | — | — | `Architect` Header Button |
 | **Toggle Stage Vault** | — | — | `Stages (100)` Header Button |
 | **Toggle Random Lab** | — | — | `Random Lab` Header Button |
+| **Trophy Matrix** | — | — | `Trophies` Header Button |
 
 ---
 
@@ -198,6 +219,7 @@ As Operative Lolo, your mission is to navigate through security sectors, outsmar
 You can launch directly into specific levels, views, or generated seeds using URL parameters:
 
 - **Launch Stage N (1–100)**: `adventures_of_lolo_cyberpunk_remaster.html?stage=45`
+- **Launch Daily Protocol**: `adventures_of_lolo_cyberpunk_remaster.html?view=daily`
 - **Open Level Editor**: `adventures_of_lolo_cyberpunk_remaster.html?view=editor`
 - **Open 100-Stage Vault Matrix**: `adventures_of_lolo_cyberpunk_remaster.html?view=levels`
 - **Unlock All 100 Stages in Vault**: `adventures_of_lolo_cyberpunk_remaster.html?view=levels&unlock=1`
@@ -232,7 +254,7 @@ flowchart TD
 - **Language & Framework**: Vanilla JavaScript (ES6+), HTML5 Canvas 2D API, Tailwind CSS utilities.
 - **Audio Engine**: 8-Track Web Audio API oscillator synthesis with gain envelopes and high-pass filters.
 - **Solver Algorithm**: A* Search with MinHeap priority queue, state canonicalization, and flood-fill reachability analysis.
-- **Save Engine**: High-performance `localStorage` engine persisting star scores, unlocked levels, active audio presets, theme palette, and CRT modes.
+- **Save Engine**: High-performance `localStorage` engine persisting star scores, unlocked levels, active audio presets, theme palette, daily streak logs, and CRT modes.
 - **Asset Overhead**: 0 KB external images or audio files (100% self-contained code).
 
 ---

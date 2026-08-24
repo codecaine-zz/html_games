@@ -105,6 +105,73 @@
             background: #00f0ff;
             border-radius: 4px;
         }
+
+        /* Achievement Toast Notification Animations */
+        @keyframes toastSlideIn {
+            0% {
+                transform: translateX(120%) scale(0.9);
+                opacity: 0;
+            }
+            70% {
+                transform: translateX(-8px) scale(1.02);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes toastSlideOut {
+            0% {
+                transform: translateX(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(120%) scale(0.8);
+                opacity: 0;
+            }
+        }
+
+        .toast-animate-in {
+            animation: toastSlideIn 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .toast-animate-out {
+            animation: toastSlideOut 0.4s ease-in forwards;
+        }
+
+        /* Typewriter Terminal Scanlines */
+        .terminal-scanline {
+            background: linear-gradient(
+                rgba(18, 16, 16, 0) 50%,
+                rgba(0, 240, 255, 0.08) 50%
+            ), linear-gradient(
+                90deg,
+                rgba(0, 255, 128, 0.03),
+                rgba(0, 240, 255, 0.02),
+                rgba(0, 255, 128, 0.03)
+            );
+            background-size: 100% 3px, 4px 100%;
+        }
+
+        /* Speedrun Timer Pulse */
+        @keyframes timerPulse {
+            0%, 100% { opacity: 1; text-shadow: 0 0 8px rgba(168, 85, 247, 0.6); }
+            50% { opacity: 0.85; text-shadow: 0 0 16px rgba(168, 85, 247, 0.9); }
+        }
+        .modal-active {
+            display: flex !important;
+        }
+        .modal-hidden {
+            display: none !important;
+        }
+
+        .speedrun-active {
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.45);
+            border-color: rgba(0, 240, 255, 0.8) !important;
+            animation: speedrunPulse 1.8s infinite ease-in-out;
+        }
     </style>
 </head>
 
@@ -199,6 +266,24 @@
                 <span id="label-vfx" class="hidden sm:inline">CRT: Subtle</span>
             </button>
 
+            <!-- Daily Hack Challenge Modal Toggle -->
+            <button id="btn-daily-hack"
+                class="btn-action bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white text-xs font-bold px-3.5 py-2 rounded-xl flex items-center space-x-2 shadow-lg shadow-amber-500/30 border border-amber-400/40"
+                title="Daily Procedural Hack Protocol">
+                <i class="fa-solid fa-fire text-yellow-300"></i>
+                <span>Daily Hack</span>
+                <span id="header-daily-streak" class="bg-black/40 text-amber-200 text-[10px] px-1.5 py-0.5 rounded-md font-mono">0🔥</span>
+            </button>
+
+            <!-- Achievements Showcase Modal Toggle -->
+            <button id="btn-achievements"
+                class="btn-action bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold px-3.5 py-2 rounded-xl flex items-center space-x-2 shadow-lg shadow-emerald-500/30 border border-emerald-400/40"
+                title="Cyber Trophies & Achievement Matrix">
+                <i class="fa-solid fa-trophy text-yellow-300"></i>
+                <span class="hidden sm:inline">Trophies</span>
+                <span id="header-achievements-badge" class="bg-black/40 text-emerald-200 text-[10px] px-1.5 py-0.5 rounded-md font-mono">0/28</span>
+            </button>
+
             <!-- Random Stage Generator Modal Toggle -->
             <button id="btn-random-modal"
                 class="btn-action bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white text-xs font-bold px-3.5 py-2 rounded-xl flex items-center space-x-2 shadow-lg shadow-pink-500/30 border border-pink-400/40">
@@ -279,6 +364,12 @@
                         Next <i class="fa-solid fa-chevron-right text-cyan-400"></i>
                     </button>
                 </div>
+
+                <!-- Sector Terminal Lore Briefing Button -->
+                <button id="btn-open-sector-briefing"
+                    class="btn-action w-full bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-500/40 text-[11px] font-bold py-1.5 rounded-xl text-cyan-300 flex items-center justify-center gap-1.5 orbitron-font shadow-inner">
+                    <i class="fa-solid fa-terminal text-cyan-400"></i> Sector Briefing
+                </button>
             </div>
 
             <!-- Active Threat Scanner -->
@@ -307,29 +398,37 @@
 
             <!-- Game HUD -->
             <div id="game-hud"
-                class="w-full max-w-[620px] 2xl:max-w-[700px] cyber-glass rounded-t-2xl p-3 flex items-center justify-between gap-2 border-b-0 shadow-lg">
+                class="w-full max-w-[620px] 2xl:max-w-[700px] cyber-glass rounded-t-2xl p-3 flex items-center justify-between gap-1.5 sm:gap-2 border-b-0 shadow-lg flex-wrap">
                 <div
-                    class="flex items-center space-x-2 bg-slate-900/90 px-3 py-1.5 rounded-xl border border-cyan-500/30">
+                    class="flex items-center space-x-1.5 sm:space-x-2 bg-slate-900/90 px-2.5 sm:px-3 py-1.5 rounded-xl border border-cyan-500/30">
                     <span class="text-slate-400 text-[10px] font-bold orbitron-font">STAGE</span>
-                    <span id="hud-level-num" class="pixel-font text-sm text-cyan-300 font-bold">1</span>
+                    <span id="hud-level-num" class="pixel-font text-xs sm:text-sm text-cyan-300 font-bold">1</span>
                 </div>
 
                 <div
-                    class="flex items-center space-x-2 bg-slate-900/90 px-3 py-1.5 rounded-xl border border-pink-500/30">
-                    <i class="fa-solid fa-atom text-pink-500 text-sm animate-pulse"></i>
-                    <span id="hud-hearts" class="rajdhani-font font-bold text-base text-pink-300">0/0</span>
+                    class="flex items-center space-x-1.5 sm:space-x-2 bg-slate-900/90 px-2.5 sm:px-3 py-1.5 rounded-xl border border-pink-500/30">
+                    <i class="fa-solid fa-atom text-pink-500 text-xs sm:text-sm animate-pulse"></i>
+                    <span id="hud-hearts" class="rajdhani-font font-bold text-sm sm:text-base text-pink-300">0/0</span>
                 </div>
 
                 <div
-                    class="flex items-center space-x-2 bg-slate-900/90 px-3 py-1.5 rounded-xl border border-amber-500/30">
-                    <i class="fa-solid fa-bolt text-amber-400 text-sm"></i>
-                    <span id="hud-ammo" class="rajdhani-font font-bold text-base text-amber-300">0</span>
+                    class="flex items-center space-x-1.5 sm:space-x-2 bg-slate-900/90 px-2.5 sm:px-3 py-1.5 rounded-xl border border-amber-500/30">
+                    <i class="fa-solid fa-bolt text-amber-400 text-xs sm:text-sm"></i>
+                    <span id="hud-ammo" class="rajdhani-font font-bold text-sm sm:text-base text-amber-300">0</span>
                 </div>
 
                 <div
-                    class="flex items-center space-x-2 bg-slate-900/90 px-3 py-1.5 rounded-xl border border-emerald-500/30">
+                    class="flex items-center space-x-1.5 sm:space-x-2 bg-slate-900/90 px-2.5 sm:px-3 py-1.5 rounded-xl border border-emerald-500/30">
                     <span class="text-slate-400 text-[10px] font-bold orbitron-font">MOVES</span>
-                    <span id="hud-moves" class="rajdhani-font font-bold text-base text-emerald-400">0</span>
+                    <span id="hud-moves" class="rajdhani-font font-bold text-sm sm:text-base text-emerald-400">0</span>
+                </div>
+
+                <!-- Speedrun Live Split Timer -->
+                <div id="hud-timer-container"
+                    class="flex items-center space-x-1.5 bg-slate-900/90 px-2.5 py-1.5 rounded-xl border border-purple-500/30 cursor-pointer hover:border-purple-400 transition-all"
+                    title="Live Speedrun Timer (Click to toggle Speedrun Mode)">
+                    <i class="fa-solid fa-stopwatch text-purple-400 text-xs"></i>
+                    <span id="hud-timer" class="font-mono text-xs font-bold text-purple-300">00:00.0</span>
                 </div>
 
                 <div
@@ -1094,9 +1193,157 @@
                     class="btn-action w-full bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold py-2.5 rounded-xl border border-cyan-500/30 text-xs flex items-center justify-center gap-2">
                     <i class="fa-solid fa-arrow-rotate-right"></i> Replay This Stage
                 </button>
-                <button id="btn-victory-close-random"
-                    class="btn-action w-full bg-slate-900/80 hover:bg-slate-800 text-slate-400 font-semibold py-2 rounded-xl border border-slate-800 text-xs">
-                    Return to Main Lab
+            </div>
+        </div>
+    </div>
+
+    <!-- Achievement Live Toast Notification Container -->
+    <div id="achievement-toast-container" class="fixed top-5 right-5 z-[9999] flex flex-col gap-2 pointer-events-none max-w-sm w-full px-4"></div>
+
+    <!-- Daily Hack Protocol Modal -->
+    <div id="modal-daily-hack" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="cyber-glass w-full max-w-xl max-h-[90vh] rounded-3xl p-6 flex flex-col gap-4 border border-amber-500/40 shadow-2xl overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-amber-500/30 pb-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-600 to-orange-500 flex items-center justify-center text-white text-2xl shadow-lg shadow-amber-500/30 border border-amber-300/40">
+                        <i class="fa-solid fa-fire text-yellow-300 animate-pulse"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h2 class="orbitron-font text-base text-amber-300 font-bold">DAILY HACK PROTOCOL</h2>
+                            <span id="daily-status-badge" class="bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[9px] font-bold px-2 py-0.5 rounded-full orbitron-font">READY</span>
+                        </div>
+                        <p id="daily-date-display" class="text-xs text-slate-400 font-mono mt-0.5">UTC Date: 2026-08-24</p>
+                    </div>
+                </div>
+                <button id="btn-close-daily" class="text-slate-400 hover:text-white text-xl p-1 rounded-lg hover:bg-slate-800 transition-all"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Daily Streak & Stat Cards -->
+            <div class="grid grid-cols-3 gap-2 text-center text-xs font-mono">
+                <div class="bg-slate-950/80 p-3 rounded-2xl border border-amber-500/30">
+                    <span class="text-slate-400 text-[10px] block font-sans">CURRENT STREAK</span>
+                    <span id="daily-streak-count" class="text-amber-400 font-bold text-lg orbitron-font">0 🔥</span>
+                </div>
+                <div class="bg-slate-950/80 p-3 rounded-2xl border border-amber-500/30">
+                    <span class="text-slate-400 text-[10px] block font-sans">BEST STREAK</span>
+                    <span id="daily-best-streak" class="text-yellow-300 font-bold text-lg orbitron-font">0 ⚡</span>
+                </div>
+                <div class="bg-slate-950/80 p-3 rounded-2xl border border-amber-500/30">
+                    <span class="text-slate-400 text-[10px] block font-sans">TOTAL CLEARED</span>
+                    <span id="daily-total-clears" class="text-emerald-400 font-bold text-lg orbitron-font">0 🏆</span>
+                </div>
+            </div>
+
+            <!-- Sector Intel & Solvability Proof -->
+            <div class="bg-slate-950/90 border border-slate-800 rounded-2xl p-4 space-y-2 text-xs">
+                <div class="flex items-center justify-between text-slate-300 font-bold">
+                    <span class="text-amber-300 orbitron-font flex items-center gap-1.5"><i class="fa-solid fa-microchip text-amber-400"></i> SECTOR MATRIX</span>
+                    <span id="daily-grid-scale-label" class="font-mono text-cyan-300">11 × 11 Adaptive Grid</span>
+                </div>
+                <p class="text-slate-400 text-[11px] leading-relaxed">
+                    Every 24 hours (UTC), a new mathematically guaranteed solvable chamber is synthesized for all cyber operatives worldwide. Clear today's protocol to extend your daily hacking streak and earn exclusive trophies.
+                </p>
+                <div class="flex justify-between items-center bg-slate-900/80 p-2 rounded-xl border border-slate-800 text-[11px] font-mono">
+                    <span class="text-slate-400">Today's Seed ID:</span>
+                    <span id="daily-seed-label" class="text-amber-300 font-bold">DAILY-20260824</span>
+                </div>
+            </div>
+
+            <!-- 7-Day Mini Calendar History -->
+            <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-3 space-y-2">
+                <span class="text-[10px] font-bold text-slate-400 orbitron-font block">PAST 7 DAYS ACTIVITY LOG</span>
+                <div id="daily-week-calendar" class="grid grid-cols-7 gap-1.5 text-center text-[10px] font-mono">
+                    <!-- Day boxes injected dynamically -->
+                </div>
+            </div>
+
+            <button id="btn-launch-daily" class="btn-action w-full bg-gradient-to-r from-amber-600 via-orange-600 to-yellow-600 hover:from-amber-500 hover:to-yellow-500 text-white font-bold py-3 rounded-2xl border border-amber-400/50 shadow-xl shadow-amber-600/30 orbitron-font text-sm flex items-center justify-center gap-2">
+                <i class="fa-solid fa-play"></i>
+                <span id="btn-launch-daily-text">INFILTRATE TODAY'S PROTOCOL</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Cyber Achievements Matrix Modal -->
+    <div id="modal-achievements" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="cyber-glass w-full max-w-4xl max-h-[88vh] rounded-3xl p-6 flex flex-col gap-4 border border-emerald-500/40 shadow-2xl overflow-hidden">
+            <div class="flex items-center justify-between border-b border-emerald-500/30 pb-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white text-2xl shadow-lg shadow-emerald-500/30 border border-emerald-300/40">
+                        <i class="fa-solid fa-trophy text-yellow-300"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h2 class="orbitron-font text-base sm:text-lg text-emerald-300 font-bold">CYBER TROPHY MATRIX</h2>
+                            <span id="achievements-progress-pill" class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold px-2 py-0.5 rounded-full orbitron-font">0 / 28 (0%)</span>
+                        </div>
+                        <p class="text-xs text-slate-400">Unlock commendations across Campaign, Tactics, Mastery &amp; Modes</p>
+                    </div>
+                </div>
+                <button id="btn-close-achievements" class="text-slate-400 hover:text-white text-xl p-1 rounded-lg hover:bg-slate-800 transition-all"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-slate-900 rounded-full h-2.5 border border-slate-800 overflow-hidden">
+                <div id="achievements-progress-bar" class="bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 h-full rounded-full transition-all duration-500" style="width: 0%;"></div>
+            </div>
+
+            <!-- Category Filter Tabs -->
+            <div class="flex gap-2 text-xs font-bold orbitron-font flex-wrap">
+                <button class="btn-ach-filter px-3 py-1.5 rounded-xl bg-emerald-600 text-white border border-emerald-400 shadow-md shadow-emerald-500/20" data-filter="all">ALL (28)</button>
+                <button class="btn-ach-filter px-3 py-1.5 rounded-xl bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800" data-filter="progression">PROGRESSION</button>
+                <button class="btn-ach-filter px-3 py-1.5 rounded-xl bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800" data-filter="mastery">MASTERY</button>
+                <button class="btn-ach-filter px-3 py-1.5 rounded-xl bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800" data-filter="tactics">TACTICS &amp; COMBAT</button>
+                <button class="btn-ach-filter px-3 py-1.5 rounded-xl bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800" data-filter="meta">MODES &amp; META</button>
+            </div>
+
+            <!-- Achievements Grid -->
+            <div id="grid-achievements-list" class="grid grid-cols-1 md:grid-cols-2 gap-2.5 overflow-y-auto pr-1 max-h-[55vh]">
+                <!-- Injected dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Sector Narrative Lore Transmission Modal -->
+    <div id="modal-sector-briefing" class="hidden fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="cyber-glass w-full max-w-2xl rounded-3xl p-6 flex flex-col gap-4 border border-cyan-500/50 shadow-2xl terminal-scanline relative">
+            <div class="flex items-center justify-between border-b border-cyan-500/30 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <span class="w-3 h-3 rounded-full bg-red-500 animate-ping"></span>
+                    <span class="orbitron-font text-xs font-bold text-cyan-400 tracking-widest uppercase flex items-center gap-1.5">
+                        <i class="fa-solid fa-satellite"></i> INCOMING SYNDICATE TRANSMISSION
+                    </span>
+                </div>
+                <button id="btn-close-briefing" class="text-slate-400 hover:text-white text-xl p-1 rounded-lg hover:bg-slate-800 transition-all"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="space-y-3">
+                <div class="flex items-center justify-between bg-slate-950/80 p-3 rounded-2xl border border-cyan-500/30">
+                    <div>
+                        <span id="briefing-sector-tag" class="text-[10px] text-pink-400 font-bold orbitron-font block">SECURITY TIER 1 • SECTOR ALPHA</span>
+                        <h3 id="briefing-sector-title" class="orbitron-font text-lg text-cyan-300 font-extrabold">NEURAL INFILTRATION HUB</h3>
+                    </div>
+                    <span id="briefing-threat-level" class="bg-pink-950 text-pink-300 border border-pink-500/40 text-[10px] font-bold px-2.5 py-1 rounded-lg orbitron-font">THREAT: STANDARD</span>
+                </div>
+
+                <!-- Typewriter Decoded Text Container -->
+                <div class="bg-slate-950/90 border border-slate-800 rounded-2xl p-4 font-mono text-xs text-slate-300 leading-relaxed min-h-[120px] max-h-[220px] overflow-y-auto space-y-2">
+                    <p id="briefing-terminal-text" class="text-cyan-200">
+                        [TRANSMISSION DECODING...]
+                    </p>
+                </div>
+
+                <!-- Threat Profiles Checklist -->
+                <div class="bg-slate-950/70 p-3 rounded-2xl border border-slate-800 flex justify-between items-center text-[11px]">
+                    <span class="text-slate-400 font-bold orbitron-font">SECTOR MECHANICS:</span>
+                    <span id="briefing-mechanics-summary" class="text-amber-300 font-mono">Push-Blocks • Sentry Laser Avoidance • Core Extraction</span>
+                </div>
+            </div>
+
+            <div class="flex gap-2 pt-2">
+                <button id="btn-start-briefing-mission" class="btn-action flex-1 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-3 rounded-xl border border-cyan-400/50 shadow-lg shadow-cyan-600/30 orbitron-font text-xs flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-play"></i> INITIALIZE INFILTRATION PROTOCOL
                 </button>
             </div>
         </div>
@@ -1145,27 +1392,37 @@
 
             init() {
                 if (!this.ctx) {
-                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    try {
+                        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                        if (AudioCtx) {
+                            this.ctx = new AudioCtx();
+                        }
+                    } catch (e) {}
                 }
                 if (this.ctx && this.ctx.state === 'suspended') {
-                    this.ctx.resume();
+                    try {
+                        this.ctx.resume();
+                    } catch (e) {}
                 }
             }
 
             playStep() {
                 if (!this.sfxEnabled) return;
                 this.init();
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(160, this.ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(70, this.ctx.currentTime + 0.06);
-                gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
-                gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.06);
-                osc.connect(gain);
-                gain.connect(this.ctx.destination);
-                osc.start();
-                osc.stop(this.ctx.currentTime + 0.06);
+                if (!this.ctx) return;
+                try {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(160, this.ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(70, this.ctx.currentTime + 0.06);
+                    gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.06);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start();
+                    osc.stop(this.ctx.currentTime + 0.06);
+                } catch (e) {}
             }
 
             playHeart() {
@@ -1465,6 +1722,67 @@
                 osc.stop(this.ctx.currentTime + 0.12);
             }
 
+            playAchievement() {
+                if (!this.sfxEnabled) return;
+                this.init();
+                if (!this.ctx) return;
+                try {
+                    // 5-Tone Harmonic Synth Fanfare [C5, E5, G5, B5, C6, E6]
+                    const notes = [523.25, 659.25, 783.99, 987.77, 1046.50, 1318.51];
+                    notes.forEach((freq, idx) => {
+                        const osc = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(freq, this.ctx.currentTime + idx * 0.07);
+                        gain.gain.setValueAtTime(0.18, this.ctx.currentTime + idx * 0.07);
+                        gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + idx * 0.07 + 0.35);
+                        osc.connect(gain);
+                        gain.connect(this.ctx.destination);
+                        osc.start(this.ctx.currentTime + idx * 0.07);
+                        osc.stop(this.ctx.currentTime + idx * 0.07 + 0.35);
+                    });
+                } catch (e) {}
+            }
+
+            playTerminalBeep() {
+                if (!this.sfxEnabled) return;
+                this.init();
+                if (!this.ctx) return;
+                try {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(1800 + Math.random() * 400, this.ctx.currentTime);
+                    gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.035);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start();
+                    osc.stop(this.ctx.currentTime + 0.035);
+                } catch (e) {}
+            }
+
+            playDailyFanfare() {
+                if (!this.sfxEnabled) return;
+                this.init();
+                if (!this.ctx) return;
+                try {
+                    const notes = [440, 554.37, 659.25, 880, 1108.73, 1318.51];
+                    notes.forEach((freq, idx) => {
+                        const osc = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
+                        osc.type = 'square';
+                        osc.frequency.setValueAtTime(freq, this.ctx.currentTime + idx * 0.06);
+                        gain.gain.setValueAtTime(0.12, this.ctx.currentTime + idx * 0.06);
+                        gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + idx * 0.06 + 0.28);
+                        osc.connect(gain);
+                        gain.connect(this.ctx.destination);
+                        osc.start(this.ctx.currentTime + idx * 0.06);
+                        osc.stop(this.ctx.currentTime + idx * 0.06 + 0.28);
+                    });
+                } catch (e) {}
+            }
+
             startBGM(trackIndex = 0) {
                 this.currentBgmTrack = parseInt(trackIndex, 10);
                 this.stopBGM();
@@ -1674,6 +1992,7 @@
 
         const MODE_CAMPAIGN = 'campaign';
         const MODE_RANDOM = 'random';
+        const MODE_DAILY = 'daily';
         const DIFFICULTY_EASY = 'easy';
         const DIFFICULTY_MEDIUM = 'medium';
         const DIFFICULTY_HARD = 'hard';
@@ -1684,6 +2003,463 @@
         const RANDOM_SEED_FALLBACK_MAX = 999;
         const RANDOM_SEED_ATTEMPT_LIMIT = 500;
         const RANDOM_LEVEL_ATTEMPT_LIMIT = 6;
+
+        /* Cyberpunk Narrative Lore Briefing Matrix across 6 Security Tiers */
+        const SECTOR_LORE = {
+            1: {
+                tier: 'SECURITY TIER 1 • SECTOR ALPHA',
+                title: 'NEURAL INFILTRATION HUB',
+                threat: 'STANDARD',
+                mechanics: 'Push-Blocks • Laser Avoidance • Core Extraction',
+                briefing: 'Operative Lolo, welcome to the Syndicate Grid. Automated Cardinal Sentries patrol this perimeter with instant kill-on-sight laser optics. Shove Alloy push-blocks into active crossfires to create safe transit corridors, extract all cybernetic Energy Cores to decrypt the Data Chest, and reach the extraction gateway.'
+            },
+            11: {
+                tier: 'SECURITY TIER 2 • SECTOR BETA',
+                title: 'SUB-SURFACE COOLANT CANAL',
+                threat: 'ELEVATED',
+                mechanics: 'Bio-Eggs • Plasma Water Crossing • Leeper Nanobots',
+                briefing: 'Warning: Lethal superheated coolant streams bisect this sector. Neutralize Serpent Drones with your blaster to collapse them into Bio-Eggs, then shove them into plasma channels to bridge crossings. Beware of EMP Leeper nanobots: they will pursue you relentlessly and solidify into impassable barriers.'
+            },
+            21: {
+                tier: 'SECURITY TIER 3 • SECTOR GAMMA',
+                title: 'PRISM OPTICAL DEFLECTION LAB',
+                threat: 'HIGH',
+                mechanics: 'Optical 90° Prisms • Diagonal Medusas • Mag-Lev Ice',
+                briefing: 'Intrusion alert: The optical research wing is armed with 90° Prism Reflectors and Diagonal Sentries (Medusa-X). Align mirror angles to redirect lethal laser vectors away from extraction gateways. Frictionless Mag-Lev tracks will accelerate blocks across rooms.'
+            },
+            41: {
+                tier: 'SECURITY TIER 4 • SECTOR DELTA',
+                title: 'HIGH-DENSITY SENTRY MATRIX',
+                threat: 'SEVERE',
+                mechanics: 'Don Medusa Patrols • Plasma Bombs • Phasing Barriers',
+                briefing: 'Active Patrol Sentinels (Don Medusa) are mobile and continuously sweep corridors. Detonate Plasma Bombs to blast through cracked security walls and eradicate hostile threats in a 3x3 blast radius. Phasing Holo-Barriers will allow lasers through while blocking physical passage.'
+            },
+            61: {
+                tier: 'SECURITY TIER 5 • SECTOR EPSILON',
+                title: 'QUANTUM SINGULARITY CHAMBERS',
+                threat: 'EXTREME',
+                mechanics: 'Quantum Portals • Awakening Skulls • Multi-Directional Turrets',
+                briefing: 'Quantum wormholes Alpha and Beta connect distant security wings. When all Energy Cores are gathered, Slumbering Skull Mechs will awaken and charge at maximum velocity. Calculate your escape trajectory before picking up the final core.'
+            },
+            81: {
+                tier: 'SECURITY TIER 6 • APEX CYBER FORTRESS',
+                title: 'THE CORE OVERLORD MAINFRAME',
+                threat: 'APEX MAXIMUM',
+                mechanics: 'Omni 360° Sentries • Hydraulic Golems • 19×19 Grandmaster Chambers',
+                briefing: 'You have penetrated the deepest sanctum of the Syndicate Core. Omni Sentries fire 360° across all 8 vectors. Hydraulic Golems will violently shove you into hazards. Only flawless mathematical precision and perfect block positioning will allow you to claim all 300 Campaign Stars.'
+            }
+        };
+
+        /* Daily Hack Manager (Deterministic Daily Solvable Seed & Streak Engine) */
+        class DailyHackManager {
+            static getTodayUTCString() {
+                const now = new Date();
+                const y = now.getUTCFullYear();
+                const m = String(now.getUTCMonth() + 1).padStart(2, '0');
+                const d = String(now.getUTCDate()).padStart(2, '0');
+                return `${y}-${m}-${d}`;
+            }
+
+            static getDailySeed(dateStr = null) {
+                const ds = dateStr || this.getTodayUTCString();
+                const clean = ds.replace(/-/g, '');
+                return `DAILY-${clean}`;
+            }
+
+            static getDailyGridSize(dateStr = null) {
+                const ds = dateStr || this.getTodayUTCString();
+                const day = new Date(`${ds}T00:00:00Z`).getUTCDay();
+                if (day === 0) return 15; // Sunday Apex
+                if (day === 6) return 13; // Saturday
+                return 11; // Weekdays
+            }
+
+            static getStreak() {
+                const data = this.loadData();
+                return data.streak || 0;
+            }
+
+            static getBestStreak() {
+                const data = this.loadData();
+                return data.bestStreak || 0;
+            }
+
+            static loadData() {
+                try {
+                    const raw = localStorage.getItem('lolo_cyber_daily_data');
+                    if (raw) return JSON.parse(raw);
+                } catch (e) {}
+                return {
+                    streak: 0,
+                    bestStreak: 0,
+                    lastCompletedDate: '',
+                    totalClears: 0,
+                    history: {}
+                };
+            }
+
+            static saveData(data) {
+                try {
+                    localStorage.setItem('lolo_cyber_daily_data', JSON.stringify(data));
+                } catch (e) {}
+            }
+
+            static isCompletedToday() {
+                const data = this.loadData();
+                return data.lastCompletedDate === this.getTodayUTCString();
+            }
+
+            static recordDailyClear(playerMoves, optimalMoves, stars, elapsedMs) {
+                const today = this.getTodayUTCString();
+                const data = this.loadData();
+
+                if (data.lastCompletedDate !== today) {
+                    const now = new Date();
+                    const yest = new Date(now.getTime() - 86400000);
+                    const yestStr = `${yest.getUTCFullYear()}-${String(yest.getUTCMonth() + 1).padStart(2, '0')}-${String(yest.getUTCDate()).padStart(2, '0')}`;
+
+                    if (data.lastCompletedDate === yestStr) {
+                        data.streak = (data.streak || 0) + 1;
+                    } else {
+                        data.streak = 1;
+                    }
+
+                    data.bestStreak = Math.max(data.bestStreak || 0, data.streak);
+                    data.totalClears = (data.totalClears || 0) + 1;
+                    data.lastCompletedDate = today;
+                }
+
+                data.history[today] = {
+                    moves: playerMoves,
+                    optimal: optimalMoves,
+                    stars: stars,
+                    elapsedMs: elapsedMs,
+                    timestamp: Date.now()
+                };
+
+                this.saveData(data);
+                this.updateUI();
+
+                if (typeof achievements !== 'undefined' && achievements) {
+                    achievements.unlock('daily_first');
+                    if (data.streak >= 3) achievements.unlock('daily_streak_3');
+                    if (data.streak >= 7) achievements.unlock('daily_streak_7');
+                }
+
+                return data;
+            }
+
+            static renderModalUI() {
+                this.updateUI();
+            }
+
+            static updateUI() {
+                const data = this.loadData();
+                const today = this.getTodayUTCString();
+                const isDone = data.lastCompletedDate === today;
+
+                const streakBadge = document.getElementById('header-daily-streak');
+                if (streakBadge) {
+                    streakBadge.innerText = `${data.streak || 0}🔥`;
+                }
+
+                const streakCountEl = document.getElementById('daily-streak-count');
+                if (streakCountEl) streakCountEl.innerText = `${data.streak || 0} 🔥`;
+
+                const bestStreakEl = document.getElementById('daily-best-streak');
+                if (bestStreakEl) bestStreakEl.innerText = `${data.bestStreak || 0} ⚡`;
+
+                const totalClearsEl = document.getElementById('daily-total-clears');
+                if (totalClearsEl) totalClearsEl.innerText = `${data.totalClears || 0} 🏆`;
+
+                const dateEl = document.getElementById('daily-date-display');
+                if (dateEl) dateEl.innerText = `UTC Date: ${today}`;
+
+                const seedLabel = document.getElementById('daily-seed-label');
+                if (seedLabel) seedLabel.innerText = this.getDailySeed();
+
+                const gridLabel = document.getElementById('daily-grid-scale-label');
+                if (gridLabel) {
+                    const gs = this.getDailyGridSize();
+                    gridLabel.innerText = `${gs} × ${gs} Adaptive Grid`;
+                }
+
+                const statusBadge = document.getElementById('daily-status-badge');
+                if (statusBadge) {
+                    statusBadge.innerText = isDone ? 'COMPLETED' : 'READY';
+                    statusBadge.className = isDone
+                        ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[9px] font-bold px-2 py-0.5 rounded-full orbitron-font'
+                        : 'bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[9px] font-bold px-2 py-0.5 rounded-full orbitron-font animate-pulse';
+                }
+
+                const launchBtnText = document.getElementById('btn-launch-daily-text');
+                if (launchBtnText) {
+                    launchBtnText.innerText = isDone ? "REPLAY TODAY'S PROTOCOL" : "INFILTRATE TODAY'S PROTOCOL";
+                }
+
+                const calGrid = document.getElementById('daily-week-calendar');
+                if (calGrid) {
+                    calGrid.innerHTML = '';
+                    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                    for (let i = 6; i >= 0; i--) {
+                        const d = new Date(Date.now() - i * 86400000);
+                        const dStr = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`;
+                        const isDayDone = !!(data.history && data.history[dStr]);
+                        const isCurrent = dStr === today;
+                        const dayCol = document.createElement('div');
+                        dayCol.className = `p-1.5 rounded-xl border flex flex-col items-center gap-1 ${
+                            isDayDone
+                                ? 'bg-emerald-950/70 border-emerald-500/40 text-emerald-300'
+                                : isCurrent
+                                ? 'bg-amber-950/60 border-amber-500/40 text-amber-300'
+                                : 'bg-slate-900/60 border-slate-800 text-slate-500'
+                        }`;
+                        dayCol.innerHTML = `
+                            <span class="text-[9px] font-bold uppercase">${dayNames[d.getUTCDay()]}</span>
+                            <span class="text-[11px] font-mono font-bold">${d.getUTCDate()}</span>
+                            <i class="fa-solid ${isDayDone ? 'fa-check text-emerald-400' : isCurrent ? 'fa-fire text-amber-400 animate-pulse' : 'fa-circle text-slate-700 text-[6px]'}"></i>
+                        `;
+                        dayCol.style.cursor = 'pointer';
+                        dayCol.title = `Click to infiltrate protocol for ${dStr}`;
+                        dayCol.onclick = () => {
+                            const modal = document.getElementById('modal-daily-hack');
+                            if (modal) modal.classList.add('hidden');
+                            if (window.game) {
+                                window.game.loadDailyLevel(dStr);
+                                if (audio && audio.playWarp) audio.playWarp();
+                                if (window.game.particles) {
+                                    const cellSize = window.game.canvas.width / (window.game.grid.length || GRID_SIZE);
+                                    const cx = (window.game.lolo.renderX + 0.5) * cellSize;
+                                    const cy = (window.game.lolo.renderY + 0.5) * cellSize;
+                                    window.game.particles.floatingText(window.game.canvas.width / 2, 45, `DAILY [${dStr}] LOADED`, '#f59e0b');
+                                    window.game.particles.ripple(cx, cy, '#f59e0b');
+                                }
+                            }
+                        };
+                        calGrid.appendChild(dayCol);
+                    }
+                }
+            }
+        }
+
+        /* Cyber Achievement Matrix Engine */
+        class CyberAchievementEngine {
+            constructor() {
+                this.achievements = [
+                    // Category: Progression
+                    { id: 'first_clear', cat: 'progression', icon: 'fa-shield-halved', title: 'First Infiltration', desc: 'Clear Stage 1 of the Campaign.', reward: 'Cyber Novice' },
+                    { id: 'sector_10', cat: 'progression', icon: 'fa-microchip', title: 'Sub-Surface Vanguard', desc: 'Clear Stage 10 of the Campaign.', reward: 'Grid Infiltrator' },
+                    { id: 'sector_25', cat: 'progression', icon: 'fa-network-wired', title: 'Optical Operative', desc: 'Clear Stage 25 of the Campaign.', reward: 'Optical Specialist' },
+                    { id: 'sector_50', cat: 'progression', icon: 'fa-server', title: 'Matrix Penetrator', desc: 'Clear Stage 50 of the Campaign.', reward: 'Matrix Veteran' },
+                    { id: 'sector_75', cat: 'progression', icon: 'fa-satellite-dish', title: 'Cyber Commando', desc: 'Clear Stage 75 of the Campaign.', reward: 'Cyber Commando' },
+                    { id: 'sector_100', cat: 'progression', icon: 'fa-crown', title: 'Apex Grandmaster', desc: 'Complete all 100 Campaign Stages.', reward: 'Grandmaster' },
+
+                    // Category: Mastery & Par
+                    { id: 'stars_25', cat: 'mastery', icon: 'fa-star', title: 'Gold Collector', desc: 'Earn 25 Gold Stars in the Campaign.', reward: 'Star Hunter' },
+                    { id: 'stars_50', cat: 'mastery', icon: 'fa-award', title: 'Gold Connoisseur', desc: 'Earn 50 Gold Stars in the Campaign.', reward: 'Star Virtuoso' },
+                    { id: 'stars_100', cat: 'mastery', icon: 'fa-medal', title: 'Star Specialist', desc: 'Earn 100 Gold Stars in the Campaign.', reward: 'Sector Master' },
+                    { id: 'stars_300', cat: 'mastery', icon: 'fa-gem', title: 'Grid Perfectionist', desc: 'Earn all 300 Stars across 100 Stages.', reward: 'Grid Deity' },
+                    { id: 'par_beat', cat: 'mastery', icon: 'fa-bolt', title: 'Zero-Waste Virtuoso', desc: 'Clear any stage matching or beating the A* par move estimate.', reward: 'Math Wizard' },
+                    { id: 'perfect_10', cat: 'mastery', icon: 'fa-chess-knight', title: 'Optimal Strategist', desc: 'Earn 3-Star Gold ratings on 10 stages.', reward: 'Grand Tactician' },
+
+                    // Category: Tactics & Combat
+                    { id: 'laser_weaver', cat: 'tactics', icon: 'fa-arrows-split-up-and-left', title: 'Laser Weaver', desc: 'Deflect an active laser through a Reflector Prism.', reward: 'Optics Master' },
+                    { id: 'laser_multi', cat: 'tactics', icon: 'fa-burst', title: 'Prism Overdrive', desc: 'Deflect a single laser beam 3 or more times.', reward: 'Beam Architect' },
+                    { id: 'bomb_maestro', cat: 'tactics', icon: 'fa-bomb', title: 'Demolition Specialist', desc: 'Eliminate a hostile or cracked wall with a Plasma Bomb.', reward: 'Bomb Tech' },
+                    { id: 'egg_ferry', cat: 'tactics', icon: 'fa-egg', title: 'Bio-Egg Navigator', desc: 'Push an Egg into plasma water to bridge a crossing.', reward: 'Canal Pilot' },
+                    { id: 'leeper_trap', cat: 'tactics', icon: 'fa-lock', title: 'EMP Neutralizer', desc: 'Lure and permanently freeze an EMP Nanobot.', reward: 'Nanite Trapper' },
+                    { id: 'pacifist_ghost', cat: 'tactics', icon: 'fa-ghost', title: 'Ghost Infiltrator', desc: 'Clear a stage with active enemies without firing blaster shots.', reward: 'Silent Phantom' },
+                    { id: 'maglev_slide', cat: 'tactics', icon: 'fa-snowflake', title: 'Frictionless Glide', desc: 'Slide a Polar Magnetic block 4+ tiles on Mag-Lev tracks.', reward: 'Velocity Ace' },
+
+                    // Category: Meta & Modes
+                    { id: 'daily_first', cat: 'meta', icon: 'fa-fire', title: 'Daily Hacker', desc: 'Successfully complete a Daily Hack challenge.', reward: 'Daily Operative' },
+                    { id: 'daily_streak_3', cat: 'meta', icon: 'fa-calendar-check', title: 'Cyber Consistent', desc: 'Maintain a 3-day Daily Hack streak.', reward: 'Syndicate Regular' },
+                    { id: 'daily_streak_7', cat: 'meta', icon: 'fa-fire-flame-curved', title: 'Syndicate Breaker', desc: 'Maintain a 7-day Daily Hack streak.', reward: 'Syndicate Nemesis' },
+                    { id: 'fast_fingers', cat: 'meta', icon: 'fa-stopwatch-20', title: 'Speed Demon', desc: 'Clear any stage in under 5.0 seconds.', reward: 'Speed Demon' },
+                    { id: 'speedrun_mode', cat: 'meta', icon: 'fa-stopwatch', title: 'Quantum Sprinter', desc: 'Activate and clear a stage with Speedrun Timer enabled.', reward: 'Chronos' },
+                    { id: 'level_architect', cat: 'meta', icon: 'fa-code', title: 'Cyber Architect', desc: 'Save or test a custom stage in the Level Editor.', reward: 'World Builder' },
+                    { id: 'quantum_rewind', cat: 'meta', icon: 'fa-rotate-left', title: 'Timeline Architect', desc: 'Use the Undo (Z) function 15 times.', reward: 'Time Bender' },
+                    { id: 'theme_explorer', cat: 'meta', icon: 'fa-palette', title: 'Aesthetic Hacker', desc: 'Switch and explore different Cyberpunk color themes.', reward: 'Style Specialist' },
+                    { id: 'synth_dj', cat: 'meta', icon: 'fa-music', title: 'Synthwave Maestro', desc: 'Switch through the synthesized Web Audio BGM tracks.', reward: 'Sound Architect' }
+                ];
+
+                this.unlocked = this.loadUnlocked();
+                this.activeFilter = 'all';
+                this.undoCount = 0;
+            }
+
+            loadUnlocked() {
+                try {
+                    const raw = localStorage.getItem('lolo_cyber_achievements');
+                    if (raw) return JSON.parse(raw);
+                } catch (e) {}
+                return {};
+            }
+
+            saveUnlocked() {
+                try {
+                    localStorage.setItem('lolo_cyber_achievements', JSON.stringify(this.unlocked));
+                } catch (e) {}
+            }
+
+            isUnlocked(id) {
+                return !!this.unlocked[id];
+            }
+
+            unlock(id) {
+                if (this.isUnlocked(id)) return;
+                const ach = this.achievements.find(a => a.id === id);
+                if (!ach) return;
+
+                this.unlocked[id] = Date.now();
+                this.saveUnlocked();
+
+                if (typeof audio !== 'undefined' && audio && audio.playAchievement) {
+                    audio.playAchievement();
+                }
+
+                this.showToast(ach);
+                this.updateBadges();
+            }
+
+            showToast(ach) {
+                const container = document.getElementById('achievement-toast-container');
+                if (!container) return;
+
+                const toast = document.createElement('div');
+                toast.className = 'cyber-glass p-3.5 rounded-2xl border border-emerald-500/60 shadow-2xl flex items-center gap-3 toast-animate-in pointer-events-auto bg-slate-950/95';
+                toast.innerHTML = `
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white text-lg shadow-md shadow-emerald-500/30 border border-emerald-300/50 flex-shrink-0">
+                        <i class="fa-solid ${ach.icon} text-yellow-300"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-[9px] text-emerald-400 font-bold orbitron-font uppercase tracking-wider">TROPHY UNLOCKED!</span>
+                        </div>
+                        <h4 class="text-xs font-bold text-white orbitron-font truncate">${ach.title}</h4>
+                        <p class="text-[11px] text-slate-300 font-sans truncate">${ach.desc}</p>
+                    </div>
+                `;
+
+                container.appendChild(toast);
+
+                setTimeout(() => {
+                    if (toast.classList) {
+                        toast.classList.remove('toast-animate-in');
+                        toast.classList.add('toast-animate-out');
+                    }
+                    setTimeout(() => {
+                        if (typeof toast.remove === 'function') {
+                            toast.remove();
+                        } else if (toast.parentNode) {
+                            toast.parentNode.removeChild(toast);
+                        }
+                    }, 450);
+                }, 4000);
+            }
+
+            showCustomToast(icon, badge, title, desc, gradient = 'from-amber-600 to-orange-500', border = 'border-amber-500/60') {
+                const container = document.getElementById('achievement-toast-container');
+                if (!container) return;
+
+                const toast = document.createElement('div');
+                toast.className = `cyber-glass p-3.5 rounded-2xl border ${border} shadow-2xl flex items-center gap-3 toast-animate-in pointer-events-auto bg-slate-950/95`;
+                toast.innerHTML = `
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr ${gradient} flex items-center justify-center text-white text-lg shadow-md shadow-amber-500/30 border border-amber-300/50 flex-shrink-0">
+                        <i class="fa-solid ${icon} text-yellow-300"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-[9px] text-amber-400 font-bold orbitron-font uppercase tracking-wider">${badge}</span>
+                        </div>
+                        <h4 class="text-xs font-bold text-white orbitron-font truncate">${title}</h4>
+                        <p class="text-[11px] text-slate-300 font-sans truncate">${desc}</p>
+                    </div>
+                `;
+
+                container.appendChild(toast);
+
+                setTimeout(() => {
+                    if (toast.classList) {
+                        toast.classList.remove('toast-animate-in');
+                        toast.classList.add('toast-animate-out');
+                    }
+                    setTimeout(() => {
+                        if (typeof toast.remove === 'function') {
+                            toast.remove();
+                        } else if (toast.parentNode) {
+                            toast.parentNode.removeChild(toast);
+                        }
+                    }, 450);
+                }, 4000);
+            }
+
+            updateBadges() {
+                const count = Object.keys(this.unlocked).length;
+                const total = this.achievements.length;
+                const pct = Math.round((count / total) * 100);
+
+                const badge = document.getElementById('header-achievements-badge');
+                if (badge) badge.innerText = `${count}/${total}`;
+
+                const pill = document.getElementById('achievements-progress-pill');
+                if (pill) pill.innerText = `${count} / ${total} (${pct}%)`;
+
+                const bar = document.getElementById('achievements-progress-bar');
+                if (bar) bar.style.width = `${pct}%`;
+            }
+
+            updateHeaderBadge() {
+                this.updateBadges();
+            }
+
+            renderGrid(filterCat = null) {
+                if (filterCat) this.activeFilter = filterCat;
+                const listEl = document.getElementById('grid-achievements-list');
+                if (!listEl) return;
+
+                listEl.innerHTML = '';
+                const filtered = this.activeFilter === 'all'
+                    ? this.achievements
+                    : this.achievements.filter(a => a.cat === this.activeFilter);
+
+                filtered.forEach(ach => {
+                    const isDone = this.isUnlocked(ach.id);
+                    const timeStr = isDone ? new Date(this.unlocked[ach.id]).toLocaleDateString() : 'Locked';
+
+                    const card = document.createElement('div');
+                    card.className = `p-3 rounded-2xl border flex items-center gap-3 transition-all ${
+                        isDone
+                            ? 'bg-slate-900/90 border-emerald-500/40 shadow-md shadow-emerald-500/10'
+                            : 'bg-slate-950/70 border-slate-800/80 opacity-60'
+                    }`;
+
+                    card.innerHTML = `
+                        <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0 ${
+                            isDone
+                                ? 'bg-gradient-to-tr from-emerald-600 to-teal-500 text-white shadow-md shadow-emerald-500/30 border border-emerald-300/40'
+                                : 'bg-slate-900 text-slate-600 border border-slate-800'
+                        }">
+                            <i class="fa-solid ${ach.icon} ${isDone ? 'text-yellow-300' : 'text-slate-600'}"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between">
+                                <h4 class="text-xs font-bold ${isDone ? 'text-emerald-300' : 'text-slate-400'} orbitron-font truncate">${ach.title}</h4>
+                                <span class="text-[9px] font-mono ${isDone ? 'text-emerald-400' : 'text-slate-600'}">${timeStr}</span>
+                            </div>
+                            <p class="text-[11px] text-slate-300 leading-tight mt-0.5">${ach.desc}</p>
+                            <span class="text-[9px] ${isDone ? 'text-amber-300' : 'text-slate-600'} font-mono block mt-1">Title: [${ach.reward}]</span>
+                        </div>
+                    `;
+
+                    listEl.appendChild(card);
+                });
+            }
+        }
+
+        const achievements = new CyberAchievementEngine();
+        window.achievements = achievements;
+        window.DailyHackManager = DailyHackManager;
 
         function setGridSize(size) {
             const normalized = Number(size) || GRID_SIZE;
@@ -3687,11 +4463,23 @@
                 this.defaultBlockSquash = new SquashStretchRig();
                 this.atmosphere = new AtmosphereEngine();
 
-                this.currentMode = MODE_CAMPAIGN; // 'campaign' | 'random'
+                this.currentMode = MODE_CAMPAIGN; // 'campaign' | 'random' | 'daily'
                 this.currentLevelIndex = 0;
                 this.activeLevelData = null;
                 this.randomDifficulty = DIFFICULTY_MEDIUM;
                 this.randomSeed = `${RANDOM_SEED_PREFIX}7749`;
+                this.dailyDate = '';
+
+                this.speedrunEnabled = false;
+                this.stageStartTime = Date.now();
+                this.campaignSpeedrunStart = null;
+                this.shotsFiredInStage = 0;
+                this.laserDeflectCount = 0;
+                this.maxMaglevDistance = 0;
+                this.pushStrainTimer = 0;
+                this.lastMoveTick = 0;
+                this.viewedBriefings = {};
+                this.briefingInterval = null;
 
                 this.unlockedLevel = 1;
                 this.movesCount = 0;
@@ -3735,6 +4523,305 @@
                 this.currentLevelIndex = requestedIndex;
                 this.activeLevelData = levelData;
                 this.initLevelFromData(levelData);
+                this.checkSectorBriefingTrigger(requestedIndex + 1);
+            }
+
+            loadDailyLevel(dateStr = null) {
+                const today = dateStr || DailyHackManager.getTodayUTCString();
+                const seed = DailyHackManager.getDailySeed(today);
+                const gridSize = DailyHackManager.getDailyGridSize(today);
+                const levelData = LoloRandomGenerator.generate(DIFFICULTY_MEDIUM, seed, gridSize);
+                if (!levelData) return;
+
+                this.currentMode = MODE_DAILY;
+                this.dailyDate = today;
+                this.randomDifficulty = DIFFICULTY_MEDIUM;
+                this.randomSeed = seed;
+                this.activeLevelData = levelData;
+                this.initLevelFromData(levelData);
+
+                // Highlight canvas wrapper with visual amber flash
+                const wrapper = document.getElementById('canvas-container-wrapper');
+                if (wrapper) {
+                    wrapper.classList.add('ring-4', 'ring-amber-500', 'shadow-2xl', 'shadow-amber-500/40');
+                    setTimeout(() => {
+                        wrapper.classList.remove('ring-4', 'ring-amber-500', 'shadow-2xl', 'shadow-amber-500/40');
+                    }, 1000);
+                }
+
+                // Show prominent toast notification banner
+                if (typeof achievements !== 'undefined' && achievements && typeof achievements.showCustomToast === 'function') {
+                    achievements.showCustomToast(
+                        'fa-fire',
+                        'DAILY PROTOCOL INFILTRATED',
+                        `Chamber Seed: ${seed}`,
+                        `Grid Scale: ${gridSize}×${gridSize} • Date: ${today}`,
+                        'from-amber-600 to-orange-500',
+                        'border-amber-500/60'
+                    );
+                }
+
+                // Burst particles on canvas
+                if (this.particles && this.canvas && this.lolo) {
+                    const cellSize = this.canvas.width / (this.grid.length || GRID_SIZE);
+                    const cx = (this.lolo.renderX + 0.5) * cellSize;
+                    const cy = (this.lolo.renderY + 0.5) * cellSize;
+                    this.particles.floatingText(this.canvas.width / 2, 45, `DAILY PROTOCOL: [${seed}]`, '#f59e0b');
+                    this.particles.ripple(cx, cy, '#f59e0b', 70);
+                }
+            }
+
+            checkSectorBriefingTrigger(stageNum) {
+                // Sector briefings are available on-demand via the Tactical Dossier "Sector Briefing" button
+            }
+
+            showSectorBriefing(stageNum = null) {
+                const num = stageNum || (this.currentLevelIndex + 1);
+                const isDaily = this.currentMode === 'daily';
+                const isRandom = this.currentMode === 'random';
+
+                let tierTag = 'SECURITY TIER 1 • SECTOR ALPHA';
+                let sectorTitle = `STAGE ${num}: INFILTRATION PERIMETER`;
+                let threatRating = 'STANDARD';
+                let mechanicsSummary = 'Push-Blocks • Laser Avoidance • Core Extraction';
+                let briefingText = '';
+
+                // Analyze active chamber elements
+                const enemyCounts = {};
+                (this.enemies || []).forEach(e => {
+                    if (!e.isVaporized) {
+                        const t = e.type || 'sentry';
+                        enemyCounts[t] = (enemyCounts[t] || 0) + 1;
+                    }
+                });
+
+                const enemyNames = {
+                    'snake': 'Serpent Drone',
+                    'medusa': 'Cardinal Medusa Sentry',
+                    'medusa_diag': 'Diagonal Medusa-X',
+                    'medusa_omni': 'Omni 360° Sentry',
+                    'don_medusa': 'Don Medusa Patrol',
+                    'skull': 'Slumbering Skull Mech',
+                    'alma': 'Alma Buzzsaw Chaser',
+                    'rocky': 'Rocky Bruiser',
+                    'leeper': 'EMP Leeper Nanobot',
+                    'gol': 'Cyber Dragon Gol',
+                    'turret': 'Multi-Vector Turret'
+                };
+
+                const enemyThreatList = Object.keys(enemyCounts).map(t => `${enemyCounts[t]}× ${enemyNames[t] || t.toUpperCase()}`).join(', ');
+
+                // Analyze tiles & blocks
+                let hasWater = false, hasIce = false, hasPortals = false, hasPrisms = false, hasBombs = false, hasHolo = false;
+                if (this.grid) {
+                    for (let r = 0; r < this.grid.length; r++) {
+                        for (let c = 0; c < this.grid[r].length; c++) {
+                            const tile = this.grid[r][c];
+                            if (tile === TILE_WATER) hasWater = true;
+                            if (tile === TILE_ICE) hasIce = true;
+                            if (tile === TILE_PORTAL_A || tile === TILE_PORTAL_B) hasPortals = true;
+                        }
+                    }
+                }
+                (this.blocks || []).forEach(b => {
+                    if (b.type === BLOCK_REFLECTOR) hasPrisms = true;
+                    if (b.type === BLOCK_BOMB) hasBombs = true;
+                    if (b.type === BLOCK_HOLO) hasHolo = true;
+                });
+
+                const specialMechanics = [];
+                if (this.blocks && this.blocks.length > 0) specialMechanics.push(`${this.blocks.length}× Alloy Push-Blocks`);
+                if (hasPrisms) specialMechanics.push('90° Optical Laser Prisms');
+                if (hasWater) specialMechanics.push('Plasma Coolant Streams');
+                if (hasIce) specialMechanics.push('Frictionless Mag-Lev Ice');
+                if (hasPortals) specialMechanics.push('Quantum Warp Portals');
+                if (hasBombs) specialMechanics.push('Plasma Detonator Bombs');
+                if (hasHolo) specialMechanics.push('Phasing Holo-Barriers');
+                if (specialMechanics.length === 0) specialMechanics.push('Standard Security Floor');
+
+                mechanicsSummary = specialMechanics.join(' • ');
+
+                if (isDaily) {
+                    const todayStr = this.dailyDate || DailyHackManager.getTodayUTCString();
+                    tierTag = `DAILY PROTOCOL • UTC ${todayStr}`;
+                    sectorTitle = `SYNCHRONIZED CHAMBER: ${this.randomSeed || 'DAILY MATRIX'}`;
+                    threatRating = (this.enemies && this.enemies.length >= 4) ? 'SEVERE' : (this.enemies && this.enemies.length >= 2 ? 'ELEVATED' : 'STANDARD');
+                    briefingText = `Operative Lolo, intelligence telemetry for today's globally synchronized Daily Protocol [${this.randomSeed || 'DAILY'}]. `
+                        + `This adaptive ${(this.grid && this.grid.length) || 11}×${(this.grid && this.grid.length) || 11} chamber is armed with ${enemyThreatList || 'Automated Defenses'} and ${mechanicsSummary}. `
+                        + `Extract all Cyber Cores to release the vault payload and secure today's streak verification token.`;
+                } else if (isRandom) {
+                    const diffName = (this.randomDifficulty || 'MEDIUM').toUpperCase();
+                    tierTag = `RANDOM LAB SIMULATION • ${diffName} DIFFICULTY`;
+                    sectorTitle = `SYNTHETIC PROTOCOL [${this.randomSeed || 'PROTOTYPE'}]`;
+                    threatRating = diffName === 'MASTER' ? 'APEX LETHAL' : (diffName === 'HARD' ? 'HIGH' : 'STANDARD');
+                    briefingText = `Procedural simulation chamber initialized. Threat telemetry reports: ${enemyThreatList || 'Minimal Hostiles'}. `
+                        + `Environmental configuration: ${mechanicsSummary}. Formulate your move sequence, shield laser sightlines, and decrypt the extraction gateway.`;
+                } else {
+                    // Campaign Stage (1 to 100)
+                    const stageNames = [
+                        // Sector 1: 1-10
+                        "INFILTRATION PERIMETER", "CARDINAL CROSSFIRE", "SERPENT EGG FERRY", "OPTIC SHIELDING CORRIDOR", "DOUBLE ALLOY BARRIER",
+                        "LEEPER INTERCEPT MATRIX", "PLASMA WATERWAY PASS", "QUAD SENTRY ALLEY", "TACTICAL REPOSITIONING", "SECTOR ALPHA FINALE",
+                        // Sector 2: 11-20
+                        "COOLANT CANAL INGRESS", "MAG-LEV ICE SLIPSTREAM", "SUB-ZERO LABYRINTH", "DUAL SERPENT BRIDGING", "GLACIAL RECOIL ARENA",
+                        "TURRET FAN FIREWALL", "CHILLING PATROL VECTOR", "FROZEN PRISM ARRAY", "DEEP CANAL CROSSING", "SECTOR BETA FINALE",
+                        // Sector 3: 21-40
+                        "PRISM OPTICAL REFRACTION", "DIAGONAL MEDUSA SENTRY", "HEXAGONAL DEFLECTION LAB", "MIRROR MATRIX CROSSING", "LASER PINBALL CORRIDOR",
+                        "ANGLE OF INCIDENCE", "SPLIT-BEAM PERIMETER", "PRISM MAZE RUNNER", "TWIN SENTRY REFLECTION", "SECTOR GAMMA MIDPOINT",
+                        "OPTICAL TRAP ENCLOSURE", "OCTAGONAL LASER WEB", "REFRACTIVE PUZZLE LAB", "HIGH-FREQUENCY INTERCEPT", "MIRRORED GAUNTLET",
+                        "LASER WEAPONS TESTING", "CORNER DEFLECTOR WING", "PRISM RUNNER ESCAPE", "CONVERGENT BEAM MATRIX", "SECTOR GAMMA FINALE",
+                        // Sector 4: 41-60
+                        "DON MEDUSA PATROL ROUTE", "MOBILE SENTINEL GAUNTLET", "PLASMA BOMB DETONATION", "CRACKED BULKHEAD BREACH", "TIMED DEMOLITION RUN",
+                        "INTERSECTING PATROLS", "HOLO-BARRIER PHASING", "MOBILE CROSSFIRE LAB", "BLAST RADIUS PROTOCOL", "SECTOR DELTA MIDPOINT",
+                        "BOMB CHAIN REACTION", "TRIPLE PATROL CORRIDOR", "HOLO-SHIELD DECEPTION", "HEAVY ARTILLERY ROW", "SPEED DEMOLITION RUN",
+                        "DYNAMIC SENTRY CHASE", "TACTICAL CONFINEMENT", "BREACH & EXTRACT", "PATROL CONVERGENCE", "SECTOR DELTA FINALE",
+                        // Sector 5: 61-80
+                        "QUANTUM PORTAL ALPHA", "WARP MATRIX ENTRANCE", "AWAKENING SKULL VAULT", "INSTANT ACCELERATION CHASE", "DUAL WORMHOLE ROUTE",
+                        "PORTAL FLANKING ACTION", "SKULL AMBUSH CHAMBER", "WORMHOLE RELAY GAUNTLET", "SLEEPING DRAGON LAIR", "SECTOR EPSILON MIDPOINT",
+                        "CHRONO-WARP ESCAPE", "MULTI-TURRET CROSSROADS", "SKULL HORDE CONTAINMENT", "WORMHOLE SOKOBAN WING", "RAPID EXTRACTION DRILL",
+                        "QUANTUM MAZE DISRUPTION", "SLEEP-STATE INTERCEPT", "PORTAL INTERLOCK HUB", "WARP GAUNTLET RUN", "SECTOR EPSILON FINALE",
+                        // Sector 6: 81-100
+                        "OMNI SENTRY INGRESS", "360-DEGREE CROSSFIRE", "HYDRAULIC GOLEM SANCTUM", "THE BRUISER GAUNTLET", "GRANDMASTER APEX LAB",
+                        "OCTA-BEAM NIGHTMARE", "GOLEM PUSH CRUCIBLE", "THE OVERLORD BARRICADE", "CYBER MATRIX APEX", "SECTOR OMEGA MIDPOINT",
+                        "ULTIMATE SENTRY NEXUS", "THE 19x19 COLOSSEUM", "TITANIC DEFLECTION LAB", "CYBER DRAGON ASCENSION", "CHAOS VECTOR OVERLOAD",
+                        "THE MASTER PARADOX", "APEX SOKOBAN CITADEL", "THE GAUNTLET OF CHAMPIONS", "CORE OVERLORD ANTECHAMBER", "THE FINAL SYNDICATE MAINFRAME"
+                    ];
+
+                    const sName = stageNames[num - 1] || `CYBER PUZZLE CHAMBER ${num}`;
+                    const sectorNum = num <= 10 ? 1 : num <= 20 ? 2 : num <= 40 ? 3 : num <= 60 ? 4 : num <= 80 ? 5 : 6;
+                    const sectorCode = ['ALPHA', 'BETA', 'GAMMA', 'DELTA', 'EPSILON', 'OMEGA'][sectorNum - 1];
+
+                    tierTag = `SECURITY TIER ${sectorNum} • SECTOR ${sectorCode}`;
+                    sectorTitle = `STAGE ${num}: ${sName}`;
+
+                    const threatLevels = ['STANDARD', 'MODERATE', 'ELEVATED', 'HIGH', 'SEVERE', 'APEX MAXIMUM'];
+                    threatRating = threatLevels[Math.min(threatLevels.length - 1, Math.floor((num - 1) / 18))];
+
+                    // Generate stage-specific directive
+                    let directive = '';
+                    if (enemyCounts['medusa'] || enemyCounts['medusa_diag'] || enemyCounts['medusa_omni'] || enemyCounts['turret']) {
+                        directive += `Active laser sentries have line-of-sight locks. Manually reposition push-blocks into firing lanes before stepping into exposed corridors. `;
+                    }
+                    if (enemyCounts['don_medusa']) {
+                        directive += `Mobile Don Medusa sentinels are patrolling on continuous loops. Time your movements to cross corridors while their back is turned. `;
+                    }
+                    if (enemyCounts['skull'] || enemyCounts['gol']) {
+                        directive += `Slumbering hostiles in this chamber will awaken instantly when the final core is collected. Ensure a clear pathway to the exit door before taking the last core. `;
+                    }
+                    if (enemyCounts['snake']) {
+                        directive += `Serpent drones can be shot to form Bio-Eggs, which can be shoved into plasma channels or used as temporary barriers. `;
+                    }
+                    if (enemyCounts['leeper']) {
+                        directive += `EMP Leeper nanobots will follow your position and permanently lock down upon contact. Lead them to an unneeded tile so they do not block critical routes. `;
+                    }
+                    if (enemyCounts['alma'] || enemyCounts['rocky']) {
+                        directive += `Aggressive chasers are actively hunting. Use obstructions and quick turns to outmaneuver them. `;
+                    }
+                    if (hasPrisms) {
+                        directive += `Optical 90° prisms redirect laser beams. Align them to shield your transit corridors or redirect fire. `;
+                    }
+                    if (hasWater && !enemyCounts['snake']) {
+                        directive += `Navigate carefully around superheated plasma waterways. `;
+                    }
+                    if (hasIce) {
+                        directive += `Mag-Lev ice tracks will accelerate pushed blocks until they impact a solid obstruction. `;
+                    }
+                    if (hasPortals) {
+                        directive += `Step into Quantum Portals to teleport between Alpha and Beta node positions. `;
+                    }
+                    if (hasBombs) {
+                        directive += `Detonate plasma bombs to shatter cracked security barriers. `;
+                    }
+
+                    if (!directive) {
+                        directive = `Extract all Cyber Energy Cores in this chamber to decrypt the Data Vault, retrieve the Great Jewel, and reach the exit portal.`;
+                    }
+
+                    briefingText = `Operative Lolo, tactical dossier for Stage ${num} [${sName}]. `
+                        + `Hostiles detected: ${enemyThreatList || 'None (Automated Puzzle Room)'}. `
+                        + `Chamber modules: ${mechanicsSummary}. `
+                        + `Tactical directive: ${directive}`;
+                }
+
+                const modal = document.getElementById('modal-sector-briefing');
+                if (!modal) return;
+
+                const tagEl = document.getElementById('briefing-sector-tag');
+                if (tagEl) tagEl.innerText = tierTag;
+
+                const titleEl = document.getElementById('briefing-sector-title');
+                if (titleEl) titleEl.innerText = sectorTitle;
+
+                const threatEl = document.getElementById('briefing-threat-level');
+                if (threatEl) threatEl.innerText = `THREAT: ${threatRating}`;
+
+                const mechEl = document.getElementById('briefing-mechanics-summary');
+                if (mechEl) mechEl.innerText = mechanicsSummary;
+
+                const textEl = document.getElementById('briefing-terminal-text');
+                if (textEl) {
+                    textEl.innerText = '';
+                    let charIndex = 0;
+                    const fullText = briefingText;
+                    if (this.briefingInterval) clearInterval(this.briefingInterval);
+                    this.briefingInterval = setInterval(() => {
+                        if (charIndex < fullText.length) {
+                            textEl.innerText += fullText[charIndex];
+                            if (charIndex % 3 === 0 && typeof audio !== 'undefined' && audio && audio.playTerminalBeep) {
+                                audio.playTerminalBeep();
+                            }
+                            charIndex++;
+                        } else {
+                            clearInterval(this.briefingInterval);
+                            this.briefingInterval = null;
+                        }
+                    }, 14);
+                }
+
+                showModal(modal);
+            }
+
+            isLaserBlocker(cx, cy, vec) {
+                if (!this.grid || !this.grid[cy]) return true;
+                const tile = this.grid[cy][cx];
+                if (tile === TILE_WALL || tile === TILE_TREE || tile === TILE_WATER || tile === TILE_CHEST_CLOSED || tile === TILE_CHEST_OPENED || tile === TILE_DOOR_CLOSED || tile === TILE_CRACKED_WALL) {
+                    return true;
+                }
+                const block = this.getBlockAt(cx, cy);
+                if (block && block.type !== BLOCK_HOLO) {
+                    return true;
+                }
+                const otherEnemy = this.getEnemyAt(cx, cy);
+                if (otherEnemy && !otherEnemy.isVaporized) {
+                    return true;
+                }
+                return false;
+            }
+
+            isLoloInDanger() {
+                if (this.isDead) return false;
+                for (const e of this.enemies) {
+                    if (e.isEgg || e.isVaporized) continue;
+                    if (e.type === 'leeper' || e.type === 'skull' || e.type === 'alma' || e.type === 'rocky') {
+                        const dist = Math.hypot(e.x - this.lolo.x, e.y - this.lolo.y);
+                        if (dist <= 2.2) return true;
+                    }
+                    if (e.type === 'medusa' || e.type === 'medusa_diag' || e.type === 'medusa_omni' || e.type === 'don_medusa' || e.type === 'turret' || (e.type === 'gol' && this.countRemainingHearts() === 0)) {
+                        const vectors = getEnemyDirectionVectors(e);
+                        for (const vec of vectors) {
+                            let cx = e.x + vec.dx;
+                            let cy = e.y + vec.dy;
+                            const bSize = this.grid ? this.grid.length : GRID_SIZE;
+                            while (cx >= 0 && cx < bSize && cy >= 0 && cy < bSize) {
+                                if (cx === this.lolo.x && cy === this.lolo.y) return true;
+                                if (this.isLaserBlocker(cx, cy, vec)) break;
+                                cx += vec.dx;
+                                cy += vec.dy;
+                            }
+                        }
+                    }
+                }
+                return false;
             }
 
             updatePrevNextButtons() {
@@ -3821,12 +4908,18 @@
                 this.projectiles = [];
                 this.undoStack = [];
                 this.movesCount = 0;
+                this.shotsFiredInStage = 0;
+                this.laserDeflectCount = 0;
+                this.pushStrainTimer = 0;
+                this.lastMoveTick = this.animTick;
 
                 this.isDead = false;
+                this.isStageCompleted = false;
                 this.killer = null;
                 this.stageStartTime = Date.now();
 
                 this.updateHUD();
+                this.updatePrevNextButtons();
             }
 
             saveSnapshot() {
@@ -3842,7 +4935,7 @@
             }
 
             undo() {
-                if (this.isDead) return;
+                if (this.isDead || this.isStageCompleted) return;
                 if (this.undoStack.length === 0) return;
                 const state = this.undoStack.pop();
                 this.grid = state.grid.map(row => [...row]);
@@ -3851,6 +4944,13 @@
                 this.enemies = state.enemies.map(e => ({ ...e }));
                 this.movesCount = state.movesCount;
                 this.updateHUD();
+
+                if (typeof achievements !== 'undefined' && achievements) {
+                    achievements.undoCount = (achievements.undoCount || 0) + 1;
+                    if (achievements.undoCount >= 15) {
+                        achievements.unlock('quantum_rewind');
+                    }
+                }
             }
 
             countRemainingHearts() {
@@ -3885,6 +4985,8 @@
                     if (this.currentMode === MODE_RANDOM) {
                         const dShort = this.randomDifficulty ? this.randomDifficulty.charAt(0).toUpperCase() : 'R';
                         lvlNumEl.innerText = `RND-${dShort}`;
+                    } else if (this.currentMode === MODE_DAILY) {
+                        lvlNumEl.innerText = 'DAILY';
                     } else {
                         lvlNumEl.innerText = this.currentLevelIndex + 1;
                     }
@@ -3898,7 +5000,9 @@
                 const movesEl = document.getElementById('hud-moves');
                 if (movesEl) movesEl.innerText = this.movesCount;
 
-                const levelKey = this.currentMode === 'campaign' ? `campaign_${this.currentLevelIndex + 1}` : `random_${this.randomSeed}`;
+                const levelKey = this.currentMode === 'campaign'
+                    ? `campaign_${this.currentLevelIndex + 1}`
+                    : (this.currentMode === MODE_DAILY ? `daily_${this.dailyDate}` : `random_${this.randomSeed}`);
                 const stats = typeof getLevelStats === 'function' ? getLevelStats(levelKey) : { stars: 0 };
                 const hudStarsEl = document.getElementById('hud-stars');
                 if (hudStarsEl) {
@@ -3912,15 +5016,23 @@
                 // Update Left Tactical Intel Panel
                 const modeBadge = document.getElementById('intel-mode-badge');
                 if (modeBadge) {
-                    modeBadge.innerText = (this.currentMode === MODE_RANDOM) ? 'RANDOM PROTOCOL' : 'CAMPAIGN';
-                    modeBadge.className = (this.currentMode === MODE_RANDOM)
-                        ? 'bg-purple-950 text-purple-300 border border-purple-500/40 text-[10px] font-bold px-2 py-0.5 rounded-md orbitron-font'
-                        : 'bg-cyan-950 text-cyan-300 border border-cyan-500/40 text-[10px] font-bold px-2 py-0.5 rounded-md orbitron-font';
+                    if (this.currentMode === MODE_DAILY) {
+                        modeBadge.innerText = 'DAILY PROTOCOL';
+                        modeBadge.className = 'bg-amber-950 text-amber-300 border border-amber-500/40 text-[10px] font-bold px-2 py-0.5 rounded-md orbitron-font';
+                    } else if (this.currentMode === MODE_RANDOM) {
+                        modeBadge.innerText = 'RANDOM PROTOCOL';
+                        modeBadge.className = 'bg-purple-950 text-purple-300 border border-purple-500/40 text-[10px] font-bold px-2 py-0.5 rounded-md orbitron-font';
+                    } else {
+                        modeBadge.innerText = 'CAMPAIGN';
+                        modeBadge.className = 'bg-cyan-950 text-cyan-300 border border-cyan-500/40 text-[10px] font-bold px-2 py-0.5 rounded-md orbitron-font';
+                    }
                 }
 
                 const stageNameEl = document.getElementById('intel-stage-name');
                 if (stageNameEl) {
-                    if (this.currentMode === MODE_RANDOM) {
+                    if (this.currentMode === MODE_DAILY) {
+                        stageNameEl.innerText = `Daily [${this.dailyDate}]`;
+                    } else if (this.currentMode === MODE_RANDOM) {
                         stageNameEl.innerText = (this.activeLevelData && this.activeLevelData.seed) ? `Seed [${this.activeLevelData.seed}]` : 'Random Chamber';
                     } else {
                         stageNameEl.innerText = `Stage ${this.currentLevelIndex + 1} / 100`;
@@ -3929,9 +5041,11 @@
 
                 const diffEl = document.getElementById('intel-difficulty');
                 if (diffEl) {
-                    const diff = this.currentMode === MODE_RANDOM
-                        ? (this.randomDifficulty || 'Medium')
-                        : getCampaignDifficultyForStage(this.currentLevelIndex + 1);
+                    const diff = this.currentMode === MODE_DAILY
+                        ? 'Medium'
+                        : (this.currentMode === MODE_RANDOM
+                            ? (this.randomDifficulty || 'Medium')
+                            : getCampaignDifficultyForStage(this.currentLevelIndex + 1));
                     diffEl.innerText = diff.charAt(0).toUpperCase() + diff.slice(1);
                     diffEl.className = diff === 'easy' ? 'font-bold text-emerald-400' : diff === 'medium' ? 'font-bold text-amber-400' : 'font-bold text-pink-400';
                 }
@@ -3954,7 +5068,9 @@
 
                 const pbEl = document.getElementById('intel-personal-best');
                 if (pbEl) {
-                    const levelKey = this.currentMode === 'campaign' ? `campaign_${this.currentLevelIndex + 1}` : `random_${this.randomSeed}`;
+                    const levelKey = this.currentMode === 'campaign'
+                        ? `campaign_${this.currentLevelIndex + 1}`
+                        : (this.currentMode === MODE_DAILY ? `daily_${this.dailyDate}` : `random_${this.randomSeed}`);
                     const stats = getLevelStats(levelKey);
                     if (stats && stats.stars > 0) {
                         const starStr = '★'.repeat(stats.stars) + '☆'.repeat(3 - stats.stars);
@@ -4019,7 +5135,7 @@
             }
 
             moveLolo(dx, dy) {
-                if (this.isDead) return;
+                if (this.isDead || this.isStageCompleted) return;
                 if (dx === 0 && dy === 0) return;
 
                 const size = this.grid ? this.grid.length : GRID_SIZE;
@@ -4125,6 +5241,9 @@
 
                     if (isFreeFloor && !pushBlock && !pushEnemy) {
                         let shattered = false;
+                        let slideDistance = 0;
+                        this.pushStrainTimer = 18;
+
                         // Mag-Lev Ice continuous gliding for pushed block
                         if (pushTile === TILE_ICE) {
                             audio.playIceSlide();
@@ -4144,8 +5263,13 @@
                                 }
                                 pushX = nextX;
                                 pushY = nextY;
+                                slideDistance++;
                                 if (nextTile !== TILE_ICE) break;
                             }
+                        }
+
+                        if (slideDistance >= 4 && typeof achievements !== 'undefined' && achievements) {
+                            achievements.unlock('maglev_slide');
                         }
 
                         this.saveSnapshot();
@@ -4207,6 +5331,7 @@
                         let pushEnemy = this.getEnemyAt(pushX, pushY);
 
                         if ((pushTile === TILE_FLOOR || pushTile === TILE_GRASS || pushTile === TILE_SAND || pushTile === TILE_ICE) && !pushBlock && !pushEnemy) {
+                            this.pushStrainTimer = 18;
                             if (pushTile === TILE_ICE) {
                                 audio.playIceSlide();
                                 while (true) {
@@ -4249,6 +5374,9 @@
                             audio.playStep();
                             this.particles.ripple((pushX + 0.5) * (this.canvas.width / size), (pushY + 0.5) * (this.canvas.width / size), '#00f0ff');
                             this.particles.floatingText((pushX + 0.5) * (this.canvas.width / size), pushY * (this.canvas.width / size), 'PLASMA BRIDGE', '#00ff9d');
+                            if (typeof achievements !== 'undefined' && achievements) {
+                                achievements.unlock('egg_ferry');
+                            }
                             this.postMoveCheck();
                             return;
                         }
@@ -4336,6 +5464,7 @@
             }
 
             collectPearl() {
+                if (this.isStageCompleted) return;
                 const size = this.grid ? this.grid.length : GRID_SIZE;
                 const cellSize = this.canvas.width / size;
 
@@ -4365,13 +5494,6 @@
                 }
 
                 audio.playClear();
-
-                // Auto-trigger stage completion & victory sequence after celebration
-                setTimeout(() => {
-                    if (!this.isDead) {
-                        this.nextLevel();
-                    }
-                }, 1000);
             }
 
             detonateBomb(bomb) {
@@ -4388,6 +5510,10 @@
                 this.particles.plasmaBlast(px, py, '#f97316', 36);
                 this.particles.scorchMark(px, py, cellSize * 1.5);
                 this.particles.floatingText(px, py - 10, 'NITRO DETONATION', '#ff5500');
+
+                if (typeof achievements !== 'undefined' && achievements) {
+                    achievements.unlock('bomb_maestro');
+                }
 
                 // Remove the bomb block
                 this.blocks = this.blocks.filter(b => b !== bomb);
@@ -4444,9 +5570,10 @@
             }
 
             shoot() {
-                if (this.isDead) return;
+                if (this.isDead || this.isStageCompleted) return;
                 if (this.lolo.ammo <= 0) return;
                 this.lolo.ammo--;
+                this.shotsFiredInStage = (this.shotsFiredInStage || 0) + 1;
                 audio.playShoot();
                 this.updateHUD();
 
@@ -4497,7 +5624,9 @@
 
                 // Wait 1.2 seconds for dramatic effect before respawning
                 setTimeout(() => {
-                    if (this.currentMode === 'random' && this.activeLevelData) {
+                    if (this.currentMode === 'daily') {
+                        this.loadDailyLevel(this.dailyDate);
+                    } else if (this.currentMode === 'random' && this.activeLevelData) {
                         this.initLevelFromData(this.activeLevelData);
                     } else {
                         this.loadLevel(this.currentLevelIndex);
@@ -4506,9 +5635,14 @@
             }
 
             nextLevel() {
-                if (this.currentLevelIndex + 2 > this.unlockedLevel) {
-                    this.unlockedLevel = Math.min(100, this.currentLevelIndex + 2);
-                    this.saveProgress();
+                if (this.isStageCompleted) return;
+                this.isStageCompleted = true;
+
+                if (this.currentMode === MODE_CAMPAIGN) {
+                    if (this.currentLevelIndex + 2 > this.unlockedLevel) {
+                        this.unlockedLevel = Math.min(100, this.currentLevelIndex + 2);
+                        this.saveProgress();
+                    }
                 }
 
                 if (typeof window.showVictoryModal === 'function') {
@@ -4529,6 +5663,18 @@
                 this.animTick++;
                 const boardSize = this.grid.length || GRID_SIZE;
                 const cellSize = this.canvas.width / boardSize;
+
+                // Update Live Speedrun HUD Timer
+                if (this.animTick % 3 === 0) {
+                    const timerEl = document.getElementById('hud-timer');
+                    if (timerEl) {
+                        const elapsed = Math.max(0, Date.now() - (this.stageStartTime || Date.now()));
+                        const mins = Math.floor(elapsed / 60000);
+                        const secs = Math.floor((elapsed % 60000) / 1000);
+                        const msTenth = Math.floor((elapsed % 1000) / 100);
+                        timerEl.innerText = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}.${msTenth}`;
+                    }
+                }
 
                 // Update Camera Trauma & Squash Physics
                 this.camera.update();
@@ -4844,18 +5990,38 @@
                 ctx.arc(lx, ly, loloRad, 0, Math.PI * 2);
                 ctx.fill();
 
-                // Open Chest / Exit Gateway Beacons
+                // Open Chest / Exit Gateway Beacons & Energy Cores Point Lights
                 for (let r = 0; r < boardSize; r++) {
                     for (let c = 0; c < boardSize; c++) {
                         const tile = this.grid[r][c];
-                        if (tile === TILE_CHEST_OPENED) {
+                        if (tile === TILE_HEART || tile === TILE_HEART_AMMO) {
+                            const hx = (c + 0.5) * cellSize;
+                            const hy = (r + 0.5) * cellSize;
+                            const pulse = 1.0 + Math.sin(this.animTick * 0.12 + (r * 3 + c)) * 0.22;
+                            const hRad = cellSize * 1.5 * pulse;
+                            const isAmmo = tile === TILE_HEART_AMMO;
+                            const hGrad = ctx.createRadialGradient(hx, hy, 2, hx, hy, hRad);
+                            if (isAmmo) {
+                                hGrad.addColorStop(0, 'rgba(245, 158, 11, 0.35)');
+                                hGrad.addColorStop(0.5, 'rgba(217, 119, 6, 0.12)');
+                                hGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+                            } else {
+                                hGrad.addColorStop(0, 'rgba(236, 72, 153, 0.35)');
+                                hGrad.addColorStop(0.5, 'rgba(219, 39, 119, 0.12)');
+                                hGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+                            }
+                            ctx.fillStyle = hGrad;
+                            ctx.beginPath();
+                            ctx.arc(hx, hy, hRad, 0, Math.PI * 2);
+                            ctx.fill();
+                        } else if (tile === TILE_CHEST_OPENED) {
                             const cx = (c + 0.5) * cellSize;
                             const cy = (r + 0.5) * cellSize;
                             const pulse = 1.0 + Math.sin(this.animTick * 0.1) * 0.2;
-                            const cRad = cellSize * 2.4 * pulse;
+                            const cRad = cellSize * 2.6 * pulse;
                             const cGrad = ctx.createRadialGradient(cx, cy, 2, cx, cy, cRad);
-                            cGrad.addColorStop(0, 'rgba(255, 183, 0, 0.35)');
-                            cGrad.addColorStop(0.5, 'rgba(245, 158, 11, 0.12)');
+                            cGrad.addColorStop(0, 'rgba(255, 183, 0, 0.42)');
+                            cGrad.addColorStop(0.5, 'rgba(245, 158, 11, 0.16)');
                             cGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
                             ctx.fillStyle = cGrad;
                             ctx.beginPath();
@@ -4864,10 +6030,10 @@
                         } else if (tile === TILE_DOOR_OPEN) {
                             const dx = (c + 0.5) * cellSize;
                             const dy = (r + 0.5) * cellSize;
-                            const dRad = cellSize * 2.5;
+                            const dRad = cellSize * 2.8;
                             const dGrad = ctx.createRadialGradient(dx, dy, 2, dx, dy, dRad);
-                            dGrad.addColorStop(0, 'rgba(255, 255, 255, 0.32)');
-                            dGrad.addColorStop(0.5, 'rgba(0, 240, 255, 0.14)');
+                            dGrad.addColorStop(0, 'rgba(255, 255, 255, 0.38)');
+                            dGrad.addColorStop(0.5, 'rgba(0, 240, 255, 0.18)');
                             dGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
                             ctx.fillStyle = dGrad;
                             ctx.beginPath();
@@ -4877,9 +6043,10 @@
                             const px = (c + 0.5) * cellSize;
                             const py = (r + 0.5) * cellSize;
                             const pColor = tile === TILE_PORTAL_A ? 'rgba(0, 240, 255, ' : 'rgba(255, 0, 128, ';
-                            const pRad = cellSize * 1.8;
+                            const pRad = cellSize * 2.0;
                             const pGrad = ctx.createRadialGradient(px, py, 2, px, py, pRad);
-                            pGrad.addColorStop(0, pColor + '0.30)');
+                            pGrad.addColorStop(0, pColor + '0.38)');
+                            pGrad.addColorStop(0.6, pColor + '0.12)');
                             pGrad.addColorStop(1, pColor + '0)');
                             ctx.fillStyle = pGrad;
                             ctx.beginPath();
@@ -4889,14 +6056,31 @@
                     }
                 }
 
+                // Sentry Hostile Core Glows
+                this.enemies.forEach(e => {
+                    if (!e.isVaporized && !e.isEgg) {
+                        const ex = (e.renderX + 0.5) * cellSize;
+                        const ey = (e.renderY + 0.5) * cellSize;
+                        const eRad = cellSize * 1.2;
+                        const eColor = (e.type === 'medusa' || e.type === 'don_medusa') ? 'rgba(255, 0, 85, ' : 'rgba(168, 85, 247, ';
+                        const eGrad = ctx.createRadialGradient(ex, ey, 2, ex, ey, eRad);
+                        eGrad.addColorStop(0, eColor + '0.25)');
+                        eGrad.addColorStop(1, eColor + '0)');
+                        ctx.fillStyle = eGrad;
+                        ctx.beginPath();
+                        ctx.arc(ex, ey, eRad, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                });
+
                 // Glowing Blocks & Projectiles
                 this.blocks.forEach(b => {
                     if (b.type === BLOCK_REFLECTOR) {
                         const bx = (b.renderX + 0.5) * cellSize;
                         const by = (b.renderY + 0.5) * cellSize;
-                        const bRad = cellSize * 1.5;
+                        const bRad = cellSize * 1.6;
                         const bGrad = ctx.createRadialGradient(bx, by, 2, bx, by, bRad);
-                        bGrad.addColorStop(0, 'rgba(16, 185, 129, 0.28)');
+                        bGrad.addColorStop(0, 'rgba(16, 185, 129, 0.32)');
                         bGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
                         ctx.fillStyle = bGrad;
                         ctx.beginPath();
@@ -4906,9 +6090,9 @@
                         const bx = (b.renderX + 0.5) * cellSize;
                         const by = (b.renderY + 0.5) * cellSize;
                         const bPulse = 0.8 + Math.sin(this.animTick * 0.15) * 0.2;
-                        const bRad = cellSize * 1.6 * bPulse;
+                        const bRad = cellSize * 1.8 * bPulse;
                         const bGrad = ctx.createRadialGradient(bx, by, 2, bx, by, bRad);
-                        bGrad.addColorStop(0, 'rgba(239, 68, 68, 0.32)');
+                        bGrad.addColorStop(0, 'rgba(239, 68, 68, 0.38)');
                         bGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
                         ctx.fillStyle = bGrad;
                         ctx.beginPath();
@@ -5314,6 +6498,10 @@
                                         curDx = nextDx;
                                         curDy = nextDy;
                                         deflected = true;
+                                        if (typeof achievements !== 'undefined' && achievements) {
+                                            achievements.unlock('laser_weaver');
+                                            if (maxReflections <= 2) achievements.unlock('laser_multi');
+                                        }
                                         break;
                                     } else {
                                         segEndX = cx;
@@ -7339,6 +8527,11 @@
                     }
                 }
 
+                const isDanger = this.isLoloInDanger();
+                const isTriumphant = this.countRemainingHearts() === 0;
+                const isPushing = this.pushStrainTimer > 0;
+                if (this.pushStrainTimer > 0) this.pushStrainTimer--;
+
                 // Movement Detection for Waddling & Dynamic Stride
                 const isMoving = Math.hypot(this.lolo.x - this.lolo.renderX, this.lolo.y - this.lolo.renderY) > 0.02;
 
@@ -7346,8 +8539,16 @@
                 const bounceY = Math.abs(Math.sin(this.animTick * 0.35)) * (isMoving ? 3.5 : 1.2);
                 const legWaddle = isMoving ? Math.sin(this.animTick * 0.45) * 5.5 : 0;
 
-                const lx = x + size / 2;
-                const ly = y + size / 2 - bounceY;
+                let lx = x + size / 2;
+                let ly = y + size / 2 - bounceY;
+
+                // Push exertion forward strain offset
+                if (isPushing) {
+                    if (this.lolo.dir === 'left') lx -= 2.5;
+                    else if (this.lolo.dir === 'right') lx += 2.5;
+                    else if (this.lolo.dir === 'up') ly -= 2.5;
+                    else if (this.lolo.dir === 'down') ly += 2.5;
+                }
 
                 // Apply dynamic squash & stretch kinematic scaling around Lolo center
                 if (this.loloSquash && (this.loloSquash.scaleX !== 1.0 || this.loloSquash.scaleY !== 1.0)) {
@@ -7361,7 +8562,7 @@
                     this.particles.spawn(
                         lx + (Math.random() - 0.5) * 8,
                         y + size * 0.82,
-                        '#00f0ff',
+                        isTriumphant ? '#fbbf24' : '#00f0ff',
                         2.5,
                         (Math.random() - 0.5) * 0.8,
                         -0.8,
@@ -7385,11 +8586,10 @@
 
                 // --- 1. RENDER BACKPACK / EXHAUST OR REAR BLASTER (Facing UP) ---
                 if (this.lolo.dir === 'up') {
-                    // Twin Ion Micro-Thruster Exhaust Plumes (Pulsing Amber/Cyan)
                     const thrustPulse = Math.sin(this.animTick * 0.5) * 2;
-                    ctx.shadowColor = '#00f0ff';
+                    ctx.shadowColor = isTriumphant ? '#fbbf24' : '#00f0ff';
                     ctx.shadowBlur = 12;
-                    ctx.fillStyle = '#00f0ff';
+                    ctx.fillStyle = isTriumphant ? '#fbbf24' : '#00f0ff';
                     ctx.beginPath();
                     ctx.arc(lx - size * 0.16, ly + size * 0.18 + thrustPulse, 3.5, 0, Math.PI * 2);
                     ctx.arc(lx + size * 0.16, ly + size * 0.18 + thrustPulse, 3.5, 0, Math.PI * 2);
@@ -7404,15 +8604,13 @@
                 }
 
                 // --- 2. CYBER BOOTS / STRIDE ---
-                ctx.fillStyle = '#0369a1';
+                ctx.fillStyle = isTriumphant ? '#b45309' : '#0369a1';
                 if (this.lolo.dir === 'left' || this.lolo.dir === 'right') {
-                    // Side stride boots
                     ctx.beginPath();
                     ctx.arc(lx - legWaddle, y + size * 0.82, size * 0.14, 0, Math.PI * 2);
                     ctx.arc(lx + legWaddle * 0.8, y + size * 0.82, size * 0.14, 0, Math.PI * 2);
                     ctx.fill();
                 } else {
-                    // Front / Back waddle boots
                     ctx.beginPath();
                     ctx.arc(lx - size * 0.22 + legWaddle, y + size * 0.82, size * 0.14, 0, Math.PI * 2);
                     ctx.arc(lx + size * 0.22 - legWaddle, y + size * 0.82, size * 0.14, 0, Math.PI * 2);
@@ -7420,13 +8618,22 @@
                 }
 
                 // --- 3. MAIN SPHERICAL ARMOR BODY ---
-                ctx.shadowColor = '#00f0ff';
+                ctx.shadowColor = isDanger ? '#f43f5e' : (isTriumphant ? '#fbbf24' : '#00f0ff');
                 ctx.shadowBlur = 18;
-                // Rich 3D metallic sphere gradient
                 const grad = ctx.createRadialGradient(lx - size * 0.1, ly - size * 0.1, size * 0.05, lx, ly, size * 0.44);
-                grad.addColorStop(0, '#38bdf8');
-                grad.addColorStop(0.5, '#0284c7');
-                grad.addColorStop(1, '#075985');
+                if (isTriumphant) {
+                    grad.addColorStop(0, '#fde047');
+                    grad.addColorStop(0.5, '#f59e0b');
+                    grad.addColorStop(1, '#b45309');
+                } else if (isDanger) {
+                    grad.addColorStop(0, '#fda4af');
+                    grad.addColorStop(0.5, '#f43f5e');
+                    grad.addColorStop(1, '#881337');
+                } else {
+                    grad.addColorStop(0, '#38bdf8');
+                    grad.addColorStop(0.5, '#0284c7');
+                    grad.addColorStop(1, '#075985');
+                }
                 ctx.fillStyle = grad;
                 ctx.beginPath();
                 ctx.arc(lx, ly, size * 0.42, 0, Math.PI * 2);
@@ -7439,18 +8646,22 @@
                 ctx.fill();
 
                 // Subtle Armor Panel Seam
-                ctx.strokeStyle = 'rgba(0, 240, 255, 0.4)';
+                ctx.strokeStyle = isTriumphant ? 'rgba(251, 191, 36, 0.5)' : 'rgba(0, 240, 255, 0.4)';
                 ctx.lineWidth = 1;
                 ctx.stroke();
 
-                // --- 4. DIRECTIONAL VISOR & FACE / BACK DETAILS ---
+                // --- 4. DIRECTIONAL VISOR & FACE DETAILS ---
+                const visorColor = isDanger ? '#fb7185' : (isTriumphant ? '#fde047' : '#00f0ff');
+                const isIdle = !isMoving && (this.animTick - this.lastMoveTick > 120);
+                const idleLookOffset = isIdle ? Math.sin(this.animTick * 0.06) * (size * 0.06) : 0;
+
                 if (this.lolo.dir === 'down') {
                     // Front Visor Frame
                     ctx.fillStyle = '#0f172a';
                     ctx.fillRect(lx - size * 0.28, ly - size * 0.2, size * 0.56, size * 0.24);
 
-                    // Cyan Holographic Visor Screen
-                    ctx.fillStyle = '#00f0ff';
+                    // Visor Screen
+                    ctx.fillStyle = visorColor;
                     ctx.fillRect(lx - size * 0.26, ly - size * 0.18, size * 0.52, size * 0.2);
 
                     // Animated HUD Scanline Across Visor
@@ -7462,21 +8673,37 @@
                     ctx.lineTo(lx + size * 0.26, scanY);
                     ctx.stroke();
 
-                    // Animated Blinking Pupil Optics
-                    if (this.animTick % 120 > 8) {
+                    // Optic Eyes
+                    if (isTriumphant) {
+                        // Golden Star Eyes
                         ctx.fillStyle = '#ffffff';
-                        ctx.fillRect(lx - size * 0.18, ly - size * 0.14, size * 0.1, 5);
-                        ctx.fillRect(lx + size * 0.08, ly - size * 0.14, size * 0.1, 5);
+                        ctx.font = `bold ${Math.floor(size * 0.2)}px sans-serif`;
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText('★', lx - size * 0.13, ly - size * 0.08);
+                        ctx.fillText('★', lx + size * 0.13, ly - size * 0.08);
+                    } else if (isDanger) {
+                        // Wide Alarmed Optic Rects
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fillRect(lx - size * 0.20, ly - size * 0.16, size * 0.14, size * 0.15);
+                        ctx.fillRect(lx + size * 0.06, ly - size * 0.16, size * 0.14, size * 0.15);
+                        ctx.fillStyle = '#f43f5e';
+                        ctx.fillRect(lx - size * 0.15, ly - size * 0.11, 4, 4);
+                        ctx.fillRect(lx + size * 0.11, ly - size * 0.11, 4, 4);
+                    } else if (this.animTick % 120 > 8) {
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fillRect(lx - size * 0.18 + idleLookOffset, ly - size * 0.14, size * 0.1, 5);
+                        ctx.fillRect(lx + size * 0.08 + idleLookOffset, ly - size * 0.14, size * 0.1, 5);
                     }
 
                     // Pulsing Arc Reactor Chest Core
-                    ctx.shadowColor = '#00f0ff';
+                    ctx.shadowColor = isTriumphant ? '#fbbf24' : '#00f0ff';
                     ctx.shadowBlur = 14;
                     ctx.fillStyle = '#ffffff';
                     ctx.beginPath();
                     ctx.arc(lx, ly + size * 0.14, size * 0.12 + Math.sin(this.animTick * 0.1) * 1.2, 0, Math.PI * 2);
                     ctx.fill();
-                    ctx.strokeStyle = '#00f0ff';
+                    ctx.strokeStyle = isTriumphant ? '#fbbf24' : '#00f0ff';
                     ctx.lineWidth = 1.5;
                     ctx.stroke();
 
@@ -7486,48 +8713,67 @@
                     // Left Profile Visor
                     ctx.fillStyle = '#0f172a';
                     ctx.fillRect(lx - size * 0.38, ly - size * 0.2, size * 0.36, size * 0.24);
-                    ctx.fillStyle = '#00f0ff';
+                    ctx.fillStyle = visorColor;
                     ctx.fillRect(lx - size * 0.36, ly - size * 0.18, size * 0.32, size * 0.2);
 
-                    // Left Optic Eye
-                    if (this.animTick % 120 > 8) {
+                    if (isTriumphant) {
+                        ctx.fillStyle = '#ffffff';
+                        ctx.font = `bold ${Math.floor(size * 0.2)}px sans-serif`;
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText('★', lx - size * 0.22, ly - size * 0.08);
+                    } else if (this.animTick % 120 > 8) {
                         ctx.fillStyle = '#ffffff';
                         ctx.fillRect(lx - size * 0.32, ly - size * 0.14, size * 0.1, 5);
                     }
 
-                    // Left-Facing Extended Blaster
                     this.drawLoloBlaster(ctx, lx, ly, angle, size);
                 } else if (this.lolo.dir === 'right') {
                     // Right Profile Visor
                     ctx.fillStyle = '#0f172a';
                     ctx.fillRect(lx + size * 0.02, ly - size * 0.2, size * 0.36, size * 0.24);
-                    ctx.fillStyle = '#00f0ff';
+                    ctx.fillStyle = visorColor;
                     ctx.fillRect(lx + size * 0.04, ly - size * 0.18, size * 0.32, size * 0.2);
 
-                    // Right Optic Eye
-                    if (this.animTick % 120 > 8) {
+                    if (isTriumphant) {
+                        ctx.fillStyle = '#ffffff';
+                        ctx.font = `bold ${Math.floor(size * 0.2)}px sans-serif`;
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText('★', lx + size * 0.22, ly - size * 0.08);
+                    } else if (this.animTick % 120 > 8) {
                         ctx.fillStyle = '#ffffff';
                         ctx.fillRect(lx + size * 0.22, ly - size * 0.14, size * 0.1, 5);
                     }
 
-                    // Right-Facing Extended Blaster
                     this.drawLoloBlaster(ctx, lx, ly, angle, size);
                 } else {
                     // Back View Armor Spine Plates (Up)
                     ctx.fillStyle = '#0f172a';
                     ctx.fillRect(lx - size * 0.12, ly - size * 0.24, size * 0.24, size * 0.16);
-                    ctx.fillStyle = '#00f0ff';
+                    ctx.fillStyle = isTriumphant ? '#fbbf24' : '#00f0ff';
                     ctx.fillRect(lx - size * 0.06, ly - size * 0.2, size * 0.12, 3);
+                }
+
+                // Danger Sweat Droplet Bead Animation
+                if (isDanger) {
+                    const drip = ((this.animTick * 1.8) % (size * 0.3));
+                    ctx.fillStyle = '#38bdf8';
+                    ctx.shadowColor = '#38bdf8';
+                    ctx.shadowBlur = 6;
+                    ctx.beginPath();
+                    ctx.ellipse(lx + size * 0.28, ly - size * 0.18 + drip, 2.5, 4, 0, 0, Math.PI * 2);
+                    ctx.fill();
                 }
 
                 // --- 5. ANTENNA & STATUS LED BEACON ---
                 ctx.fillStyle = '#0284c7';
                 ctx.fillRect(lx - 1.5, ly - size * 0.42 - 3, 3, 5);
-                ctx.shadowColor = '#ff007f';
-                ctx.shadowBlur = 10;
-                ctx.fillStyle = '#ff007f';
+                ctx.shadowColor = isDanger ? '#ef4444' : (isTriumphant ? '#fbbf24' : '#ff007f');
+                ctx.shadowBlur = isDanger ? 16 : 10;
+                ctx.fillStyle = isDanger ? '#ef4444' : (isTriumphant ? '#fbbf24' : '#ff007f');
                 ctx.beginPath();
-                ctx.arc(lx, ly - size * 0.42 - 4, 3, 0, Math.PI * 2);
+                ctx.arc(lx, ly - size * 0.42 - 4, 3 + (isDanger ? Math.sin(this.animTick * 0.5) * 1.5 : 0), 0, Math.PI * 2);
                 ctx.fill();
 
                 ctx.restore();
@@ -7575,12 +8821,15 @@
             }
         };
 
-        function applyTheme(themeKey) {
+        function applyTheme(themeKey, isUserAction = false) {
             const theme = THEMES[themeKey] || THEMES.synthwave;
             document.body.style.backgroundImage = theme.bodyBg;
             try {
                 localStorage.setItem('lolo_cyber_active_theme', themeKey);
             } catch (e) {}
+            if (isUserAction && typeof achievements !== 'undefined' && achievements) {
+                achievements.unlock('theme_explorer');
+            }
         }
 
         function applyCrtMode(mode) {
@@ -7666,6 +8915,26 @@
             if (badge) badge.innerText = `${total} / 300`;
         }
 
+        function showModal(idOrEl) {
+            const el = typeof idOrEl === 'string' ? document.getElementById(idOrEl) : idOrEl;
+            if (el) {
+                el.classList.remove('hidden', 'modal-hidden');
+                el.classList.add('modal-active');
+                el.style.setProperty('display', 'flex', 'important');
+            }
+        }
+        window.showModal = showModal;
+
+        function hideModal(idOrEl) {
+            const el = typeof idOrEl === 'string' ? document.getElementById(idOrEl) : idOrEl;
+            if (el) {
+                el.classList.remove('modal-active');
+                el.classList.add('hidden', 'modal-hidden');
+                el.style.setProperty('display', 'none', 'important');
+            }
+        }
+        window.hideModal = hideModal;
+
         function bootCyberGame() {
             if (window.__loloCyberBooted) return;
             window.__loloCyberBooted = true;
@@ -7689,7 +8958,7 @@
             };
 
             const restartActiveLevel = () => {
-                if (game.currentMode === 'random' && game.activeLevelData) {
+                if ((game.currentMode === 'random' || game.currentMode === 'daily') && game.activeLevelData) {
                     game.initLevelFromData(game.activeLevelData);
                 } else {
                     game.loadLevel(game.currentLevelIndex);
@@ -7732,6 +9001,8 @@
                     if (window.nextRandomProtocol) {
                         window.nextRandomProtocol();
                     }
+                } else if (game.currentMode === 'daily') {
+                    game.loadDailyLevel();
                 }
             });
 
@@ -7744,6 +9015,8 @@
                     if (window.nextRandomProtocol) {
                         window.nextRandomProtocol();
                     }
+                } else if (game.currentMode === 'daily') {
+                    game.loadDailyLevel();
                 }
             });
 
@@ -7803,7 +9076,7 @@
                 themeSelect.value = savedTheme;
                 applyTheme(savedTheme);
                 themeSelect.onchange = (e) => {
-                    applyTheme(e.target.value);
+                    applyTheme(e.target.value, true);
                     e.target.blur();
                 };
             }
@@ -7834,6 +9107,9 @@
                 bgmSelect.onchange = function (e) {
                     audio.startBGM(e.target.value);
                     audio.saveSettings();
+                    if (typeof achievements !== 'undefined' && achievements) {
+                        achievements.unlock('synth_dj');
+                    }
                     e.target.blur();
                 };
             }
@@ -7951,13 +9227,180 @@
             render100Grid();
 
             document.getElementById('btn-level-grid').onclick = (e) => {
-                modalLevels.classList.remove('hidden');
+                showModal(modalLevels);
                 blurButtonEvent(e);
             };
 
             document.getElementById('btn-close-levels').onclick = () => {
-                modalLevels.classList.add('hidden');
+                hideModal(modalLevels);
             };
+
+            // ==========================================
+            // DAILY HACK PROTOCOL MODAL BINDINGS
+            // ==========================================
+            const modalDaily = document.getElementById('modal-daily-hack');
+            const btnDaily = document.getElementById('btn-daily-hack');
+            const btnCloseDaily = document.getElementById('btn-close-daily');
+            const btnLaunchDaily = document.getElementById('btn-launch-daily');
+            const btnReplayDaily = document.getElementById('btn-replay-daily');
+
+            if (btnDaily && modalDaily) {
+                btnDaily.onclick = (e) => {
+                    DailyHackManager.renderModalUI();
+                    showModal(modalDaily);
+                    blurButtonEvent(e);
+                };
+            }
+
+            if (btnCloseDaily && modalDaily) {
+                btnCloseDaily.onclick = () => hideModal(modalDaily);
+            }
+
+            if (btnLaunchDaily && modalDaily) {
+                btnLaunchDaily.onclick = (e) => {
+                    hideModal(modalDaily);
+                    game.loadDailyLevel();
+                    if (audio && audio.playWarp) audio.playWarp();
+                    if (game.particles) {
+                        const cellSize = game.canvas.width / (game.grid.length || GRID_SIZE);
+                        const cx = (game.lolo.renderX + 0.5) * cellSize;
+                        const cy = (game.lolo.renderY + 0.5) * cellSize;
+                        game.particles.floatingText(game.canvas.width / 2, 45, "DAILY PROTOCOL INFILTRATED", '#f59e0b');
+                        game.particles.ripple(cx, cy, '#f59e0b');
+                    }
+                    blurButtonEvent(e);
+                };
+            }
+
+            if (btnReplayDaily && modalDaily) {
+                btnReplayDaily.onclick = (e) => {
+                    hideModal(modalDaily);
+                    game.loadDailyLevel();
+                    if (audio && audio.playWarp) audio.playWarp();
+                    if (game.particles) {
+                        const cellSize = game.canvas.width / (game.grid.length || GRID_SIZE);
+                        const cx = (game.lolo.renderX + 0.5) * cellSize;
+                        const cy = (game.lolo.renderY + 0.5) * cellSize;
+                        game.particles.floatingText(game.canvas.width / 2, 45, "DAILY PROTOCOL REPLAY", '#f59e0b');
+                        game.particles.ripple(cx, cy, '#f59e0b');
+                    }
+                    blurButtonEvent(e);
+                };
+            }
+
+            // Sync daily streak badge in header
+            const headerDailyStreak = document.getElementById('header-daily-streak');
+            if (headerDailyStreak) headerDailyStreak.innerText = DailyHackManager.getStreak();
+
+            // ==========================================
+            // CYBER ACHIEVEMENTS MATRIX MODAL BINDINGS
+            // ==========================================
+            const modalAchievements = document.getElementById('modal-achievements');
+            const btnAchievements = document.getElementById('btn-achievements');
+            const btnCloseAchievements = document.getElementById('btn-close-achievements');
+
+            if (btnAchievements && modalAchievements) {
+                btnAchievements.onclick = (e) => {
+                    achievements.renderGrid();
+                    showModal(modalAchievements);
+                    blurButtonEvent(e);
+                };
+            }
+
+            if (btnCloseAchievements && modalAchievements) {
+                btnCloseAchievements.onclick = () => hideModal(modalAchievements);
+            }
+
+            document.querySelectorAll('.btn-ach-filter').forEach(btn => {
+                btn.onclick = () => {
+                    document.querySelectorAll('.btn-ach-filter').forEach(b => {
+                        b.classList.remove('active', 'bg-cyan-950', 'text-cyan-300', 'border-cyan-500/60');
+                        b.classList.add('bg-slate-900', 'text-slate-400', 'border-slate-800');
+                    });
+                    btn.classList.add('active', 'bg-cyan-950', 'text-cyan-300', 'border-cyan-500/60');
+                    btn.classList.remove('bg-slate-900', 'text-slate-400', 'border-slate-800');
+                    achievements.renderGrid(btn.dataset.category || 'all');
+                };
+            });
+
+            // Initial achievement badge sync
+            achievements.updateHeaderBadge();
+
+            // ==========================================
+            // SECTOR BRIEFING NARRATIVE MODAL BINDINGS
+            // ==========================================
+            const modalBriefing = document.getElementById('modal-sector-briefing');
+            const btnOpenBriefing = document.getElementById('btn-open-sector-briefing');
+            const btnCloseBriefing = document.getElementById('btn-close-briefing');
+            const btnStartMission = document.getElementById('btn-start-briefing-mission');
+
+            if (btnOpenBriefing) {
+                btnOpenBriefing.onclick = (e) => {
+                    game.showSectorBriefing();
+                    blurButtonEvent(e);
+                };
+            }
+
+            if (btnCloseBriefing && modalBriefing) {
+                btnCloseBriefing.onclick = () => hideModal(modalBriefing);
+            }
+
+            if (btnStartMission && modalBriefing) {
+                btnStartMission.onclick = () => hideModal(modalBriefing);
+            }
+
+            // Modal backdrop dismiss handler for all overlay modals
+            const allModalIds = ['modal-daily-hack', 'modal-achievements', 'modal-sector-briefing', 'modal-levels', 'modal-random', 'modal-victory-random', 'modal-editor-json'];
+            allModalIds.forEach(id => {
+                const m = document.getElementById(id);
+                if (m) {
+                    m.addEventListener('click', (e) => {
+                        if (e.target === m) {
+                            if (id === 'modal-victory-random' && typeof window.handleVictoryClose === 'function') {
+                                window.handleVictoryClose();
+                            } else {
+                                hideModal(m);
+                            }
+                        }
+                    });
+                }
+            });
+
+            // Global Escape key dismiss for open modals
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    allModalIds.forEach(id => {
+                        if (id === 'modal-victory-random' && typeof window.handleVictoryClose === 'function') {
+                            const mv = document.getElementById('modal-victory-random');
+                            if (mv && !mv.classList.contains('hidden') && mv.style.display !== 'none') {
+                                window.handleVictoryClose();
+                                return;
+                            }
+                        }
+                        hideModal(id);
+                    });
+                }
+            });
+
+            // ==========================================
+            // SPEEDRUN TIMER HUD TOGGLE
+            // ==========================================
+            const timerContainer = document.getElementById('hud-timer-container');
+            if (timerContainer) {
+                timerContainer.onclick = () => {
+                    game.speedrunEnabled = !game.speedrunEnabled;
+                    if (game.speedrunEnabled) {
+                        timerContainer.classList.add('speedrun-active');
+                        achievements.unlock('speedrun_mode');
+                        if (game.particles) {
+                            const cellSize = game.canvas.width / (game.grid.length || GRID_SIZE);
+                            game.particles.floatingText(game.canvas.width / 2, 40, 'SPEEDRUN SPLIT TIMER ACTIVE', '#00f0ff');
+                        }
+                    } else {
+                        timerContainer.classList.remove('speedrun-active');
+                    }
+                };
+            }
 
             // ==========================================
             // RANDOM LEVEL GENERATOR LAB MODAL LOGIC
@@ -8517,7 +9960,7 @@
             document.getElementById('btn-random-modal').onclick = (e) => {
                 generateAndDisplayLevel(true);
                 renderSeedHistoryUI();
-                modalRandom.classList.remove('hidden');
+                showModal(modalRandom);
                 blurButtonEvent(e);
             };
 
@@ -8526,7 +9969,7 @@
                     clearInterval(simulationInterval);
                     simulationInterval = null;
                 }
-                modalRandom.classList.add('hidden');
+                hideModal(modalRandom);
             };
 
             if (gridSizeSelect) {
@@ -8677,7 +10120,7 @@
                 btnSendToArch.onclick = () => {
                     if (currentGeneratedLevel && window.editor) {
                         window.editor.loadCustomLevel(currentGeneratedLevel);
-                        modalRandom.classList.add('hidden');
+                        hideModal(modalRandom);
                         const editorTab = document.getElementById('tab-editor');
                         if (editorTab) editorTab.click();
                         flashShareToast('Sent to Architect!');
@@ -8756,7 +10199,7 @@
             btnPlayRandom.onclick = () => {
                 if (!currentGeneratedLevel) generateAndDisplayLevel();
                 game.loadRandomLevel(selectedDifficulty, inputSeed.value.trim(), currentGeneratedLevel);
-                modalRandom.classList.add('hidden');
+                hideModal(modalRandom);
             };
 
             // ==========================================
@@ -8767,8 +10210,11 @@
             window.showVictoryModal = function (gameInstance) {
                 if (!modalVictory) return;
 
-                const isCampaign = gameInstance.currentMode === 'campaign';
-                const levelKey = isCampaign ? `campaign_${gameInstance.currentLevelIndex + 1}` : `random_${gameInstance.randomSeed}`;
+                const isCampaign = gameInstance.currentMode === MODE_CAMPAIGN;
+                const isDaily = gameInstance.currentMode === MODE_DAILY;
+                const levelKey = isCampaign
+                    ? `campaign_${gameInstance.currentLevelIndex + 1}`
+                    : (isDaily ? `daily_${gameInstance.dailyDate}` : `random_${gameInstance.randomSeed}`);
                 const levelData = gameInstance.activeLevelData || ALL_100_LEVELS[gameInstance.currentLevelIndex];
                 const optimalMoves = (levelData && levelData.solverResult && levelData.solverResult.moves) ? levelData.solverResult.moves : (gameInstance.movesCount || 15);
                 const playerMoves = gameInstance.movesCount;
@@ -8777,11 +10223,53 @@
                 const starsEarned = calculateStars(playerMoves, optimalMoves);
                 saveLevelStats(levelKey, starsEarned, playerMoves, elapsedMs);
 
+                // Handle Daily Hack recording
+                if (isDaily) {
+                    DailyHackManager.recordDailyClear(playerMoves, optimalMoves, starsEarned, elapsedMs);
+                    const streak = DailyHackManager.getStreak();
+                    const streakEl = document.getElementById('header-daily-streak');
+                    if (streakEl) streakEl.innerText = streak;
+                    if (typeof achievements !== 'undefined' && achievements) {
+                        achievements.unlock('daily_first');
+                        if (streak >= 7) achievements.unlock('daily_streak_7');
+                    }
+                }
+
+                // Check Metagame Progression Achievements
+                if (typeof achievements !== 'undefined' && achievements) {
+                    if (isCampaign) {
+                        achievements.unlock('first_clear');
+                        const stageNum = gameInstance.currentLevelIndex + 1;
+                        if (stageNum >= 10) achievements.unlock('sector_10');
+                        if (stageNum >= 25) achievements.unlock('sector_25');
+                        if (stageNum >= 50) achievements.unlock('sector_50');
+                        if (stageNum >= 75) achievements.unlock('sector_75');
+                        if (stageNum >= 100) achievements.unlock('sector_100');
+                    }
+
+                    const totalStars = getTotalStars();
+                    if (totalStars >= 25) achievements.unlock('stars_25');
+                    if (totalStars >= 50) achievements.unlock('stars_50');
+                    if (totalStars >= 100) achievements.unlock('stars_100');
+                    if (totalStars >= 300) achievements.unlock('stars_300');
+
+                    if (playerMoves <= optimalMoves) achievements.unlock('par_beat');
+                    if (elapsedMs < 5000) achievements.unlock('fast_fingers');
+                    if (gameInstance.shotsFiredInStage === 0 && (gameInstance.enemies || []).length >= 2) {
+                        achievements.unlock('pacifist_ghost');
+                    }
+                    if (gameInstance.speedrunEnabled) achievements.unlock('speedrun_mode');
+                }
+
                 const subtitle = document.getElementById('victory-random-subtitle');
                 if (subtitle) {
-                    subtitle.innerText = isCampaign
-                        ? `Sector Stage ${gameInstance.currentLevelIndex + 1} Cleared!`
-                        : `${(gameInstance.randomDifficulty || 'MEDIUM').toUpperCase()} Protocol [${gameInstance.randomSeed}] Cleared!`;
+                    if (isDaily) {
+                        subtitle.innerText = `Daily Protocol [${gameInstance.dailyDate}] Cleared!`;
+                    } else if (isCampaign) {
+                        subtitle.innerText = `Sector Stage ${gameInstance.currentLevelIndex + 1} Cleared!`;
+                    } else {
+                        subtitle.innerText = `${(gameInstance.randomDifficulty || 'MEDIUM').toUpperCase()} Protocol [${gameInstance.randomSeed}] Cleared!`;
+                    }
                 }
 
                 const pMovesEl = document.getElementById('victory-player-moves');
@@ -8814,10 +10302,17 @@
 
                 const btnNext = document.getElementById('btn-victory-next-random');
                 if (btnNext) {
-                    if (isCampaign) {
+                    if (isDaily) {
+                        btnNext.innerHTML = `<i class="fa-solid fa-calendar-check"></i> VIEW DAILY CALENDAR`;
+                        btnNext.onclick = () => {
+                            hideModal(modalVictory);
+                            DailyHackManager.renderModalUI();
+                            showModal('modal-daily-hack');
+                        };
+                    } else if (isCampaign) {
                         btnNext.innerHTML = `<i class="fa-solid fa-forward-step"></i> NEXT CAMPAIGN STAGE`;
                         btnNext.onclick = () => {
-                            modalVictory.classList.add('hidden');
+                            hideModal(modalVictory);
                             if (gameInstance.currentLevelIndex < 99) {
                                 gameInstance.loadLevel(gameInstance.currentLevelIndex + 1);
                             } else {
@@ -8837,7 +10332,7 @@
                     window.render100GridGlobal();
                 }
 
-                modalVictory.classList.remove('hidden');
+                showModal(modalVictory);
                 if (audio && audio.playWin) audio.playWin();
             };
 
@@ -8845,7 +10340,7 @@
             window.showCampaignVictory = window.showVictoryModal;
 
             window.nextRandomProtocol = function () {
-                if (modalVictory) modalVictory.classList.add('hidden');
+                if (modalVictory) hideModal(modalVictory);
                 if (inputSeed) {
                     inputSeed.dataset.userEdited = 'false';
                     inputSeed.value = '';
@@ -8859,18 +10354,32 @@
             };
 
             document.getElementById('btn-victory-replay-random').onclick = () => {
-                modalVictory.classList.add('hidden');
+                hideModal(modalVictory);
                 if (game.activeLevelData) {
                     game.initLevelFromData(game.activeLevelData);
                 }
             };
 
-            const btnVictoryClose = document.getElementById('btn-victory-close-random');
-            if (btnVictoryClose) {
-                btnVictoryClose.onclick = () => {
-                    modalVictory.classList.add('hidden');
-                };
-            }
+            const handleVictoryClose = () => {
+                hideModal(modalVictory);
+                if (game.isStageCompleted) {
+                    if (game.currentMode === 'campaign') {
+                        if (game.currentLevelIndex < 99) {
+                            game.loadLevel(game.currentLevelIndex + 1);
+                        } else {
+                            game.initLevelFromData(game.activeLevelData);
+                        }
+                    } else if (game.currentMode === 'daily') {
+                        DailyHackManager.renderModalUI();
+                        showModal('modal-daily-hack');
+                    } else if (game.currentMode === 'random') {
+                        window.nextRandomProtocol();
+                    } else {
+                        game.isStageCompleted = false;
+                    }
+                }
+            };
+            window.handleVictoryClose = handleVictoryClose;
 
             // ==========================================
             // LEVEL EDITOR (CYBER ARCHITECT) LOGIC
@@ -9581,6 +11090,9 @@
                     refreshVaultSelect();
                     const cellSize = game.canvas.width / (game.grid.length || GRID_SIZE);
                     game.particles.floatingText((game.lolo.renderX + 0.5) * cellSize, game.lolo.renderY * cellSize - 10, 'STAGE SAVED', '#10b981');
+                    if (typeof achievements !== 'undefined' && achievements) {
+                        achievements.unlock('level_architect');
+                    }
                     audio.playPowerUp();
                 };
             }
@@ -9659,12 +11171,12 @@
                         enemies: game.enemies.map(e => ({ type: e.type, x: e.x, y: e.y, dir: e.dir, dirs: e.dirs }))
                     };
                     textareaJson.value = JSON.stringify(currentStageData, null, 2);
-                    modalJson.classList.remove('hidden');
+                    showModal(modalJson);
                 };
             }
 
             if (btnCloseJson && modalJson) {
-                btnCloseJson.onclick = () => modalJson.classList.add('hidden');
+                btnCloseJson.onclick = () => hideModal(modalJson);
             }
 
             if (btnCopyJson && textareaJson) {
@@ -9705,7 +11217,7 @@
                         }));
                         if (inputCustomName && parsed.name) inputCustomName.value = parsed.name;
                         updateEditorTelemetry();
-                        modalJson.classList.add('hidden');
+                        hideModal(modalJson);
                         const cellSize = game.canvas.width / (game.grid.length || GRID_SIZE);
                         game.particles.floatingText((game.lolo.renderX + 0.5) * cellSize, game.lolo.renderY * cellSize - 10, 'JSON LOADED', '#00f0ff');
                         audio.playPowerUp();
@@ -9745,15 +11257,17 @@
                 const urlUnlock = params.get('unlock');
                 const urlDiff = params.get('diff') || 'medium';
                 const urlGrid = parseInt(params.get('grid'), 10) || 11;
+                const urlDaily = params.get('daily');
                 
                 if (urlUnlock) {
                     game.unlockedLevel = 100;
                     if (typeof render100Grid === 'function') render100Grid();
                 }
-                if (urlStage >= 1 && urlStage <= 100) {
+                if (urlDaily || urlView === 'daily') {
+                    game.loadDailyLevel();
+                } else if (urlStage >= 1 && urlStage <= 100) {
                     game.loadLevel(urlStage - 1);
-                }
-                if (urlSeed) {
+                } else if (urlSeed) {
                     const generatedLevel = LoloRandomGenerator.generate(urlDiff, urlSeed, urlGrid);
                     if (generatedLevel) {
                         game.loadRandomLevel(urlDiff, urlSeed, generatedLevel);
@@ -9762,9 +11276,12 @@
                 if (urlView === 'editor') {
                     panelEditor.classList.remove('hidden');
                 } else if (urlView === 'levels') {
-                    modalLevels.classList.remove('hidden');
+                    showModal(modalLevels);
                 } else if (urlView === 'random') {
-                    modalRandom.classList.remove('hidden');
+                    showModal(modalRandom);
+                } else if (urlView === 'achievements') {
+                    showModal(modalAchievements);
+                    achievements.renderGrid();
                 }
             } catch (e) {
                 console.warn('URL param parse error:', e);
