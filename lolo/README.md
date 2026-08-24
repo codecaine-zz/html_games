@@ -69,32 +69,57 @@ As Operative Lolo, your mission is to navigate through security sectors, outsmar
   - **100% Unique & Solvability-Proven**: Every layout is mathematically guaranteed solvable by the built-in $A^*$ solver engine.
 
 - **13 Hostile Enemy AI Archetypes**:
-  | Hostile Unit | Name | Threat Profile | Behavior / Mechanics |
-  | :--- | :--- | :--- | :--- |
-  | 🐍 | **Serpent Drone** | Passive | Stationary drone; shootable into a pushable Bio-Egg to bridge water/plasma canals. |
-  | 🎯 | **Cardinal Sentry (Medusa)** | High (Kill-on-Sight) | Fires instant line-of-sight laser beams along 4 orthogonal axes (+). Blocked by push-blocks/trees. |
-  | ✕ | **Diagonal Sentry** | High (Kill-on-Sight) | Fires instant line-of-sight laser beams along 4 diagonal axes (✕). |
-  | ★ | **Omni Sentry** | Extreme (Kill-on-Sight) | Fires 360° laser beams across all 8 directions. |
-  | ⚙️ | **Multi-Directional Turret** | Configurable | Emitter firing customizable 1-way to 8-way directional lasers (`1-up`, `2-horiz`, `4-cross`, `8-omni`). |
-  | 🐲 | **Dragon Mech (Gol)** | Awakening Hazard | Slumbers until all cores are gathered; shoots lethal fireballs down its line-of-sight when awake. |
-  | 🚓 | **Patrol Sentinel (Don Medusa)** | Extreme (Kill-on-Sight) | Patrols continuously along horizontal or vertical tracks while maintaining crossfire lasers. |
-  | 💤 | **EMP Nanobot (Leeper)** | Area Denial | Relentlessly chases Lolo; upon reaching adjacent tile, permanently freezes into an impassable block. |
-  | 💀 | **Charger Skull** | Awakening Chaser | Slumbers while cores remain; charges straight at Lolo upon core collection. |
-  | 🪚 | **Buzzsaw Bot (Alma)** | Real-Time Chaser | Continuously pathfinds toward Lolo in real time across walkable floor tiles. |
-  | 🚜 | **Hydraulic Golem (Rocky)** | Physical Threat | Aggressively charges and physically shoves Lolo backward on contact. |
-  | 🌀 | **Vortex Leviathan (Moby)** | Pull Hazard | Emits a tractor vortex across water channels, pulling Lolo into the current. |
-  | 🦗 | **Beetle Hopper** | Jumping Chaser | Chases Lolo by leaping over low obstacles, push-blocks, and cyber trees. |
+
+  ![Hostile AI Threat Matrix](screenshots/enemy_roster.png)
+
+  | Rendered Icon | Name | Threat Profile | Behavior / Mechanics |
+  | :---: | :--- | :--- | :--- |
+  | <img src="screenshots/enemies/snake.png" width="36" height="36" /> | **Serpent Drone (`snake`)** | Passive | Stationary drone; shootable into a pushable Bio-Egg to bridge water/plasma canals. |
+  | <img src="screenshots/enemies/medusa.png" width="36" height="36" /> | **Cardinal Sentry (`medusa`)** | High (Kill-on-Sight) | Fires instant line-of-sight laser beams along 4 orthogonal axes (+). Blocked by push-blocks/trees. |
+  | <img src="screenshots/enemies/medusa_diag.png" width="36" height="36" /> | **Diagonal Sentry (`medusa_diag`)** | High (Kill-on-Sight) | Fires instant line-of-sight laser beams along 4 diagonal axes (✕). |
+  | <img src="screenshots/enemies/medusa_omni.png" width="36" height="36" /> | **Omni Sentry (`medusa_omni`)** | Extreme (Kill-on-Sight) | Fires 360° laser beams across all 8 directions. |
+  | <img src="screenshots/enemies/turret.png" width="36" height="36" /> | **Multi-Directional Turret (`turret`)** | Configurable | Emitter firing customizable 1-way to 8-way directional lasers (`1-up`, `2-horiz`, `4-cross`, `8-omni`). |
+  | <img src="screenshots/enemies/gol.png" width="36" height="36" /> | **Dragon Mech (`gol`)** | Awakening Hazard | Slumbers until all cores are gathered; shoots lethal fireballs down its line-of-sight when awake. |
+  | <img src="screenshots/enemies/don_medusa.png" width="36" height="36" /> | **Patrol Sentinel (`don_medusa`)** | Extreme (Kill-on-Sight) | Patrols continuously along horizontal or vertical tracks while maintaining crossfire lasers. |
+  | <img src="screenshots/enemies/leeper.png" width="36" height="36" /> | **EMP Nanobot (`leeper`)** | Area Denial | Relentlessly chases Lolo; upon reaching adjacent tile, permanently freezes into an impassable block. |
+  | <img src="screenshots/enemies/skull.png" width="36" height="36" /> | **Charger Skull (`skull`)** | Awakening Chaser | Slumbers while cores remain; charges straight at Lolo upon core collection. |
+  | <img src="screenshots/enemies/alma.png" width="36" height="36" /> | **Buzzsaw Bot (`alma`)** | Real-Time Chaser | Continuously pathfinds toward Lolo in real time across walkable floor tiles. |
+  | <img src="screenshots/enemies/rocky.png" width="36" height="36" /> | **Hydraulic Golem (`rocky`)** | Physical Threat | Aggressively charges and physically shoves Lolo backward on contact. |
+  | <img src="screenshots/enemies/moby.png" width="36" height="36" /> | **Vortex Leviathan (`moby`)** | Pull Hazard | Emits a tractor vortex across water channels, pulling Lolo into the current. |
+  | <img src="screenshots/enemies/hopper.png" width="36" height="36" /> | **Beetle Hopper (`hopper`)** | Jumping Chaser | Chases Lolo by leaping over low obstacles, push-blocks, and cyber trees. |
 
 - **9 Tactical Push-Block Archetypes**:
-  - **Alloy Shield (`alloy`)**: Standard 1-tile push block; blocks entity movement & laser beams.
-  - **Heavy Titanium (`heavy`)**: Immovable heavy barrier; blocks all lasers and paths.
-  - **Prism Reflector (`reflector`)**: Deflects lasers at 90° angles based on 4 mirror orientations ($\nearrow, \searrow, \swarrow, \nwarrow$). Supports up to 4 chained reflections.
-  - **Holo Barrier (`holo`)**: Permeable to optical lasers and blaster shots, but physically blocks Lolo and hostiles.
-  - **Plasma Bomb (`bomb`)**: Explodes on shot or damage, detonating a $3\times 3$ area clearing cracked walls, fragile blocks, and hostiles.
-  - **Mag-Lev Polar (`magnetic`)**: Glides frictionless on Mag-Lev Ice tracks until colliding with solid barriers.
-  - **Adhesive Gel (`sticky`)**: Nanite bonding locks permanently to floor after a single push.
-  - **Glass Crystal (`fragile`)**: Shatters permanently upon collision, heavy pushes, or blaster impacts.
-  - **Decoy Hologram (`decoy`)**: Emits an operative hologram signal that redirects enemy aim beams and chaser aggro away from Lolo.
+
+  ![Tactical Push-Blocks Roster](screenshots/blocks_roster.png)
+
+  | Rendered Icon | Name | Classification | Mechanics & Tactical Usage |
+  | :---: | :--- | :--- | :--- |
+  | <img src="screenshots/blocks/alloy.png" width="36" height="36" /> | **Alloy Shield (`alloy`)** | Standard Push Block | Standard 1-tile push block; blocks entity movement & laser beams. |
+  | <img src="screenshots/blocks/heavy.png" width="36" height="36" /> | **Heavy Titanium (`heavy`)** | Heavy Barrier | Immovable heavy barrier; blocks all lasers and unit paths. |
+  | <img src="screenshots/blocks/reflector.png" width="36" height="36" /> | **Prism Reflector (`reflector`)** | Optical Deflector | Deflects lasers at 90° angles based on 4 mirror orientations ($\nearrow, \searrow, \swarrow, \nwarrow$). |
+  | <img src="screenshots/blocks/holo.png" width="36" height="36" /> | **Holo Barrier (`holo`)** | Phasing Barrier | Permeable to optical lasers and blaster shots, but physically blocks Lolo and hostiles. |
+  | <img src="screenshots/blocks/bomb.png" width="36" height="36" /> | **Plasma Bomb (`bomb`)** | Explosive Ordnance | Explodes on shot or damage, detonating a $3\times 3$ area clearing cracked walls, fragile blocks, and hostiles. |
+  | <img src="screenshots/blocks/magnetic.png" width="36" height="36" /> | **Mag-Lev Polar (`magnetic`)** | Frictionless Slider | Glides frictionless on Mag-Lev Ice tracks until colliding with solid barriers. |
+  | <img src="screenshots/blocks/sticky.png" width="36" height="36" /> | **Adhesive Gel (`sticky`)** | One-Push Lock | Nanite bonding locks permanently to floor after a single push. |
+  | <img src="screenshots/blocks/fragile.png" width="36" height="36" /> | **Glass Crystal (`fragile`)** | Shatterable Block | Shatters permanently upon collision, heavy pushes, or blaster impacts. |
+  | <img src="screenshots/blocks/decoy.png" width="36" height="36" /> | **Decoy Hologram (`decoy`)** | Signal Distractor | Emits an operative hologram signal that redirects enemy aim beams and chaser aggro away from Lolo. |
+
+- **Sector Environment & Interactive Tiles**:
+
+  ![Sector Environment Tiles Roster](screenshots/tiles_roster.png)
+
+  | Rendered Icon | Name | Sector Functionality |
+  | :---: | :--- | :--- |
+  | <img src="screenshots/tiles/lolo.png" width="36" height="36" /> | **Operative Lolo (`lolo`)** | Player Operative equipped with blaster and tactical suit. |
+  | <img src="screenshots/tiles/core.png" width="36" height="36" /> | **Energy Core (`core`)** | Cybernetic core required to unlock the sector Data Chest. |
+  | <img src="screenshots/tiles/chest.png" width="36" height="36" /> | **Data Chest (`chest`)** | Encrypted vault containing sector key; unlocks Cyber Gateway. |
+  | <img src="screenshots/tiles/door.png" width="36" height="36" /> | **Cyber Gateway (`door`)** | Extraction portal to complete sector protocol. |
+  | <img src="screenshots/tiles/tree.png" width="36" height="36" /> | **Cyber Tree (`tree`)** | Dense cybernetic tree blocking movement and laser beams. |
+  | <img src="screenshots/tiles/water.png" width="36" height="36" /> | **Plasma Canal (`water`)** | Lethal plasma liquid; requires Bio-Egg bridge to cross. |
+  | <img src="screenshots/tiles/ice.png" width="36" height="36" /> | **Mag-Lev Track (`ice`)** | Frictionless superconducting track accelerating objects. |
+  | <img src="screenshots/tiles/cracked.png" width="36" height="36" /> | **Cracked Wall (`cracked`)** | Fragile security wall breakable via Plasma Bomb detonation. |
+  | <img src="screenshots/tiles/portal.png" width="36" height="36" /> | **Quantum Portal (`portal`)** | Pair of quantum wormholes (Alpha/Beta) for instantaneous teleportation. |
+  | <img src="screenshots/tiles/one_way.png" width="36" height="36" /> | **One-Way Gate (`one_way`)** | Directional security barrier permitting 1-way traversal. |
 
 - **Mathematical A* Solvability Engine (`LoloMathSolver`)**:
   - Utilizes a MinHeap Priority Queue with canonical block state serialization to evaluate solution paths across multi-block Sokoban arrangements in under 100 state evaluations ($<1\text{ms}$).
