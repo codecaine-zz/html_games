@@ -148,6 +148,11 @@
                     <option value="0" class="bg-slate-900 text-pink-300">Track 1: Cyber Pulse</option>
                     <option value="1" class="bg-slate-900 text-pink-300">Track 2: Quantum Rush</option>
                     <option value="2" class="bg-slate-900 text-pink-300">Track 3: Synth Chill</option>
+                    <option value="3" class="bg-slate-900 text-pink-300">Track 4: Neon Overdrive</option>
+                    <option value="4" class="bg-slate-900 text-pink-300">Track 5: Hypergrid Arc</option>
+                    <option value="5" class="bg-slate-900 text-pink-300">Track 6: Matrix Solace</option>
+                    <option value="6" class="bg-slate-900 text-pink-300">Track 7: Retro Byte Surge</option>
+                    <option value="7" class="bg-slate-900 text-pink-300">Track 8: Orbital Protocol</option>
                 </select>
                 <button id="btn-music-toggle"
                     class="btn-action bg-pink-600/80 hover:bg-pink-500 text-white text-xs p-1.5 rounded-lg border border-pink-400/50"
@@ -1401,25 +1406,71 @@
                 }
                 this.bgmStep = 0;
 
-                // Multi-track synth notes sequences (Cyber Pulse, Quantum Rush, Synth Chill)
+                // AAA Quality Cyberpunk Synthwave & Chiptune Tracks (8-Track Multi-Voice Engine)
                 const tracks = [
-                    // Track 0: Cyber Pulse (Catchy Driving Synthwave)
+                    // Track 0: Cyber Pulse (128 BPM - Catchy Driving Synthwave)
                     {
                         bpm: 128,
-                        bass: [110, 110, 130.81, 110, 146.83, 110, 130.81, 123.47],
-                        lead: [220, 261.63, 329.63, 261.63, 392, 329.63, 261.63, 246.94]
+                        bass: [110, 110, 130.81, 110, 146.83, 110, 130.81, 123.47, 110, 110, 146.83, 110, 164.81, 146.83, 130.81, 123.47],
+                        lead: [220, 261.63, 329.63, 261.63, 392, 329.63, 261.63, 246.94, 220, 329.63, 440, 392, 329.63, 293.66, 261.63, 246.94],
+                        arp: [440, 523.25, 659.25, 523.25, 783.99, 659.25, 523.25, 493.88, 440, 659.25, 880, 783.99, 659.25, 587.33, 523.25, 493.88],
+                        perc: [1, 0, 2, 0, 1, 0, 2, 1, 1, 0, 2, 0, 1, 1, 2, 1]
                     },
-                    // Track 1: Quantum Rush (Fast High Energy Puzzle Bounce)
+                    // Track 1: Quantum Rush (142 BPM - Fast High-Energy Puzzle Bounce)
                     {
-                        bpm: 140,
-                        bass: [146.83, 146.83, 174.61, 146.83, 196, 174.61, 146.83, 130.81],
-                        lead: [293.66, 349.23, 440, 349.23, 523.25, 440, 349.23, 329.63]
+                        bpm: 142,
+                        bass: [146.83, 146.83, 174.61, 146.83, 196, 174.61, 146.83, 130.81, 146.83, 174.61, 220, 196, 174.61, 146.83, 130.81, 110],
+                        lead: [293.66, 349.23, 440, 349.23, 523.25, 440, 349.23, 329.63, 293.66, 440, 587.33, 523.25, 440, 349.23, 329.63, 293.66],
+                        arp: [587.33, 698.46, 880, 698.46, 1046.5, 880, 698.46, 659.25, 587.33, 880, 1174.66, 1046.5, 880, 698.46, 659.25, 587.33],
+                        perc: [1, 1, 2, 0, 1, 0, 2, 1, 1, 1, 2, 0, 1, 1, 2, 2]
                     },
-                    // Track 2: Synth Chill (Atmospheric Futuristic Flow)
+                    // Track 2: Synth Chill (105 BPM - Atmospheric Futuristic Flow)
                     {
                         bpm: 105,
-                        bass: [98, 98, 110, 98, 130.81, 110, 98, 87.31],
-                        lead: [196, 220, 261.63, 220, 293.66, 261.63, 220, 196]
+                        bass: [98, 98, 110, 98, 130.81, 110, 98, 87.31, 98, 110, 130.81, 110, 146.83, 130.81, 110, 98],
+                        lead: [196, 220, 261.63, 220, 293.66, 261.63, 220, 196, 261.63, 293.66, 349.23, 329.63, 293.66, 261.63, 220, 196],
+                        arp: [392, 440, 523.25, 440, 587.33, 523.25, 440, 392, 523.25, 587.33, 698.46, 659.25, 587.33, 523.25, 440, 392],
+                        perc: [1, 0, 0, 0, 2, 0, 1, 0, 1, 0, 0, 1, 2, 0, 1, 0]
+                    },
+                    // Track 3: Neon Overdrive (134 BPM - Pumping Cyberpunk Action Synth)
+                    {
+                        bpm: 134,
+                        bass: [110, 130.81, 146.83, 110, 164.81, 146.83, 130.81, 110, 123.47, 146.83, 164.81, 123.47, 174.61, 164.81, 146.83, 123.47],
+                        lead: [440, 523.25, 587.33, 440, 659.25, 587.33, 523.25, 440, 493.88, 587.33, 659.25, 493.88, 698.46, 659.25, 587.33, 493.88],
+                        arp: [880, 1046.5, 1174.66, 880, 1318.51, 1174.66, 1046.5, 880, 987.77, 1174.66, 1318.51, 987.77, 1396.91, 1318.51, 1174.66, 987.77],
+                        perc: [1, 1, 2, 1, 1, 0, 2, 1, 1, 1, 2, 1, 1, 2, 2, 1]
+                    },
+                    // Track 4: Hypergrid Arc (138 BPM - Melodic Arcade Chiptune Anthem)
+                    {
+                        bpm: 138,
+                        bass: [130.81, 164.81, 196, 164.81, 220, 196, 164.81, 146.83, 130.81, 174.61, 220, 174.61, 246.94, 220, 174.61, 146.83],
+                        lead: [523.25, 659.25, 783.99, 659.25, 880, 783.99, 659.25, 587.33, 523.25, 698.46, 880, 698.46, 987.77, 880, 698.46, 587.33],
+                        arp: [1046.5, 1318.51, 1567.98, 1318.51, 1760, 1567.98, 1318.51, 1174.66, 1046.5, 1396.91, 1760, 1396.91, 1975.53, 1760, 1396.91, 1174.66],
+                        perc: [1, 0, 2, 1, 1, 1, 2, 0, 1, 0, 2, 1, 1, 1, 2, 2]
+                    },
+                    // Track 5: Matrix Solace (98 BPM - Deep Ambient Cyber Odyssey)
+                    {
+                        bpm: 98,
+                        bass: [87.31, 87.31, 98, 87.31, 110, 98, 87.31, 82.41, 87.31, 98, 110, 130.81, 110, 98, 87.31, 82.41],
+                        lead: [349.23, 392, 440, 392, 523.25, 440, 392, 329.63, 349.23, 440, 523.25, 659.25, 523.25, 440, 392, 329.63],
+                        arp: [698.46, 783.99, 880, 783.99, 1046.5, 880, 783.99, 659.25, 698.46, 880, 1046.5, 1318.51, 1046.5, 880, 783.99, 659.25],
+                        perc: [1, 0, 0, 0, 2, 0, 0, 0, 1, 0, 1, 0, 2, 0, 0, 1]
+                    },
+                    // Track 6: Retro Byte Surge (146 BPM - Upbeat 8-Bit Retro Synth)
+                    {
+                        bpm: 146,
+                        bass: [164.81, 164.81, 196, 164.81, 220, 196, 164.81, 146.83, 164.81, 220, 246.94, 220, 261.63, 246.94, 220, 196],
+                        lead: [659.25, 783.99, 880, 783.99, 987.77, 880, 783.99, 587.33, 659.25, 880, 987.77, 1046.5, 987.77, 880, 783.99, 659.25],
+                        arp: [1318.51, 1567.98, 1760, 1567.98, 1975.53, 1760, 1567.98, 1174.66, 1318.51, 1760, 1975.53, 2093, 1975.53, 1760, 1567.98, 1318.51],
+                        perc: [1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 2, 2]
+                    },
+                    // Track 7: Orbital Protocol (126 BPM - Sci-Fi Cyber Synthwave Anthem)
+                    {
+                        bpm: 126,
+                        bass: [123.47, 123.47, 146.83, 123.47, 164.81, 146.83, 123.47, 110, 123.47, 164.81, 196, 164.81, 174.61, 164.81, 146.83, 110],
+                        lead: [493.88, 587.33, 659.25, 587.33, 783.99, 659.25, 587.33, 440, 493.88, 659.25, 783.99, 659.25, 698.46, 659.25, 587.33, 440],
+                        arp: [987.77, 1174.66, 1318.51, 1174.66, 1567.98, 1318.51, 1174.66, 880, 987.77, 1318.51, 1567.98, 1318.51, 1396.91, 1318.51, 1174.66, 880],
+                        perc: [1, 0, 2, 0, 1, 1, 2, 1, 1, 0, 2, 0, 1, 1, 2, 0]
                     }
                 ];
 
@@ -1432,31 +1483,76 @@
                     const idx = this.bgmStep % track.bass.length;
                     const bassFreq = track.bass[idx];
                     const leadFreq = track.lead[idx];
+                    const arpFreq = track.arp ? track.arp[idx] : 0;
+                    const percHit = track.perc ? track.perc[idx] : 0;
 
-                    // Bass Synth Line
-                    const bOsc = this.ctx.createOscillator();
-                    const bGain = this.ctx.createGain();
-                    bOsc.type = 'sawtooth';
-                    bOsc.frequency.setValueAtTime(bassFreq, this.ctx.currentTime);
-                    bGain.gain.setValueAtTime(0.03, this.ctx.currentTime);
-                    bGain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + (interval / 1000) * 0.9);
-                    bOsc.connect(bGain);
-                    bGain.connect(this.ctx.destination);
-                    bOsc.start();
-                    bOsc.stop(this.ctx.currentTime + (interval / 1000) * 0.9);
+                    // Voice 1: Deep Sawtooth Bass Synth
+                    if (bassFreq > 0) {
+                        const bOsc = this.ctx.createOscillator();
+                        const bGain = this.ctx.createGain();
+                        bOsc.type = 'sawtooth';
+                        bOsc.frequency.setValueAtTime(bassFreq, this.ctx.currentTime);
+                        bGain.gain.setValueAtTime(0.035, this.ctx.currentTime);
+                        bGain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + (interval / 1000) * 0.9);
+                        bOsc.connect(bGain);
+                        bGain.connect(this.ctx.destination);
+                        bOsc.start();
+                        bOsc.stop(this.ctx.currentTime + (interval / 1000) * 0.9);
+                    }
 
-                    // Lead Synth Melody
-                    if (this.bgmStep % 2 === 0) {
+                    // Voice 2: Lead Synth Melody
+                    if (leadFreq > 0 && (this.bgmStep % 2 === 0)) {
                         const lOsc = this.ctx.createOscillator();
                         const lGain = this.ctx.createGain();
                         lOsc.type = 'triangle';
                         lOsc.frequency.setValueAtTime(leadFreq, this.ctx.currentTime);
-                        lGain.gain.setValueAtTime(0.025, this.ctx.currentTime);
+                        lGain.gain.setValueAtTime(0.028, this.ctx.currentTime);
                         lGain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + (interval / 1000) * 1.5);
                         lOsc.connect(lGain);
                         lGain.connect(this.ctx.destination);
                         lOsc.start();
                         lOsc.stop(this.ctx.currentTime + (interval / 1000) * 1.5);
+                    }
+
+                    // Voice 3: Arpeggio Chiptune Harmony
+                    if (arpFreq > 0 && (this.bgmStep % 2 === 1)) {
+                        const aOsc = this.ctx.createOscillator();
+                        const aGain = this.ctx.createGain();
+                        aOsc.type = 'sine';
+                        aOsc.frequency.setValueAtTime(arpFreq, this.ctx.currentTime);
+                        aGain.gain.setValueAtTime(0.018, this.ctx.currentTime);
+                        aGain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + (interval / 1000) * 0.7);
+                        aOsc.connect(aGain);
+                        aGain.connect(this.ctx.destination);
+                        aOsc.start();
+                        aOsc.stop(this.ctx.currentTime + (interval / 1000) * 0.7);
+                    }
+
+                    // Voice 4: Percussion Noise Pulse (Hi-Hat / Snare)
+                    if (percHit > 0) {
+                        try {
+                            const bufferSize = Math.floor(this.ctx.sampleRate * (percHit === 2 ? 0.06 : 0.025));
+                            const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+                            const output = noiseBuffer.getChannelData(0);
+                            for (let i = 0; i < bufferSize; i++) {
+                                output[i] = Math.random() * 2 - 1;
+                            }
+                            const whiteNoise = this.ctx.createBufferSource();
+                            whiteNoise.buffer = noiseBuffer;
+
+                            const filter = this.ctx.createBiquadFilter();
+                            filter.type = percHit === 2 ? 'bandpass' : 'highpass';
+                            filter.frequency.value = percHit === 2 ? 1400 : 6500;
+
+                            const pGain = this.ctx.createGain();
+                            pGain.gain.setValueAtTime(percHit === 2 ? 0.035 : 0.018, this.ctx.currentTime);
+                            pGain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + (percHit === 2 ? 0.06 : 0.025));
+
+                            whiteNoise.connect(filter);
+                            filter.connect(pGain);
+                            pGain.connect(this.ctx.destination);
+                            whiteNoise.start();
+                        } catch (err) {}
                     }
 
                     this.bgmStep++;
@@ -3559,6 +3655,9 @@
 
             loadLevel(index) {
                 const requestedIndex = Math.max(0, Math.min(index, 99));
+                if (requestedIndex >= this.unlockedLevel && this.unlockedLevel < 100) {
+                    return;
+                }
                 const levelData = ensureCampaignLevel(requestedIndex + 1) || ALL_100_LEVELS[requestedIndex];
                 if (!levelData) return;
 
@@ -3566,6 +3665,28 @@
                 this.currentLevelIndex = requestedIndex;
                 this.activeLevelData = levelData;
                 this.initLevelFromData(levelData);
+            }
+
+            updatePrevNextButtons() {
+                const btnNext = document.getElementById('btn-stage-next');
+                const btnPrev = document.getElementById('btn-stage-prev');
+                if (this.currentMode === MODE_CAMPAIGN) {
+                    if (btnNext) {
+                        const canGoNext = (this.currentLevelIndex + 1 < this.unlockedLevel) && (this.currentLevelIndex < 99);
+                        btnNext.disabled = !canGoNext;
+                        btnNext.style.opacity = canGoNext ? '1' : '0.4';
+                        btnNext.style.cursor = canGoNext ? 'pointer' : 'not-allowed';
+                    }
+                    if (btnPrev) {
+                        const canGoPrev = this.currentLevelIndex > 0;
+                        btnPrev.disabled = !canGoPrev;
+                        btnPrev.style.opacity = canGoPrev ? '1' : '0.4';
+                        btnPrev.style.cursor = canGoPrev ? 'pointer' : 'not-allowed';
+                    }
+                } else {
+                    if (btnNext) { btnNext.disabled = false; btnNext.style.opacity = '1'; btnNext.style.cursor = 'pointer'; }
+                    if (btnPrev) { btnPrev.disabled = false; btnPrev.style.opacity = '1'; btnPrev.style.cursor = 'pointer'; }
+                }
             }
 
             loadRandomLevel(difficulty, seed, precomputedData = null) {
@@ -4290,10 +4411,14 @@
                     return;
                 }
 
-                if (this.currentLevelIndex + 1 > this.unlockedLevel) {
+                if (this.currentLevelIndex + 2 > this.unlockedLevel) {
                     this.unlockedLevel = Math.min(100, this.currentLevelIndex + 2);
                     this.saveProgress();
                 }
+                if (typeof window.render100GridGlobal === 'function') {
+                    window.render100GridGlobal();
+                }
+
                 if (this.currentLevelIndex < 99) {
                     this.loadLevel(this.currentLevelIndex + 1);
                 } else {
@@ -7358,6 +7483,10 @@
                 if (e.key === ' ' || e.key === 'x' || e.key === 'X') game.shoot();
                 if (e.key === 'z' || e.key === 'Z') game.undo();
                 if (e.key === 'r' || e.key === 'R') restartActiveLevel();
+                if (e.key === 'h' || e.key === 'H') {
+                    const btnHint = document.getElementById('btn-solve-hint');
+                    if (btnHint) btnHint.click();
+                }
             });
 
             bindPad('btn-pad-up', () => game.moveLolo(0, -1));
@@ -7379,8 +7508,10 @@
             });
 
             bindPad('btn-stage-next', () => {
-                if (game.currentMode === 'campaign' && game.currentLevelIndex < 99) {
-                    game.loadLevel(game.currentLevelIndex + 1);
+                if (game.currentMode === 'campaign') {
+                    if (game.currentLevelIndex + 1 < game.unlockedLevel && game.currentLevelIndex < 99) {
+                        game.loadLevel(game.currentLevelIndex + 1);
+                    }
                 } else if (game.currentMode === 'random') {
                     if (window.nextRandomProtocol) {
                         window.nextRandomProtocol();
@@ -7389,24 +7520,51 @@
             });
 
             bindPad('btn-solve-hint', () => {
-                const lvl = game.activeLevelData || ALL_100_LEVELS[game.currentLevelIndex];
-                if (lvl) {
-                    const sol = LoloMathSolver.solve(lvl);
-                    if (sol && sol.solvable && sol.path && sol.path.length > 0) {
-                        const nextStep = sol.path[0];
-                        const dirNames = { 'U': 'UP (↑)', 'D': 'DOWN (↓)', 'L': 'LEFT (←)', 'R': 'RIGHT (→)' };
-                        const cellSize = game.canvas.width / (game.grid.length || GRID_SIZE);
-                        const lx = (game.lolo.renderX + 0.5) * cellSize;
-                        const ly = (game.lolo.renderY + 0.5) * cellSize;
-                        game.particles.floatingText(lx, ly - 35, `HINT: MOVE ${stepDesc}`, '#00f0ff');
-                        game.particles.ripple(lx, ly, '#00f0ff');
-                        audio.playPowerUp();
-                    } else {
-                        const cellSize = game.canvas.width / (game.grid.length || GRID_SIZE);
-                        const lx = (game.lolo.renderX + 0.5) * cellSize;
-                        const ly = (game.lolo.renderY + 0.5) * cellSize;
-                        game.particles.floatingText(lx, ly - 35, `SOLVABILITY VERIFIED`, '#ff007f');
+                let sol = null;
+                if (game.grid && game.lolo) {
+                    sol = LoloMathSolver.solve({
+                        grid: game.grid,
+                        lolo: game.lolo,
+                        blocks: game.blocks,
+                        enemies: game.enemies,
+                        ammo: game.lolo ? game.lolo.ammo : 0
+                    }, 15000);
+                }
+                if (!sol || !sol.solvable) {
+                    const lvl = game.activeLevelData || ALL_100_LEVELS[game.currentLevelIndex];
+                    if (lvl) {
+                        sol = LoloMathSolver.solve(lvl, 25000);
                     }
+                }
+
+                const cellSize = game.canvas ? (game.canvas.width / (game.grid.length || GRID_SIZE)) : 30;
+                const lx = game.lolo ? (game.lolo.renderX + 0.5) * cellSize : 150;
+                const ly = game.lolo ? (game.lolo.renderY + 0.5) * cellSize : 150;
+
+                if (sol && sol.solvable && sol.path && sol.path.length > 0) {
+                    const nextStep = sol.path[0];
+                    const dirNames = { 'U': 'UP (↑)', 'D': 'DOWN (↓)', 'L': 'LEFT (←)', 'R': 'RIGHT (→)' };
+                    let stepDesc = '';
+                    if (typeof nextStep === 'string' && nextStep.startsWith('S_')) {
+                        const dirKey = nextStep.substring(2);
+                        stepDesc = `SHOOT ${dirNames[dirKey] || dirKey}`;
+                    } else if (typeof nextStep === 'string' && dirNames[nextStep]) {
+                        stepDesc = `MOVE ${dirNames[nextStep]}`;
+                    } else {
+                        stepDesc = `MOVE ${nextStep}`;
+                    }
+
+                    if (game.particles) {
+                        game.particles.floatingText(lx, ly - 35, `HINT: ${stepDesc}`, '#00f0ff');
+                        game.particles.ripple(lx, ly, '#00f0ff');
+                    }
+                    audio.playPowerUp();
+                } else {
+                    if (game.particles) {
+                        game.particles.floatingText(lx, ly - 35, `STUCK: PRESS (R) TO RESET`, '#ff007f');
+                        game.particles.ripple(lx, ly, '#ff007f');
+                    }
+                    audio.playHit();
                 }
             });
 
@@ -7475,6 +7633,7 @@
             }
 
             function render100Grid() {
+                window.render100GridGlobal = render100Grid;
                 if (!grid100) return;
                 const existing = Array.from(grid100.children);
                 if (existing.length === 100) {
