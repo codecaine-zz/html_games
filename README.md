@@ -1,7 +1,7 @@
 # Adventures of Lolo: Cyberpunk Remaster
 
 > **Next-Gen Grid-Based Cyberpunk Action-Puzzle Engine**  
-> Fusing classic top-down Sokoban mechanics with real-time hazard avoidance, 90° optical laser deflection, phase-permeable barriers, multi-directional turrets, procedural Sokoban generation, an integrated Level Editor & Chamber Vault, and an A* priority queue mathematical solvability engine.
+> Fusing classic top-down Sokoban mechanics with real-time hazard avoidance, 90° optical laser deflection, phase-permeable barriers, multi-directional turrets, procedural Sokoban generation, and an integrated level editor.
 
 ![HTML5 Canvas](https://img.shields.io/badge/Engine-HTML5%20Canvas%20%2F%20Vanilla%20JS-cyan?style=for-the-badge&logo=html5)
 ![Zero External Assets](https://img.shields.io/badge/Audio-Web%20Audio%20API%20Synthesizer-pink?style=for-the-badge)
@@ -12,9 +12,9 @@
 
 ## 🎮 Game Overview
 
-**Adventures of Lolo: Cyberpunk Remaster** reimagine the timeless 1989 HAL Laboratory classic *Adventures of Lolo* in a sleek neon-lit synthwave aesthetic. 
+**Adventures of Lolo: Cyberpunk Remaster** reimagines the timeless 1989 HAL Laboratory classic *Adventures of Lolo* in a sleek neon-lit synthwave aesthetic.
 
-As Operative Lolo, your mission is to navigate through security sectors, outsmart automated killer sentries, manipulate high-tech tactical push-blocks, collect Energy Cores to unlock Data Chests, and extract via the Cyber Gateway.
+As Operative Lolo, your mission is to navigate through security sectors, outsmart automated killer sentries, manipulate high-tech tactical push-blocks, collect Energy Cores to unlock Data Chests, and conquer 100 handcrafted stages.
 
 ---
 
@@ -23,49 +23,49 @@ As Operative Lolo, your mission is to navigate through security sectors, outsmar
 ### 1. Main Campaign Gameplay (Stage 1 — Introductory Training Protocol)
 *Standard 11×11 grid with Tactical Dossier telemetry, Hazard Scanner, Virtual Gamepad, and real-time canvas rendering.*
 
-![Stage 1 Intro Gameplay](screenshots/gameplay_stage1.png)
+![Stage 1 Intro Gameplay](lolo/screenshots/gameplay_stage1.png)
 
 ---
 
 ### 2. Tactical Mid-Campaign Puzzle (Stage 45 — Prism Deflection Matrix)
 *Expanded 13×13 grid featuring Reflector Prisms deflecting line-of-sight laser sentries and multi-directional turrets.*
 
-![Stage 45 Prism Deflection](screenshots/gameplay_stage45.png)
+![Stage 45 Prism Deflection](lolo/screenshots/gameplay_stage45.png)
 
 ---
 
 ### 3. Apex Cyber Fortress (Stage 98 — High-Density Grandmaster Chamber)
 *Maximum 19×19 grid featuring dense security corridors, Don Medusa patrols, Quantum Portals, and multi-block Sokoban covers.*
 
-![Stage 98 Apex Cyber Fortress](screenshots/gameplay_stage98.png)
+![Stage 98 Apex Cyber Fortress](lolo/screenshots/gameplay_stage98.png)
 
 ---
 
 ### 4. Cyber Architect Studio (Integrated Level Editor)
 *Full-featured level editor with symmetry tools, drawing tools (Pencil, Fill, Box, Eraser), tile/block/enemy palettes, live telemetry, A* solver integration, and JSON import/export.*
 
-![Cyber Architect Studio](screenshots/cyber_architect_editor.png)
+![Cyber Architect Studio](lolo/screenshots/cyber_architect_editor.png)
 
 ---
 
 ### 5. Cyber Protocol Lab (Procedural Sokoban Generator)
 *Procedural generator capable of synthesizing 100% mathematically proven solvable Sokoban chambers based on seed, grid size (9×9 to 17×17), difficulty, and hazard filters.*
 
-![Procedural Sokoban Lab](screenshots/random_sokoban_lab.png)
+![Procedural Sokoban Lab](lolo/screenshots/random_sokoban_lab.png)
 
 ---
 
 ### 6. 100-Stage Cyber Vault Matrix
 *Interactive stage browser and unlock system covering all 100 handcrafted campaign levels.*
 
-![100-Stage Cyber Vault](screenshots/level_selector.png)
+![100-Stage Cyber Vault](lolo/screenshots/level_selector.png)
 
 ---
 
 ## 🔥 Key Features
 
 - **100-Stage Handcrafted Campaign**:
-  - **Dynamic Board Scaling**: Progressively scales grid dimensions ($9\times 9$, $11\times 11$, $13\times 13$, $15\times 15$, $17\times 17$, $19\times 19$) as security sectors increase in threat level.
+  - **Dynamic Board Scaling**: Progressively scales grid dimensions ($9\times 9$, $11\times 11$, $13\times 13$, $15\times 15$, $17\times 17$, $19\times 19$) as security sectors increase in threat.
   - **100% Unique & Solvability-Proven**: Every layout is mathematically guaranteed solvable by the built-in $A^*$ solver engine.
 
 - **13 Hostile Enemy AI Archetypes**:
@@ -106,7 +106,7 @@ As Operative Lolo, your mission is to navigate through security sectors, outsmar
   - Local Chamber Vault for saving, loading, and exporting custom levels via JSON format.
 
 - **Zero-Asset Web Audio API Sound Synthesizer**:
-  - Synthesizes 18 dynamic sound effects (laser humming, blaster fire, core pickup, block sliding, bomb detonation, portal warping) and 3 retro synthwave BGM tracks in real-time. Zero external `.mp3` or `.wav` dependencies!
+  - Synthesizes 18 dynamic sound effects (laser humming, blaster fire, core pickup, block sliding, bomb detonation, portal warping) and 3 retro synthwave BGM tracks in real-time. Zero external assets required.
 
 - **Cyberpunk AAA Visual Polish**:
   - Dynamic CRT scanline glow overlays, screen shake trauma decay, hit-stop frame freezing, particle bursts, fluid movement lerp, and responsive high-contrast UI.
