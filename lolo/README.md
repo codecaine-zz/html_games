@@ -7,6 +7,7 @@
 ![Zero External Assets](https://img.shields.io/badge/Audio-Web%20Audio%20API%20Synthesizer-pink?style=for-the-badge)
 ![100 Solvable Stages](https://img.shields.io/badge/Campaign-100%20Unique%20Solvable%20Stages-emerald?style=for-the-badge)
 ![Level Editor](https://img.shields.io/badge/Cyber%20Architect-Integrated%20Level%20Editor-amber?style=for-the-badge)
+![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)
 
 ---
 
@@ -206,5 +207,7 @@ flowchart TD
 ---
 
 ## 📄 License & Credits
+
+Distributed under the **MIT License**. See [`LICENSE`](../LICENSE) for more information.
 
 *Adventures of Lolo: Cyberpunk Remaster* © 2026. Built with passion for retro Sokoban action-puzzles and cyberpunk aesthetics. Original *Adventures of Lolo* game concept created by HAL Laboratory.
