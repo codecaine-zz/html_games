@@ -1,6 +1,6 @@
 # Adventures of Lolo: Cyberpunk Remaster — Master Technical Specification
 
-> **Version**: 3.5.0 (Daily Hack Protocol with 7-Day Streak Calendar, Cyber Achievement Engine, Dynamic Tactical Dossiers, 3-Star Performance Scoring, 5 Cyber Theme Palettes, 8-Track Synthesizer, Persistent Save States, Tactical Blocks, Optical Laser Deflection, A* Solvability Engine & Cyber Architect Studio)  
+> **Version**: 3.6.0 (Persistent CRT Save Engine & Preset Cycling, Enter Key Fast Level Progression, Daily Hack Protocol with 7-Day Streak Calendar, Cyber Achievement Engine, Dynamic Tactical Dossiers, 3-Star Performance Scoring, 5 Cyber Theme Palettes, 8-Track Synthesizer, Tactical Blocks, Optical Laser Deflection, A* Solvability Engine & Cyber Architect Studio)  
 > **Target Frameworks**: Vanilla HTML5/Canvas, Unity (C#), Godot (GDScript/C#), React Native, Unreal Engine (C++/Blueprints), WebGL / WebAssembly  
 > **Source Reference**: `adventures_of_lolo_cyberpunk_remaster.html`
 
@@ -8,7 +8,7 @@
 
 ## 1. System Overview
 
-*Adventures of Lolo: Cyberpunk Remaster* is a high-octane grid-based puzzle-action remaster that fuses classic top-down Sokoban mechanics with real-time hazard avoidance, 90° optical laser deflection, phase-permeable barriers, multi-directional aiming turrets (1–8 directions), an A* priority queue mathematical solvability engine, 13 enemy archetypes, 9 tactical push-block archetypes, 5 physics mechanics (portals, mag-lev ice, one-way gates, cracked walls, plasma bridges), a 100-stage campaign with progressive grid scaling ($9\times 9$ up to $19\times 19$), a Daily Hack Protocol with a synchronized 24-hour UTC streak calendar, a 3-Star Performance Rating Engine, 5 switchable cyberpunk color themes, an 8-track Web Audio synthesizer, a procedural Sokoban heavy generator, and an integrated Level Editor & Chamber Vault (Cyber Architect).
+*Adventures of Lolo: Cyberpunk Remaster* is a high-octane grid-based puzzle-action remaster that fuses classic top-down Sokoban mechanics with real-time hazard avoidance, 90° optical laser deflection, phase-permeable barriers, multi-directional aiming turrets (1–8 directions), an A* priority queue mathematical solvability engine, 13 enemy archetypes, 9 tactical push-block archetypes, 5 physics mechanics (portals, mag-lev ice, one-way gates, cracked walls, plasma bridges), a 100-stage campaign with progressive grid scaling ($9\times 9$ up to $19\times 19$), a Daily Hack Protocol with a synchronized 24-hour UTC streak calendar, a 3-Star Performance Rating Engine, 5 switchable cyberpunk color themes, persistent CRT scanline overlay state management, an 8-track Web Audio synthesizer, a procedural Sokoban heavy generator, and an integrated Level Editor & Chamber Vault (Cyber Architect).
 
 ### 1.1 Verified Runtime Contracts & Invariants
 
@@ -37,6 +37,8 @@ All ports, engine implementations, and modifications must strictly satisfy these
 12. **Sokoban Multi-Block Generation**: The random generator with `blockDensity: 'heavy'` or `preset: 'sokoban'` generates 4 to 8 push blocks across symmetric corridor layouts with 100% verified solvability.
 13. **Mathematical A* Solver Performance**: Search uses an A* Priority Queue (`MinHeap`) with canonical block sorting, solving multi-block chambers in under 100 states ($<1\text{ms}$).
 14. **Zero-Asset Audio Synthesis**: All 18 SFX chimes and 8-track synthwave BGM songs are synthesized in real time via Web Audio API oscillators and gain envelopes with zero external asset dependencies.
+15. **Keyboard & Mouse Fast Progression Parity**: Pressing <kbd>Enter</kbd> advances to the next unlocked stage or confirms victory/briefing modals instantly without requiring mouse navigation, while on-screen HUD buttons maintain full click and touch support.
+16. **Zero-Shift Layout Stability**: UI action controls, CRT presets (`min-w-[108px]`), and audio unlock banners are decoupled from button rows, preventing horizontal jumping or click interception during pointer events and mode transitions.
 
 ---
 
@@ -252,7 +254,38 @@ Generated purely via native Web Audio API oscillators and gain nodes (zero exter
 
 ---
 
-## 9. Verification Suite
+## 9. Input, Fast Navigation & CRT State Machine Specification
+
+### 9.1 Unified Input Matrix
+
+| Action | Primary Keystroke | Secondary Keystroke | Touch / Mouse Trigger |
+| :--- | :--- | :--- | :--- |
+| **Move Operative** | `W` `A` `S` `D` | `ArrowUp` `ArrowLeft` `ArrowDown` `ArrowRight` | On-Screen Directional Pad (`btn-pad-*`) |
+| **Fire Cyber Blaster** | `Space` | `X` | `SHOOT` Touch Pad Button |
+| **Undo Move** | `Z` | `U` | `Undo` Touch Pad Button |
+| **Restart Chamber** | `R` | — | `Reset` Touch Pad Button |
+| **Get Solver Hint** | `H` | — | `Hint` HUD Button |
+| **Fast Next Level / Advance** | `Enter` | — | `Next Stage` HUD Button (`btn-stage-next`) |
+| **Confirm Victory / Next Protocol** | `Enter` | `Space` | `NEXT STAGE` Victory Modal Button |
+| **Dismiss Briefing / Start** | `Enter` | `Escape` | `Start Mission` Briefing Modal Button |
+| **Toggle CRT Preset** | — | — | `CRT: [Preset]` Header Button (`btn-vfx-toggle`) |
+
+### 9.2 Fast Level Progression Rules (<kbd>Enter</kbd>)
+1. **Context-Aware Priority**:
+   - If the **Victory Modal** is active, <kbd>Enter</kbd> clicks `#btn-victory-next-random` to immediately load the next campaign stage or synthesize the next random/daily protocol.
+   - If the **Sector Briefing Modal** is active, <kbd>Enter</kbd> immediately begins the mission.
+   - During **Chamber Play**: If the next stage is unlocked (or current stage completed), <kbd>Enter</kbd> instantly loads `currentLevelIndex + 1`.
+2. **Text Field Immunity**: Keystroke handlers check `document.activeElement` and bypass progression when the player is editing in JSON inputs or custom seed textareas.
+
+### 9.3 CRT Preset State Machine & Layout Stability
+- **State Values**: `'subtle'` (default on), `'heavy'`, `'off'`.
+- **State Transition Sequence**: $\text{Subtle} \xrightarrow{\text{click}} \text{Off} \xrightarrow{\text{click}} \text{Heavy} \xrightarrow{\text{click}} \text{Subtle}$.
+- **Persistence**: Saved synchronously to `localStorage.getItem('lolo_cyber_crt_mode')` on state change; restored immediately upon early script load (`initCrtToggle`).
+- **Layout Invariance**: The button container enforces `min-w-[108px] sm:min-w-[114px]` and `pointer-events-none` on inner child spans to guarantee zero horizontal shift of adjacent header controls.
+
+---
+
+## 10. Verification Suite
 
 Headless verification across all campaign stages, procedural generation, daily streak tracking, and tactical dossiers can be executed with Node.js:
 

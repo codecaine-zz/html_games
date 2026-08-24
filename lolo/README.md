@@ -197,6 +197,10 @@ As Operative Lolo, your mission is to navigate through security sectors, outsmar
 | **Undo Move** | `Z` | `U` | `Undo (Z)` Button |
 | **Restart Chamber** | `R` | — | `Restart (R)` Button |
 | **Get Solver Hint** | `H` | — | `Hint (H)` Button |
+| **Fast Next Level / Advance** | `Enter` | — | `Next Stage` HUD Button |
+| **Confirm Victory / Next Protocol** | `Enter` | `Space` | `NEXT STAGE` Victory Modal Button |
+| **Dismiss Briefing / Start** | `Enter` | `Escape` | `Start Mission` Briefing Modal Button |
+| **Toggle CRT Preset** | — | — | `CRT: [Preset]` Header Button |
 | **Daily Hack Protocol** | — | — | `Daily Hack` Header Button |
 | **Toggle Level Editor** | — | — | `Architect` Header Button |
 | **Toggle Stage Vault** | — | — | `Stages (100)` Header Button |
