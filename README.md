@@ -122,17 +122,22 @@ As Operative Lolo, your mission is to navigate through security sectors, outsmar
   | <img src="lolo/screenshots/tiles/portal.png" width="36" height="36" /> | **Quantum Portal (`portal`)** | Pair of quantum wormholes (Alpha/Beta) for instantaneous teleportation. |
   | <img src="lolo/screenshots/tiles/one_way.png" width="36" height="36" /> | **One-Way Gate (`one_way`)** | Directional security barrier permitting 1-way traversal. |
 
-- **Mathematical A* Solvability Engine (`LoloMathSolver`)**:
+- **Mathematical A* Solvability & Simulation Engine (`LoloMathSolver`)**:
   - Utilizes a MinHeap Priority Queue with canonical block state serialization to evaluate solution paths across multi-block Sokoban arrangements in under 100 state evaluations ($<1\text{ms}$).
+  - **Deterministic Simulation Replay**: Real-time solution simulation in both the **Cyber Architect Level Editor** (`Simulate Play`) and **Random Lab** (`Simulate Path`), executing block pushing, quantum portal teleportation, ice sliding, and data vault unlocking with synchronous tape tracking.
   - Integrated directly into the gameplay interface via the **Hint (H)** button to assist stuck players.
 
-- **Cyber Architect Studio (Level Editor)**:
+- **Cyber Architect Studio (Level Editor & Simulation Suite)**:
   - Full-featured canvas level editor with Symmetry toggles (Horizontal, Vertical, 4-Way Radial), Pencil, Bucket Fill, Box Select, and Eraser.
   - Object Telemetry dashboard showing block counts, core requirements, hazard density, and built-in Math Check solvability verification.
+  - **Live Chamber Simulation**: Replays optimal puzzle solutions in real time with collision physics, portal warps, and automated level state restoration.
   - Local Chamber Vault for saving, loading, and exporting custom levels via JSON format.
 
+- **🏰 Mega Grid Full Hostile Roster Synthesis (17×17)**:
+  - Procedural synthesizer guarantees placement of all 13 unique hostile enemy archetypes and tactical blocks across dedicated defensive sectors on Mega grids ($17\times 17$) with 100% verified solvability.
+
 - **Zero-Asset Web Audio API Sound Synthesizer**:
-  - Synthesizes 18 dynamic sound effects (laser humming, blaster fire, core pickup, block sliding, bomb detonation, portal warping) and 3 retro synthwave BGM tracks in real-time. Zero external assets required.
+  - Synthesizes 18 dynamic sound effects (laser humming, blaster fire, core pickup, block sliding, bomb detonation, portal warping) and 8 retro synthwave BGM tracks in real-time. Zero external assets required.
 
 - **Cyberpunk AAA Visual Polish**:
   - Dynamic CRT scanline glow overlays, screen shake trauma decay, hit-stop frame freezing, particle bursts, fluid movement lerp, and responsive high-contrast UI.

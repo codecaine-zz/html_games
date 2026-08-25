@@ -1,6 +1,6 @@
 # Adventures of Lolo: Cyberpunk Remaster — Master Technical Specification
 
-> **Version**: 3.6.0 (Persistent CRT Save Engine & Preset Cycling, Enter Key Fast Level Progression, Daily Hack Protocol with 7-Day Streak Calendar, Cyber Achievement Engine, Dynamic Tactical Dossiers, 3-Star Performance Scoring, 5 Cyber Theme Palettes, 8-Track Synthesizer, Tactical Blocks, Optical Laser Deflection, A* Solvability Engine & Cyber Architect Studio)  
+> **Version**: 3.7.0 (Deterministic Simulation Engine in Cyber Architect & Random Lab, Mega Grid Full 13-Hostile Roster Synthesis, Persistent CRT Save Engine, Daily Hack Protocol with 7-Day Streak Calendar, Cyber Achievement Engine, Dynamic Tactical Dossiers, 3-Star Performance Scoring, 5 Cyber Theme Palettes, 8-Track Synthesizer, Tactical Blocks, Optical Laser Deflection, A* Solvability Engine & Cyber Architect Studio)  
 > **Target Frameworks**: Vanilla HTML5/Canvas, Unity (C#), Godot (GDScript/C#), React Native, Unreal Engine (C++/Blueprints), WebGL / WebAssembly  
 > **Source Reference**: `adventures_of_lolo_cyberpunk_remaster.html`
 
@@ -8,37 +8,43 @@
 
 ## 1. System Overview
 
-*Adventures of Lolo: Cyberpunk Remaster* is a high-octane grid-based puzzle-action remaster that fuses classic top-down Sokoban mechanics with real-time hazard avoidance, 90° optical laser deflection, phase-permeable barriers, multi-directional aiming turrets (1–8 directions), an A* priority queue mathematical solvability engine, 13 enemy archetypes, 9 tactical push-block archetypes, 5 physics mechanics (portals, mag-lev ice, one-way gates, cracked walls, plasma bridges), a 100-stage campaign with progressive grid scaling ($9\times 9$ up to $19\times 19$), a Daily Hack Protocol with a synchronized 24-hour UTC streak calendar, a 3-Star Performance Rating Engine, 5 switchable cyberpunk color themes, persistent CRT scanline overlay state management, an 8-track Web Audio synthesizer, a procedural Sokoban heavy generator, and an integrated Level Editor & Chamber Vault (Cyber Architect).
+*Adventures of Lolo: Cyberpunk Remaster* is a high-octane grid-based puzzle-action remaster that fuses classic top-down Sokoban mechanics with real-time hazard avoidance, 90° optical laser deflection, phase-permeable barriers, multi-directional aiming turrets (1–8 directions), an A* priority queue mathematical solvability engine, 13 enemy archetypes with clear UI threat categorizations, 9 tactical push-block archetypes, 5 physics mechanics (portals, mag-lev ice, one-way gates, cracked walls, plasma bridges), an integrated Level Editor with full Simulation Replay (Cyber Architect), a 100-stage campaign with progressive grid scaling ($9\times 9$ up to $19\times 19$), a Daily Hack Protocol with a synchronized 24-hour UTC streak calendar, a 3-Star Performance Rating Engine, 5 switchable cyberpunk color themes, persistent CRT scanline overlay state management, an 8-track Web Audio synthesizer, and a procedural Sokoban heavy generator with guaranteed 13-hostile full-roster Mega grid synthesis.
 
 ### 1.1 Verified Runtime Contracts & Invariants
 
 All ports, engine implementations, and modifications must strictly satisfy these core runtime invariants:
 
-1. **Deterministic Single-Step Movement**: Player movement executes precisely 1 tile per keystroke with smooth interpolated rendering (`renderX`, `renderY` lerp); no tile skipping or ghost movements.
+1. **Deterministic Single-Step Movement & Simulation**: Player movement executes precisely 1 tile per keystroke with smooth interpolated rendering (`renderX`, `renderY` lerp); quantum portal teleportation immediately snaps visual rendering coordinates to prevent cross-screen gliding artifacts.
 2. **Strict Blocker State Enforcement**: Closed Data Chests (`TILE_CHEST_CLOSED`) and Exit Gateways (`TILE_DOOR_CLOSED`) are impassable collision barriers until heart/chest conditions are unlocked.
 3. **100% Campaign Uniqueness & Solvability**: All 100 campaign stages possess unique layout signatures (`getLevelLayoutSignature`) and are mathematically proven solvable by `LoloMathSolver`.
-4. **3-Star Move Par Scoring**: Earned stars are computed against the mathematical optimal par move count ($M_{par}$) from `LoloMathSolver`:
+4. **Deterministic Simulation Play Engine**:
+   - Both the Random Lab modal (`simulateSolution`) and Cyber Architect Editor (`simulateEditorSolution`) feature real-time physical simulation replay based on the $A^*$ solver path.
+   - Simulation accurately pushes dynamic blocks, slides across Mag-Lev Ice, teleports through Quantum Portals, consumes Energy Cores, unlocks Data Chests, opens Exit Gateways, and synchronously highlights path tape badges.
+   - Editor simulation isolates state (`isSimulatingInEditor = true`), preventing accidental campaign level advancement or background real-time enemy AI death conflicts during replay, and automatically restores the stage state upon completion.
+5. **Mega Grid Full Hostile Roster Synthesis ($17\times 17$)**:
+   - The procedural generator's Mega Grid synthesis guarantees placement of all 13 unique hostile enemy archetypes and specialized blocks across dedicated grid sectors with 100% verified mathematical solvability.
+6. **3-Star Move Par Scoring**: Earned stars are computed against the mathematical optimal par move count ($M_{par}$) from `LoloMathSolver`:
    - $\star\star\star$ (**Gold Cyber Master**): $\text{Moves} \le M_{par} + 2$
    - $\star\star\star$ (**Silver Operative**): $\text{Moves} \le \lceil M_{par} \times 1.5 \rceil$
    - $\star\star\star$ (**Bronze Recon Clear**): Stage Completed.
-5. **Daily Hack Protocol & Streak Lifecycle**:
+7. **Daily Hack Protocol & Streak Lifecycle**:
    - Every 24 hours (00:00 UTC), a new deterministic chamber is synthesized via seed `DAILY-YYYYMMDD`.
    - Grid size scales by day of week: $11\times 11$ (Mon–Fri), $13\times 13$ (Sat), $15\times 15$ (Sun).
    - Clearing today's challenge updates `currentStreak`, `bestStreak`, `totalClears`, and adds a completion timestamp to the 7-Day Activity Calendar (`lolo_cyber_daily_v1`).
-6. **Dynamic Stage-by-Stage Tactical Dossiers**:
+8. **Dynamic Stage-by-Stage Tactical Dossiers**:
    - `showSectorBriefing` dynamically scans the active chamber (Campaign Stages 1–100, Daily Hack, and Random Lab) and generates real-time telemetry: unique stage name, threat tier, hostile threat counts, environmental module summary, and tailored tactical directives.
-7. **Modal Lifecycle Isolation & State Protection**:
+9. **Modal Lifecycle Isolation & State Protection**:
    - All modal overlays are toggled via global `showModal(idOrEl)` and `hideModal(idOrEl)` enforcing `display: flex !important` / `display: none !important` to prevent Tailwind class conflicts.
-   - Stage completion triggers `this.isStageCompleted = true` to lock inputs during victory celebrations; modal dismissal (`handleVictoryClose`) smoothly advances to the next stage or resets state, guaranteeing zero freeze lockups.
-8. **Persistent Save State Management**: User progress (`lolo_cyber_unlocked`), per-stage star ratings (`lolo_cyber_level_stats`), daily streak logs (`lolo_cyber_daily_v1`), active theme (`lolo_cyber_active_theme`), CRT mode (`lolo_cyber_crt_mode`), and active audio preferences (`lolo_cyber_audio_settings`) automatically persist in `localStorage`.
-9. **Progressive Board Scaling ($9\times 9$ to $19\times 19$)**: Board sizes adapt dynamically across difficulty tiers (Stage 1: $11\times 11$; Stages 2–20: $9\times 9$; Stages 21–40: $11\times 11$; Stages 41–65: $13\times 13$; Stages 66–85: $15\times 15$; Stages 86–95: $17\times 17$; Stages 96–100: $19\times 19$) without reading out-of-bounds rows or clipping canvas viewports.
-10. **Optical Laser Deflection**: Lasers intersecting Reflector Prisms (`BLOCK_REFLECTOR`) deflect 90° according to prism orientation ($\nearrow$, $\searrow$, $\swarrow$, $\nwarrow$) and support multi-bounce chained reflection up to 4 consecutive deflections.
-11. **Laser Phase Pass-Through**: Lasers and blaster shots pass through Holo Barriers (`BLOCK_HOLO`) unimpeded, while physical entities (Lolo, enemies, push blocks) are physically blocked.
-12. **Sokoban Multi-Block Generation**: The random generator with `blockDensity: 'heavy'` or `preset: 'sokoban'` generates 4 to 8 push blocks across symmetric corridor layouts with 100% verified solvability.
-13. **Mathematical A* Solver Performance**: Search uses an A* Priority Queue (`MinHeap`) with canonical block sorting, solving multi-block chambers in under 100 states ($<1\text{ms}$).
-14. **Zero-Asset Audio Synthesis**: All 18 SFX chimes and 8-track synthwave BGM songs are synthesized in real time via Web Audio API oscillators and gain envelopes with zero external asset dependencies.
-15. **Keyboard & Mouse Fast Progression Parity**: Pressing <kbd>Enter</kbd> advances to the next unlocked stage or confirms victory/briefing modals instantly without requiring mouse navigation, while on-screen HUD buttons maintain full click and touch support.
-16. **Zero-Shift Layout Stability**: UI action controls, CRT presets (`min-w-[108px]`), and audio unlock banners are decoupled from button rows, preventing horizontal jumping or click interception during pointer events and mode transitions.
+   - Stage completion triggers `this.isStageCompleted = true` to lock inputs during victory celebrations; modal dismissal smoothly advances to the next stage or resets state, guaranteeing zero freeze lockups.
+10. **Persistent Save State Management**: User progress (`lolo_cyber_unlocked`), per-stage star ratings (`lolo_cyber_level_stats`), daily streak logs (`lolo_cyber_daily_v1`), active theme (`lolo_cyber_active_theme`), CRT mode (`lolo_cyber_crt_mode`), and active audio preferences (`lolo_cyber_audio_settings`) automatically persist in `localStorage`.
+11. **Progressive Board Scaling ($9\times 9$ to $19\times 19$)**: Board sizes adapt dynamically across difficulty tiers (Stage 1: $11\times 11$; Stages 2–20: $9\times 9$; Stages 21–40: $11\times 11$; Stages 41–65: $13\times 13$; Stages 66–85: $15\times 15$; Stages 86–95: $17\times 17$; Stages 96–100: $19\times 19$) without reading out-of-bounds rows or clipping canvas viewports.
+12. **Optical Laser Deflection**: Lasers intersecting Reflector Prisms (`BLOCK_REFLECTOR`) deflect 90° according to prism orientation ($\nearrow$, $\searrow$, $\swarrow$, $\nwarrow$) and support multi-bounce chained reflection up to 4 consecutive deflections.
+13. **Laser Phase Pass-Through**: Lasers and blaster shots pass through Holo Barriers (`BLOCK_HOLO`) unimpeded, while physical entities (Lolo, enemies, push blocks) are physically blocked.
+14. **Sokoban Multi-Block Generation**: The random generator with `blockDensity: 'heavy'` or `preset: 'sokoban'` generates 4 to 8 push blocks across symmetric corridor layouts with 100% verified solvability.
+15. **Mathematical A* Solver Performance**: Search uses an A* Priority Queue (`MinHeap`) with canonical block sorting, solving multi-block chambers in under 100 states ($<1\text{ms}$).
+16. **Zero-Asset Audio Synthesis**: All 18 SFX chimes and 8-track synthwave BGM songs are synthesized in real time via Web Audio API oscillators and gain envelopes with zero external asset dependencies.
+17. **Keyboard & Mouse Fast Progression Parity**: Pressing <kbd>Enter</kbd> advances to the next unlocked stage or confirms victory/briefing modals instantly without requiring mouse navigation, while on-screen HUD buttons maintain full click and touch support.
+18. **Zero-Shift Layout Stability**: UI action controls, CRT presets (`min-w-[108px]`), and audio unlock banners are decoupled from button rows, preventing horizontal jumping or click interception during pointer events and mode transitions.
 
 ---
 
