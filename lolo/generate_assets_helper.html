@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Asset & Roster Screenshot Generator</title>
+</head>
+<body style="background:#05070e; color:#00f0ff; font-family:sans-serif;">
+    <h2>Generating Cyberpunk Assets & Rosters...</h2>
+    <div id="status">Starting...</div>
+
+    <script>
+        async function saveImage(filename, dataUrl) {
+            await fetch('/save-image', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ filename, image: dataUrl })
+            });
+            console.log('Saved:', filename);
+        }
+
+        async function run() {
+            const status = document.getElementById('status');
+            status.innerText = 'Loading game script...';
+
+            const res = await fetch('/lolo/adventures_of_lolo_cyberpunk_remaster.html');
+            const html = await res.text();
+            
+            // Extract and execute the script
+            const scriptContent = html.match(/<script>([\s\S]*?)<\/script>/)[1];
+            
+            // Create a temporary script execution environment
+            const dummyCanvas = document.createElement('canvas');
+            dummyCanvas.width = 640;
+            dummyCanvas.height = 640;
+            document.body.appendChild(dummyCanvas);
+
+            // Execute script
+            const scriptFn = new Function(scriptContent);
+            
+            // Override bootCyberGame to avoid full DOM attachment
+            window.addEventListener('DOMContentLoaded', () => {}, { once: true });
+            
+            // Run script
+            try {
+                scriptFn();
+            } catch (e) {
+                console.warn('Script init notice:', e);
+            }
+
+            // Create a LoloGame instance
+            const game = new LoloGame(dummyCanvas);
+            game.animTick = 60; // stable frame for glow/animations
+
+            const renderIcon = (drawFn, size = 64) => {
+                const c = document.createElement('canvas');
+                c.width = size;
+                c.height = size;
+                const ctx = c.getContext('2d');
+                ctx.imageSmoothingEnabled = true;
+                drawFn(ctx, 4, 4, size - 8);
+                return c.toDataURL('image/png');
+            };
+
+            status.innerText = 'Generating Individual Tile Icons...';
+            
+            // 1. Individual Tiles
+            const tileMap = [
+                { file: 'tiles/lolo.png', draw: (ctx, x, y, s) => game.drawFuturisticLolo(ctx, x, y, s) },
+                { file: 'tiles/core.png', draw: (ctx, x, y, s) => game.drawFuturisticTile(ctx, TILE_HEART, x, y, s, 0, 0) },
+                { file: 'tiles/chest.png', draw: (ctx, x, y, s) => game.drawFuturisticTile(ctx, TILE_CHEST_CLOSED, x, y, s, 0, 0) },
+                { file: 'tiles/door.png', draw: (ctx, x, y, s) => game.drawFuturisticTile(ctx, TILE_DOOR_CLOSED, x, y, s, 0, 0) },
+                { file: 'tiles/tree.png', draw: (ctx, x, y, s) => game.drawFuturisticTile(ctx, TILE_TREE, x, y, s, 0, 0) },
+                { file: 'tiles/water.png', draw: (ctx, x, y, s) => game.drawFuturisticTile(ctx, TILE_WATER, x, y, s, 0, 0) },
+                { file: 'tiles/ice.png', draw: (ctx, x, y, s) => game.drawFuturisticTile(ctx, TILE_ICE, x, y, s, 0, 0) },
+                { file: 'tiles/cracked.png', draw: (ctx, x, y, s) => game.drawFuturisticTile(ctx, TILE_CRACKED_WALL, x, y, s, 0, 0) },
+                { file: 'tiles/portal.png', draw: (ctx, x, y, s) => game.drawFuturisticTile(ctx, TILE_PORTAL_A, x, y, s, 0, 0) },
+                { file: 'tiles/one_way.png', draw: (ctx, x, y, s) => game.drawFuturisticTile(ctx, TILE_ONE_WAY_UP, x, y, s, 0, 0) }
+            ];
+
+            for (const item of tileMap) {
+                await saveImage(item.file, renderIcon(item.draw));
+            }
+
+            status.innerText = 'Generating Individual Block Icons...';
+            // 2. Individual Blocks
+            const blockMap = [
+                { file: 'blocks/alloy.png', draw: (ctx, x, y, s) => game.drawFuturisticBlock(ctx, { type: BLOCK_ALLOY }, x, y, s) },
+                { file: 'blocks/heavy.png', draw: (ctx, x, y, s) => game.drawFuturisticBlock(ctx, { type: BLOCK_HEAVY }, x, y, s) },
+                { file: 'blocks/reflector.png', draw: (ctx, x, y, s) => game.drawFuturisticBlock(ctx, { type: BLOCK_REFLECTOR, dir: 'up_right' }, x, y, s) },
+                { file: 'blocks/holo.png', draw: (ctx, x, y, s) => game.drawFuturisticBlock(ctx, { type: BLOCK_HOLO }, x, y, s) },
+                { file: 'blocks/bomb.png', draw: (ctx, x, y, s) => game.drawFuturisticBlock(ctx, { type: BLOCK_BOMB }, x, y, s) },
+                { file: 'blocks/magnetic.png', draw: (ctx, x, y, s) => game.drawFuturisticBlock(ctx, { type: BLOCK_MAGNETIC }, x, y, s) },
+                { file: 'blocks/sticky.png', draw: (ctx, x, y, s) => game.drawFuturisticBlock(ctx, { type: BLOCK_STICKY, bonded: true }, x, y, s) },
+                { file: 'blocks/fragile.png', draw: (ctx, x, y, s) => game.drawFuturisticBlock(ctx, { type: BLOCK_FRAGILE }, x, y, s) },
+                { file: 'blocks/decoy.png', draw: (ctx, x, y, s) => game.drawFuturisticBlock(ctx, { type: BLOCK_DECOY }, x, y, s) }
+            ];
+
+            for (const item of blockMap) {
+                await saveImage(item.file, renderIcon(item.draw));
+            }
+
+            status.innerText = 'Generating Individual Enemy Icons...';
+            // 3. Individual Enemies
+            const enemyMap = [
+                { file: 'enemies/snake.png', type: 'snake' },
+                { file: 'enemies/medusa.png', type: 'medusa' },
+                { file: 'enemies/medusa_diag.png', type: 'medusa_diag' },
+                { file: 'enemies/medusa_omni.png', type: 'medusa_omni' },
+                { file: 'enemies/turret.png', type: 'turret', mode: '4-cross' },
+                { file: 'enemies/gol.png', type: 'gol', isAwake: false },
+                { file: 'enemies/don_medusa.png', type: 'don_medusa', dir: 'horiz' },
+                { file: 'enemies/leeper.png', type: 'leeper' },
+                { file: 'enemies/skull.png', type: 'skull' },
+                { file: 'enemies/alma.png', type: 'alma' },
+                { file: 'enemies/rocky.png', type: 'rocky' },
+                { file: 'enemies/moby.png', type: 'moby' },
+                { file: 'enemies/hopper.png', type: 'hopper' },
+                { file: 'enemies/striker.png', type: 'striker' },
+                { file: 'enemies/wisp.png', type: 'wisp' },
+                { file: 'enemies/orbiter.png', type: 'orbiter' }
+            ];
+
+            for (const item of enemyMap) {
+                const draw = (ctx, x, y, s) => {
+                    const e = { type: item.type, x: 0, y: 0, dir: item.dir || 'down', mode: item.mode || '4-cross', isAwake: item.isAwake !== undefined ? item.isAwake : true, isAsleep: false };
+                    game.drawFuturisticEnemy(ctx, e, x, y, s);
+                };
+                await saveImage(item.file, renderIcon(draw));
+            }
+
+            status.innerText = 'Generating Roster Grid Banners...';
+
+            // Helper to render high-contrast cyberpunk roster cards
+            function createRosterCard(title, items, cols = 5, itemWidth = 140, itemHeight = 100) {
+                const rows = Math.ceil(items.length / cols);
+                const width = cols * itemWidth + 40;
+                const height = rows * itemHeight + 90;
+                
+                const c = document.createElement('canvas');
+                c.width = width;
+                c.height = height;
+                const ctx = c.getContext('2d');
+
+                // Cyber Background
+                const bgGrad = ctx.createLinearGradient(0, 0, width, height);
+                bgGrad.addColorStop(0, '#060913');
+                bgGrad.addColorStop(0.5, '#0b1329');
+                bgGrad.addColorStop(1, '#05070e');
+                ctx.fillStyle = bgGrad;
+                ctx.fillRect(0, 0, width, height);
+
+                // Grid lines
+                ctx.strokeStyle = 'rgba(0, 240, 255, 0.08)';
+                ctx.lineWidth = 1;
+                for (let x = 0; x < width; x += 20) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke(); }
+                for (let y = 0; y < height; y += 20) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke(); }
+
+                // Outer Glass Frame
+                ctx.strokeStyle = '#00f0ff';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(10, 10, width - 20, height - 20);
+
+                // Top Banner Header
+                ctx.fillStyle = 'rgba(0, 240, 255, 0.15)';
+                ctx.fillRect(12, 12, width - 24, 45);
+                ctx.fillStyle = '#00f0ff';
+                ctx.font = 'bold 20px "Orbitron", sans-serif, monospace';
+                ctx.textAlign = 'center';
+                ctx.fillText(title.toUpperCase(), width / 2, 42);
+
+                // Items
+                items.forEach((item, idx) => {
+                    const col = idx % cols;
+                    const row = Math.floor(idx / cols);
+                    const ix = 20 + col * itemWidth;
+                    const iy = 70 + row * itemHeight;
+
+                    // Item background card
+                    ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+                    ctx.fillRect(ix + 5, iy + 5, itemWidth - 10, itemHeight - 10);
+                    ctx.strokeStyle = 'rgba(56, 189, 248, 0.3)';
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(ix + 5, iy + 5, itemWidth - 10, itemHeight - 10);
+
+                    // Draw item icon
+                    const iconSize = 44;
+                    const iconX = ix + (itemWidth - iconSize) / 2;
+                    const iconY = iy + 10;
+                    ctx.save();
+                    item.draw(ctx, iconX, iconY, iconSize);
+                    ctx.restore();
+
+                    // Item Label
+                    ctx.fillStyle = '#e0f2fe';
+                    ctx.font = 'bold 11px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(item.name, ix + itemWidth / 2, iy + itemHeight - 12);
+                });
+
+                return c.toDataURL('image/png');
+            }
+
+            // 4. Enemy Roster
+            const enemyRosterItems = [
+                { name: 'Serpent Drone', draw: (ctx, x, y, s) => game.drawFuturisticEnemy(ctx, { type: 'snake', dir: 'down' }, x, y, s) },
+                { name: 'Cardinal Sentry', draw: (ctx, x, y, s) => game.drawFuturisticEnemy(ctx, { type: 'medusa', dir: 'down' }, x, y, s) },
+                { name: 'Diagonal Sentry', draw: (ctx, x, y, s) => game.drawFuturisticEnemy(ctx, { type: 'medusa_diag', dir: 'down' }, x, y, s) },
+                { name: 'Omni Sentry', draw: (ctx, x, y, s) => game.drawFuturisticEnemy(ctx, { type: 'medusa_omni', dir: 'down' }, x, y, s) },
+                { name: 'Turret', draw: (ctx, x, y, s) => game.drawFuturisticEnemy(ctx, { type: 'turret', mode: '4-cross', dir: 'down' }, x, y, s) },
+                { name: 'Dragon Mech', draw: (ctx, x, y, s) => game.drawFuturisticEnemy(ctx, { type: 'gol', isAwake: false, dir: 'down' }, x, y, s) },
+                { name: 'Patrol Sentinel', draw: (ctx, x, y, s) => game.drawFuturisticEnemy(ctx, { type: 'don_medusa', dir: 'horiz' }, x, y, s) },
+                { name: 'EMP Nanobot', draw: (ctx, x, y, s) => game.drawFuturisticEnemy(ctx, { type: 'leeper', isAsleep: false, dir: 'down' }, x, y, s) },
+                { name: 'Charger Skull', draw: (ctx, x, y, s) => game.drawFuturisticEnemy(ctx, { type: 'skull', isAwake: false, dir: 'down' }, x, y, s) },
+                { name: 'Buzzsaw Bot', draw: (ctx, x, y, s) => game.drawFuturisticEnemy(ctx, { type: 'alma', dir: 'down' }, x, y, s) },
+                { name: 'Hydraulic Golem', draw: (ctx, x, y, s) => game.drawFuturisticEnemy(ctx, { type: 'rocky', dir: 'down' }, x, y, s) },
+                { name: 'Vortex Leviathan', draw: (ctx, x, y, s) => game.drawFuturisticEnemy(ctx, { type: 'moby', dir: 'down' }, x, y, s) },
+                { name: 'Beetle Hopper', draw: (ctx, x, y, s) => game.drawFuturisticEnemy(ctx, { type: 'hopper', dir: 'down' }, x, y, s) },
+                { name: 'Striker Drone', draw: (ctx, x, y, s) => game.drawFuturisticEnemy(ctx, { type: 'striker', dir: 'down' }, x, y, s) },
+                { name: 'Wisp Specter', draw: (ctx, x, y, s) => game.drawFuturisticEnemy(ctx, { type: 'wisp', dir: 'down' }, x, y, s) },
+                { name: 'Orbiter Node', draw: (ctx, x, y, s) => game.drawFuturisticEnemy(ctx, { type: 'orbiter', dir: 'down' }, x, y, s) }
+            ];
+            await saveImage('enemy_roster.png', createRosterCard('Hostile AI Threat Matrix (16 Archetypes)', enemyRosterItems, 4, 150, 105));
+
+            // 5. Blocks Roster
+            const blocksRosterItems = [
+                { name: 'Alloy Shield', draw: (ctx, x, y, s) => game.drawFuturisticBlock(ctx, { type: BLOCK_ALLOY }, x, y, s) },
+                { name: 'Heavy Titanium', draw: (ctx, x, y, s) => game.drawFuturisticBlock(ctx, { type: BLOCK_HEAVY }, x, y, s) },
+                { name: 'Prism Reflector', draw: (ctx, x, y, s) => game.drawFuturisticBlock(ctx, { type: BLOCK_REFLECTOR, dir: 'up_right' }, x, y, s) },
+                { name: 'Holo Barrier', draw: (ctx, x, y, s) => game.drawFuturisticBlock(ctx, { type: BLOCK_HOLO }, x, y, s) },
+                { name: 'Plasma Bomb', draw: (ctx, x, y, s) => game.drawFuturisticBlock(ctx, { type: BLOCK_BOMB }, x, y, s) },
+                { name: 'Mag-Lev Polar', draw: (ctx, x, y, s) => game.drawFuturisticBlock(ctx, { type: BLOCK_MAGNETIC }, x, y, s) },
+                { name: 'Adhesive Gel', draw: (ctx, x, y, s) => game.drawFuturisticBlock(ctx, { type: BLOCK_STICKY, bonded: true }, x, y, s) },
+                { name: 'Glass Crystal', draw: (ctx, x, y, s) => game.drawFuturisticBlock(ctx, { type: BLOCK_FRAGILE }, x, y, s) },
+                { name: 'Decoy Hologram', draw: (ctx, x, y, s) => game.drawFuturisticBlock(ctx, { type: BLOCK_DECOY }, x, y, s) }
+            ];
+            await saveImage('blocks_roster.png', createRosterCard('Tactical Push-Blocks Roster (9 Archetypes)', blocksRosterItems, 3, 160, 105));
+
+            // 6. Tiles Roster
+            const tilesRosterItems = [
+                { name: 'Operative Lolo', draw: (ctx, x, y, s) => game.drawFuturisticLolo(ctx, x, y, s) },
+                { name: 'Energy Core', draw: (ctx, x, y, s) => game.drawFuturisticTile(ctx, TILE_HEART, x, y, s, 0, 0) },
+                { name: 'Data Vault', draw: (ctx, x, y, s) => game.drawFuturisticTile(ctx, TILE_CHEST_CLOSED, x, y, s, 0, 0) },
+                { name: 'Cyber Gateway', draw: (ctx, x, y, s) => game.drawFuturisticTile(ctx, TILE_DOOR_CLOSED, x, y, s, 0, 0) },
+                { name: 'Cyber Tree', draw: (ctx, x, y, s) => game.drawFuturisticTile(ctx, TILE_TREE, x, y, s, 0, 0) },
+                { name: 'Plasma Canal', draw: (ctx, x, y, s) => game.drawFuturisticTile(ctx, TILE_WATER, x, y, s, 0, 0) },
+                { name: 'Mag-Lev Track', draw: (ctx, x, y, s) => game.drawFuturisticTile(ctx, TILE_ICE, x, y, s, 0, 0) },
+                { name: 'Cracked Wall', draw: (ctx, x, y, s) => game.drawFuturisticTile(ctx, TILE_CRACKED_WALL, x, y, s, 0, 0) },
+                { name: 'Quantum Portal', draw: (ctx, x, y, s) => game.drawFuturisticTile(ctx, TILE_PORTAL_A, x, y, s, 0, 0) },
+                { name: 'One-Way Gate', draw: (ctx, x, y, s) => game.drawFuturisticTile(ctx, TILE_ONE_WAY_UP, x, y, s, 0, 0) }
+            ];
+            await saveImage('tiles_roster.png', createRosterCard('Sector Environment & Interactive Tiles', tilesRosterItems, 5, 140, 105));
+
+            status.innerText = 'ALL ASSETS & ROSTERS GENERATED SUCCESSFULLY!';
+            document.title = 'DONE';
+        }
+
+        window.onload = run;
+    </script>
+</body>
+</html>

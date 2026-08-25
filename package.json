@@ -4,7 +4,8 @@
   "description": "Next-Gen Grid-Based Cyberpunk Action-Puzzle Engine with 100 Solvable Stages",
   "main": "lolo/adventures_of_lolo_cyberpunk_remaster.html",
   "scripts": {
-    "test": "node lolo/verify_html.js"
+    "test": "node lolo/verify_html.js",
+    "screenshots": "node lolo/generate_all_screenshots_node.js"
   },
   "keywords": [
     "html5-game",
@@ -15,5 +16,8 @@
     "lolo"
   ],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@napi-rs/canvas": "^1.0.8"
+  }
 }
