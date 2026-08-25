@@ -1,6 +1,6 @@
 # Adventures of Lolo: Cyberpunk Remaster — Master Technical Specification
 
-> **Version**: 3.7.0 (Deterministic Simulation Engine in Cyber Architect & Random Lab, Mega Grid Full 13-Hostile Roster Synthesis, Persistent CRT Save Engine, Daily Hack Protocol with 7-Day Streak Calendar, Cyber Achievement Engine, Dynamic Tactical Dossiers, 3-Star Performance Scoring, 5 Cyber Theme Palettes, 8-Track Synthesizer, Tactical Blocks, Optical Laser Deflection, A* Solvability Engine & Cyber Architect Studio)  
+> **Version**: 3.8.0 (16 Hostile AI Archetypes, 31×31 Apex Sector Scaling, 13 Puzzle Genres & 32 Chamber Archetypes, Bidirectional Random Session History Stack, Real-Time In-Game Level Loading, Deterministic Simulation Engine in Cyber Architect & Random Lab, Mega Grid Full Roster Synthesis, Persistent CRT Save Engine, Daily Hack Protocol with 7-Day Streak Calendar, Cyber Achievement Engine, Dynamic Tactical Dossiers, 3-Star Performance Scoring, 5 Cyber Theme Palettes, 8-Track Synthesizer, Tactical Blocks, Optical Laser Deflection, A* Solvability Engine & Cyber Architect Studio)  
 > **Target Frameworks**: Vanilla HTML5/Canvas, Unity (C#), Godot (GDScript/C#), React Native, Unreal Engine (C++/Blueprints), WebGL / WebAssembly  
 > **Source Reference**: `adventures_of_lolo_cyberpunk_remaster.html`
 
@@ -8,34 +8,21 @@
 
 ## 1. System Overview
 
-*Adventures of Lolo: Cyberpunk Remaster* is a high-octane grid-based puzzle-action remaster that fuses classic top-down Sokoban mechanics with real-time hazard avoidance, 90° optical laser deflection, phase-permeable barriers, multi-directional aiming turrets (1–8 directions), an A* priority queue mathematical solvability engine, 13 enemy archetypes with clear UI threat categorizations, 9 tactical push-block archetypes, 5 physics mechanics (portals, mag-lev ice, one-way gates, cracked walls, plasma bridges), an integrated Level Editor with full Simulation Replay (Cyber Architect), a 100-stage campaign with progressive grid scaling ($9\times 9$ up to $19\times 19$), a Daily Hack Protocol with a synchronized 24-hour UTC streak calendar, a 3-Star Performance Rating Engine, 5 switchable cyberpunk color themes, persistent CRT scanline overlay state management, an 8-track Web Audio synthesizer, and a procedural Sokoban heavy generator with guaranteed 13-hostile full-roster Mega grid synthesis.
+*Adventures of Lolo: Cyberpunk Remaster* is a high-octane grid-based puzzle-action remaster that fuses classic top-down Sokoban mechanics with real-time hazard avoidance, 90° optical laser deflection, phase-permeable barriers, multi-directional aiming turrets (1–8 directions), an A* priority queue mathematical solvability engine, 16 hostile enemy archetypes with clear UI threat categorizations, 9 tactical push-block archetypes, 5 physics mechanics (portals, mag-lev ice, one-way gates, cracked walls, plasma bridges), an integrated Level Editor with full Simulation Replay (Cyber Architect), a 100-stage campaign with progressive grid scaling ($9\times 9$ up to $19\times 19$), a Daily Hack Protocol with a synchronized 24-hour UTC streak calendar, a 3-Star Performance Rating Engine, 5 switchable cyberpunk color themes, persistent CRT scanline overlay state management, an 8-track Web Audio synthesizer, and a procedural Sokoban heavy generator scaling up to $31\times 31$ Apex Sectors with 13 specialized puzzle genres and 32 chamber archetype presets.
 
 ### 1.1 Verified Runtime Contracts & Invariants
 
 All ports, engine implementations, and modifications must strictly satisfy these core runtime invariants:
 
 1. **Deterministic Single-Step Movement & Simulation**: Player movement executes precisely 1 tile per keystroke with smooth interpolated rendering (`renderX`, `renderY` lerp); quantum portal teleportation immediately snaps visual rendering coordinates to prevent cross-screen gliding artifacts.
-
-### 1.2 Procedural Generator Filter Matrix (Beyond CRT)
-
-The procedural chamber engine is not limited to CRT visual toggles. It supports multiple independent filter layers that affect synthesis behavior and solvability constraints.
-
-- **Terrain filters**: `includeGrass`, `includeSand`, `includeWater`, `includeTrees`, `includePortals`, `includeIce`, `includeArrows`, `includeCracked`
-- **Enemy selection filters**: `allowedEnemies` in the random lab and editor synthesis options; only selected hostile archetypes are eligible for placement
-- **Block selection filters**: `allowedBlocks` restricts which tactical block archetypes can appear in a generated chamber
-- **Prefab selection filters**: `allowedPrefabs` includes or excludes specialized strategic chamber layouts
-- **Difficulty / density controls**: `difficulty`, `gridSize`, `blockDensity`, and `biome` combine to alter chamber generation patterns while preserving solvability constraints
-- **Visual filters**: CRT mode (`subtle`, `heavy`, `off`), theme switching, and HUD overlays remain independent from the generation logic
-
-The synthesis pipeline treats these filter sets as generation constraints, not as aesthetic-only toggles. All generated layouts must still satisfy the same deterministic solvability and uniqueness guarantees as the canonical random generator.
 2. **Strict Blocker State Enforcement**: Closed Data Chests (`TILE_CHEST_CLOSED`) and Exit Gateways (`TILE_DOOR_CLOSED`) are impassable collision barriers until heart/chest conditions are unlocked.
 3. **100% Campaign Uniqueness & Solvability**: All 100 campaign stages possess unique layout signatures (`getLevelLayoutSignature`) and are mathematically proven solvable by `LoloMathSolver`.
 4. **Deterministic Simulation Play Engine**:
    - Both the Random Lab modal (`simulateSolution`) and Cyber Architect Editor (`simulateEditorSolution`) feature real-time physical simulation replay based on the $A^*$ solver path.
-   - Simulation accurately pushes dynamic blocks, slides across Mag-Lev Ice, teleports through Quantum Portals, consumes Energy Cores, unlocks Data Chests, opens Exit Gateways, and synchronously highlights path tape badges.
+   - Simulation accurately pushes dynamic blocks, slides across Mag-Lev Ice, teleports through Quantum Portals, shoots Bio-Eggs, rafts across water canals, consumes Energy Cores, unlocks Data Chests, opens Exit Gateways, and synchronously highlights path tape badges (`.random-tape-badge`).
    - Editor simulation isolates state (`isSimulatingInEditor = true`), preventing accidental campaign level advancement or background real-time enemy AI death conflicts during replay, and automatically restores the stage state upon completion.
-5. **Mega Grid Full Hostile Roster Synthesis ($17\times 17$)**:
-   - The procedural generator's Mega Grid synthesis guarantees placement of all 13 unique hostile enemy archetypes and specialized blocks across dedicated grid sectors with 100% verified mathematical solvability.
+5. **Mega Grid Full Hostile Roster Synthesis ($17\times 17$ to $31\times 31$)**:
+   - The procedural generator's Mega Grid synthesis guarantees placement of all hostile enemy archetypes and specialized blocks across dedicated grid sectors with 100% verified mathematical solvability.
 6. **3-Star Move Par Scoring**: Earned stars are computed against the mathematical optimal par move count ($M_{par}$) from `LoloMathSolver`:
    - $\star\star\star$ (**Gold Cyber Master**): $\text{Moves} \le M_{par} + 2$
    - $\star\star\star$ (**Silver Operative**): $\text{Moves} \le \lceil M_{par} \times 1.5 \rceil$
@@ -44,20 +31,32 @@ The synthesis pipeline treats these filter sets as generation constraints, not a
    - Every 24 hours (00:00 UTC), a new deterministic chamber is synthesized via seed `DAILY-YYYYMMDD`.
    - Grid size scales by day of week: $11\times 11$ (Mon–Fri), $13\times 13$ (Sat), $15\times 15$ (Sun).
    - Clearing today's challenge updates `currentStreak`, `bestStreak`, `totalClears`, and adds a completion timestamp to the 7-Day Activity Calendar (`lolo_cyber_daily_v1`).
-8. **Dynamic Stage-by-Stage Tactical Dossiers**:
+8. **Bidirectional Random Session History Stack**:
+   - Recorded in `window.randomSessionHistory` with active index pointer `window.randomSessionIndex`.
+   - Stepping backward (`window.prevRandomProtocol()`) or forward (`window.nextRandomProtocol()`) instantly restores full grid matrices, blocks, enemies, and player coordinates into the live playable engine with instant canvas updates and particle telemetry.
+9. **Dynamic Stage-by-Stage Tactical Dossiers**:
    - `showSectorBriefing` dynamically scans the active chamber (Campaign Stages 1–100, Daily Hack, and Random Lab) and generates real-time telemetry: unique stage name, threat tier, hostile threat counts, environmental module summary, and tailored tactical directives.
-9. **Modal Lifecycle Isolation & State Protection**:
-   - All modal overlays are toggled via global `showModal(idOrEl)` and `hideModal(idOrEl)` enforcing `display: flex !important` / `display: none !important` to prevent Tailwind class conflicts.
-   - Stage completion triggers `this.isStageCompleted = true` to lock inputs during victory celebrations; modal dismissal smoothly advances to the next stage or resets state, guaranteeing zero freeze lockups.
-10. **Persistent Save State Management**: User progress (`lolo_cyber_unlocked`), per-stage star ratings (`lolo_cyber_level_stats`), daily streak logs (`lolo_cyber_daily_v1`), active theme (`lolo_cyber_active_theme`), CRT mode (`lolo_cyber_crt_mode`), and active audio preferences (`lolo_cyber_audio_settings`) automatically persist in `localStorage`.
-11. **Progressive Board Scaling ($9\times 9$ to $19\times 19$)**: Board sizes adapt dynamically across difficulty tiers (Stage 1: $11\times 11$; Stages 2–20: $9\times 9$; Stages 21–40: $11\times 11$; Stages 41–65: $13\times 13$; Stages 66–85: $15\times 15$; Stages 86–95: $17\times 17$; Stages 96–100: $19\times 19$) without reading out-of-bounds rows or clipping canvas viewports.
-12. **Optical Laser Deflection**: Lasers intersecting Reflector Prisms (`BLOCK_REFLECTOR`) deflect 90° according to prism orientation ($\nearrow$, $\searrow$, $\swarrow$, $\nwarrow$) and support multi-bounce chained reflection up to 4 consecutive deflections.
-13. **Laser Phase Pass-Through**: Lasers and blaster shots pass through Holo Barriers (`BLOCK_HOLO`) unimpeded, while physical entities (Lolo, enemies, push blocks) are physically blocked.
-14. **Sokoban Multi-Block Generation**: The random generator with `blockDensity: 'heavy'` or `preset: 'sokoban'` generates 4 to 8 push blocks across symmetric corridor layouts with 100% verified solvability.
-15. **Mathematical A* Solver Performance**: Search uses an A* Priority Queue (`MinHeap`) with canonical block sorting, solving multi-block chambers in under 100 states ($<1\text{ms}$).
-16. **Zero-Asset Audio Synthesis**: All 18 SFX chimes and 8-track synthwave BGM songs are synthesized in real time via Web Audio API oscillators and gain envelopes with zero external asset dependencies.
-17. **Keyboard & Mouse Fast Progression Parity**: Pressing <kbd>Enter</kbd> advances to the next unlocked stage or confirms victory/briefing modals instantly without requiring mouse navigation, while on-screen HUD buttons maintain full click and touch support.
-18. **Zero-Shift Layout Stability**: UI action controls, CRT presets (`min-w-[108px]`), and audio unlock banners are decoupled from button rows, preventing horizontal jumping or click interception during pointer events and mode transitions.
+10. **Modal Lifecycle Isolation & State Protection**:
+    - All modal overlays are toggled via global `showModal(idOrEl)` and `hideModal(idOrEl)` enforcing `display: flex !important` / `display: none !important` to prevent Tailwind class conflicts.
+    - Stage completion triggers `this.isStageCompleted = true` to lock inputs during victory celebrations; modal dismissal smoothly advances to the next stage or resets state, guaranteeing zero freeze lockups.
+11. **Persistent Save State Management**: User progress (`lolo_cyber_unlocked`), per-stage star ratings (`lolo_cyber_level_stats`), daily streak logs (`lolo_cyber_daily_v1`), active theme (`lolo_cyber_active_theme`), CRT mode (`lolo_cyber_crt_mode`), and active audio preferences (`lolo_cyber_audio_settings`) automatically persist in `localStorage`.
+12. **Progressive Board Scaling ($9\times 9$ to $31\times 31$)**: Board sizes adapt dynamically across difficulty tiers without reading out-of-bounds rows or clipping canvas viewports.
+13. **Optical Laser Deflection**: Lasers intersecting Reflector Prisms (`BLOCK_REFLECTOR`) deflect 90° according to prism orientation ($\nearrow$, $\searrow$, $\swarrow$, $\nwarrow$) and support multi-bounce chained reflection up to 4 consecutive deflections.
+14. **Laser Phase Pass-Through**: Lasers and blaster shots pass through Holo Barriers (`BLOCK_HOLO`) unimpeded, while physical entities (Lolo, enemies, push blocks) are physically blocked.
+15. **Sokoban Multi-Block Generation**: The random generator with `blockDensity: 'heavy'` or `preset: 'sokoban'` generates 4 to 8 push blocks across symmetric corridor layouts with 100% verified solvability.
+16. **Mathematical A* Solver Performance**: Search uses an A* Priority Queue (`MinHeap`) with canonical block sorting, solving multi-block chambers in under 100 states ($<1\text{ms}$).
+17. **Zero-Asset Audio Synthesis**: All 18 SFX chimes and 8-track synthwave BGM songs are synthesized in real time via Web Audio API oscillators and gain envelopes with zero external asset dependencies.
+18. **Keyboard & Mouse Fast Progression Parity**: Pressing <kbd>Enter</kbd> advances to the next unlocked stage or confirms victory/briefing modals instantly without requiring mouse navigation, while on-screen HUD buttons maintain full click and touch support.
+
+### 1.2 Procedural Generator Filter Matrix (Beyond CRT)
+
+The procedural chamber engine supports multiple independent filter layers that affect synthesis behavior and solvability constraints:
+- **Terrain filters**: `includeGrass`, `includeSand`, `includeWater`, `includeTrees`, `includePortals`, `includeIce`, `includeArrows`, `includeCracked`
+- **Enemy selection filters**: `allowedEnemies` restricts hostile archetypes eligible for placement
+- **Block selection filters**: `allowedBlocks` restricts tactical block archetypes in generated chambers
+- **Prefab selection filters**: `allowedPrefabs` includes or excludes specialized strategic chamber layouts
+- **Difficulty / density controls**: `difficulty`, `gridSize` ($9\times 9$ to $31\times 31$), `blockDensity`, and `biome` combine to alter chamber generation patterns while preserving mathematical solvability constraints
+- **Visual filters**: CRT mode (`subtle`, `heavy`, `off`), theme switching, and HUD overlays remain independent from the generation logic
 
 ---
 
@@ -68,6 +67,17 @@ The synthesis pipeline treats these filter sets as generation constraints, not a
   - **Stage 1**: $11\times 11$ (1 stage) — Introductory Training Protocol (subtle trees, energy core, ammo core, serpent, push block).
   - **Stages 2–20**: $9\times 9$ (19 stages) — Foundations, simple alloy blocks, river bridges.
   - **Stages 21–40**: $11\times 11$ (20 stages) — Sentry networks, dual turrets, crossfires.
+  - **Stages 41–65**: $13\times 13$ (25 stages) — Diagonal Sentinels, Don Medusa corridors, Reflector Prisms.
+  - **Stages 66–85**: $15\times 15$ (20 stages) — 8-way Star Sentinels, triple-channel matrices, Moby vortex pools.
+  - **Stages 86–95**: $17\times 17$ (10 stages) — High-density security sectors, Quantum Portals.
+  - **Stages 96–100**: $19\times 19$ (5 apex stages) — Grandmaster cyber fortress chambers.
+- **Random Protocol Matrix Dimensions**: $9\times 9$, $11\times 11$, $13\times 13$, $15\times 15$, $17\times 17$, $19\times 19$, $21\times 21$, $23\times 23$, $25\times 25$, $27\times 27$, $29\times 29$, $31\times 31$.
+- **Origin**: Coordinate $(0, 0)$ is the top-left tile.
+- **Outer Perimeter**: Rows $y=0, y=size-1$ and columns $x=0, x=size-1$ are indestructible perimeter walls (`TILE_WALL`), except for the Exit Gateway at $(Math.floor(size / 2), 0)$.
+- **Key Landmarks**:
+  - **Exit Gateway**: $(Math.floor(size / 2), 0)$ (`TILE_DOOR_CLOSED` $\to$ `TILE_DOOR_OPEN`).
+  - **Data Chest**: $(Math.floor(size / 2), 2)$ (`TILE_CHEST_CLOSED` $\to$ `TILE_CHEST_OPENED`).
+  - **Operative Spawn**: $(Math.floor(size / 2), size - 2)$.
   - **Stages 41–65**: $13\times 13$ (25 stages) — Diagonal Sentinels, Don Medusa corridors, Reflector Prisms.
   - **Stages 66–85**: $15\times 15$ (20 stages) — 8-way Star Sentinels, triple-channel matrices, Moby vortex pools.
   - **Stages 86–95**: $17\times 17$ (10 stages) — High-density security sectors, Quantum Portals.
@@ -166,7 +176,7 @@ The raycasting engine supports up to **4 chained reflections (`maxReflections = 
 
 ---
 
-## 5. Hostile Enemy AI Archetypes (13 Enemies)
+## 5. Hostile Enemy AI Archetypes (16 Enemies)
 
 | ID | Name | Threat Profile | AI Behavior & Mechanics |
 | :--- | :--- | :--- | :--- |
@@ -183,6 +193,9 @@ The raycasting engine supports up to **4 chained reflections (`maxReflections = 
 | `rocky` | **Hydraulic Golem** | Physical Threat | Aggressively charges and physically shoves Lolo backward on contact. |
 | `moby` | **Vortex Leviathan** | Pull Hazard | Emits a magnetic tractor vortex across water lanes and corridors, pulling Lolo toward it. |
 | `hopper` | **Beetle Hopper** | Jumping Chaser | Chases Lolo and leaps over obstacles, trees, and push blocks. |
+| `striker` | **Striker Drone** | Sniper Sentry | Fires high-velocity line-of-sight laser projectiles directly across unobstructed corridors. |
+| `wisp` | **Phasing Phantom** | Stealth Threat | Ethereal unit that moves toward Lolo, phasing through push-blocks, crystals, and trees. |
+| `orbiter` | **Revolving Node** | Area Denial | Orbits in continuous circular trajectories around staging anchors with rotating pulse lasers. |
 
 ---
 
@@ -309,11 +322,37 @@ Generated purely via native Web Audio API oscillators and gain nodes (zero exter
 
 ---
 
-## 10. Verification Suite
+## 10. Puzzle Genres & Chamber Archetypes (13 Genres • 32 Archetypes)
+
+The procedural generator features 1-click tactical archetypes spanning 13 distinct puzzle genres:
+
+| Genre ID | Genre Title | Primary Focus & Signature Mechanics |
+| :--- | :--- | :--- |
+| `all` | **Dynamic Mix** | Harmonious combination of all available hazard systems and block types. |
+| `sokoban` | **Sokoban Corridors** | Tight multi-block warehouse packing, symmetric alleyways, heavy push-blocks. |
+| `optics` | **Optical Reflection** | 90° Prism Deflector chains, multi-bounce laser redirection, prism aiming. |
+| `portal` | **Quantum Portals** | Multi-pair wormhole teleportation loops, non-Euclidean path traversal. |
+| `ice` | **Mag-Lev Ice Glider** | Superconducting frictionless slide tracks, momentum arrest barriers. |
+| `sentry` | **Sentry Gauntlet** | Medusa crossfires, Don Medusa patrol tracks, multi-directional turret corridors. |
+| `chaser` | **Chaser Arena** | Buzzsaw Alma bots, awakened Charger Skulls, hydraulic shoving golems. |
+| `swarm` | **Nanobot Swarm** | Relentless EMP Leeper drones requiring strategic freezing as step barricades. |
+| `timing` | **Precision Timing** | Fast-moving Patrol Sentinels, timed Bio-Egg water bridge dissolution. |
+| `fortress` | **Fortress Breach** | Heavy outer bastion perimeter walls, Plasma Bomb detonation breeches. |
+| `phase` | **Phase Labyrinth** | Phasing Holo Barriers, Phasing Phantom wisps, optical shot conduits. |
+| `decoy` | **Decoy Infiltration** | Decoy hologram signal redirection, sentry aim spoofing. |
+| `titan` | **Titan Apex** | Full hostile AI threat roster across extended Mega grid sectors ($21\times 21$ to $31\times 31$). |
+
+---
+
+## 11. Verification Suite
 
 Headless verification across all campaign stages, procedural generation, daily streak tracking, and tactical dossiers can be executed with Node.js:
 
 ```bash
 # Verify 100/100 campaign stages, unique layout signatures, and grid scaling:
-node verify_html.js
+node lolo/verify_html.js
+
+# Run full project test suite:
+npm test
 ```
+

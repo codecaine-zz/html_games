@@ -133,11 +133,11 @@ This makes the Random Lab a true custom-build system rather than a single CRT-on
     8. *Orbital Protocol* (118 BPM progressive sci-fi pulse)
   - 18 synthesized dynamic sound effects (lasers, blaster shots, core chimes, portal warps, crystal shatters, bomb explosions).
 
-- **100-Stage Handcrafted Campaign**:
+- **100-Stage Handcrafted Campaign & Progressive Difficulty**:
   - **Dynamic Board Scaling**: Scales grid dimensions ($9\times 9$, $11\times 11$, $13\times 13$, $15\times 15$, $17\times 17$, $19\times 19$) as security sectors increase in threat level.
-  - **100% Unique & Solvability-Proven**: Every layout is mathematically guaranteed solvable by the built-in $A^*$ solver engine.
+  - **100% Unique & Solvability-Proven**: Every layout is mathematically guaranteed solvable by the built-in $A^*$ solver engine with strict progressive difficulty curve tuning across all 100 stages.
 
-- **13 Hostile Enemy AI Archetypes**:
+- **16 Hostile Enemy AI Archetypes**:
 
   ![Hostile AI Threat Matrix](screenshots/enemy_roster.png)
 
@@ -146,7 +146,7 @@ This makes the Random Lab a true custom-build system rather than a single CRT-on
   | <img src="screenshots/enemies/snake.png" width="36" height="36" /> | **Serpent Drone (`snake`)** | Passive | Stationary drone; shootable into a pushable Bio-Egg to bridge water/plasma canals. |
   | <img src="screenshots/enemies/medusa.png" width="36" height="36" /> | **Cardinal Sentry (`medusa`)** | High (Kill-on-Sight) | Fires instant line-of-sight laser beams along 4 orthogonal axes (+). Blocked by push-blocks/trees. |
   | <img src="screenshots/enemies/medusa_diag.png" width="36" height="36" /> | **Diagonal Sentry (`medusa_diag`)** | High (Kill-on-Sight) | Fires instant line-of-sight laser beams along 4 diagonal axes (✕). |
-  | <img src="screenshots/enemies/medusa_omni.png" width="36" height="36" /> | **Omni Sentry (`medusa_omni`)** | Extreme (Kill-on-Sight) | Fires 360° laser beams across all 8 directions. |
+  | <img src="screenshots/enemies/medusa_omni.png" width="36" height="36" /> | **Omni Sentry (`medusa_omni`)** | Extreme (Kill-on-Sight) | Fires 360° laser beams across all 8 directions (★). |
   | <img src="screenshots/enemies/turret.png" width="36" height="36" /> | **Multi-Directional Turret (`turret`)** | Configurable | Emitter firing customizable 1-way to 8-way directional lasers (`1-up`, `2-horiz`, `4-cross`, `8-omni`). |
   | <img src="screenshots/enemies/gol.png" width="36" height="36" /> | **Dragon Mech (`gol`)** | Awakening Hazard | Slumbers until all cores are gathered; shoots lethal fireballs down its line-of-sight when awake. |
   | <img src="screenshots/enemies/don_medusa.png" width="36" height="36" /> | **Patrol Sentinel (`don_medusa`)** | Extreme (Kill-on-Sight) | Patrols continuously along horizontal or vertical tracks while maintaining crossfire lasers. |
@@ -156,6 +156,9 @@ This makes the Random Lab a true custom-build system rather than a single CRT-on
   | <img src="screenshots/enemies/rocky.png" width="36" height="36" /> | **Hydraulic Golem (`rocky`)** | Physical Threat | Aggressively charges and physically shoves Lolo backward on contact. |
   | <img src="screenshots/enemies/moby.png" width="36" height="36" /> | **Vortex Leviathan (`moby`)** | Pull Hazard | Emits a tractor vortex across water channels, pulling Lolo into the current. |
   | <img src="screenshots/enemies/hopper.png" width="36" height="36" /> | **Beetle Hopper (`hopper`)** | Jumping Chaser | Chases Lolo by leaping over low obstacles, push-blocks, and cyber trees. |
+  | <img src="screenshots/enemies/striker.png" width="36" height="36" /> | **Striker Drone (`striker`)** | Sniper Sentry | Fires high-velocity line-of-sight laser projectiles directly across unobstructed corridors. |
+  | <img src="screenshots/enemies/wisp.png" width="36" height="36" /> | **Phasing Phantom (`wisp`)** | Stealth Threat | Ethereal unit that moves toward Lolo, phasing through push-blocks, crystals, and trees. |
+  | <img src="screenshots/enemies/orbiter.png" width="36" height="36" /> | **Revolving Node (`orbiter`)** | Area Denial | Orbits in continuous circular trajectories around staging anchors with rotating pulse lasers. |
 
 - **9 Tactical Push-Block Archetypes**:
 
@@ -192,17 +195,16 @@ This makes the Random Lab a true custom-build system rather than a single CRT-on
 
 - **Mathematical A* Solvability & Simulation Engine (`LoloMathSolver`)**:
   - Utilizes a MinHeap Priority Queue with canonical block state serialization to evaluate solution paths across multi-block Sokoban arrangements in under 100 state evaluations ($<1\text{ms}$).
-  - **Deterministic Simulation Replay**: Live step-by-step playback in both the **Cyber Architect Level Editor** (`Simulate Play`) and **Random Lab** (`Simulate Path`), physically pushing dynamic blocks, sliding on ice, warping across quantum portals, consuming cores, and opening vaults with synchronous tape badge tracking.
+  - **Deterministic Simulation Replay**: Live step-by-step playback in both the **Cyber Architect Level Editor** (`Simulate Play`) and **Random Lab** (`Simulate Path`), physically pushing dynamic blocks, sliding on ice, warping across quantum portals, shooting bio-eggs, water rafting, consuming cores, and opening vaults with synchronous tape badge tracking (`.random-tape-badge`).
   - Integrated directly into the gameplay interface via the **Hint (H)** button to assist stuck players.
 
-- **Cyber Architect Studio (Level Editor & Simulation Suite)**:
-  - Full-featured canvas level editor with Symmetry toggles (Horizontal, Vertical, 4-Way Radial), Pencil, Bucket Fill, Box Select, and Eraser.
-  - Object Telemetry dashboard showing block counts, core requirements, hazard density, and built-in Math Check solvability verification.
-  - **Live Chamber Simulation**: Replays optimal puzzle solutions in real time with collision physics, portal warps, and automated level state restoration.
-  - Local Chamber Vault for saving, loading, and exporting custom levels via JSON format.
+- **🏰 Mega Grid Matrix & 13 Puzzle Genres (Up to 31×31 Apex Sectors)**:
+  - Procedural synthesizer scales seamlessly from compact $9\times 9$ grids up to $31\times 31$ Apex Sectors ($9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31$).
+  - **13 Specialized Puzzle Genres & 32 Chamber Archetypes**: Dynamic Mix, Sokoban, Optics, Portal Maze, Ice Glider, Sentry Gauntlet, Chaser Arena, Swarm Defense, Precision Timing, Fortress Breach, Phase Labyrinth, Decoy Infiltration, and Titan Apex.
 
-- **🏰 Mega Grid Full Hostile Roster Synthesis (17×17)**:
-  - Procedural synthesizer guarantees placement of all 13 unique hostile enemy archetypes and tactical blocks across dedicated defensive sectors on Mega grids ($17\times 17$) with 100% verified solvability.
+- **⚡ Bidirectional Session History Stack (Next & Prev Traversal)**:
+  - Full session history tracking (`window.randomSessionHistory` and `window.randomSessionIndex`).
+  - Seamlessly step backwards and forwards through previously generated chambers with full matrix and entity fidelity using in-game Prev/Next buttons (`#btn-stage-prev` / `#btn-stage-next`) or modal seed navigators (`#btn-rnd-prev-seed` / `#btn-rnd-next-seed`).
 
 ---
 
