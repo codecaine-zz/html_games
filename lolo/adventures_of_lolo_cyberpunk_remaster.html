@@ -401,6 +401,13 @@
                     class="btn-action w-full bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-500/40 text-[11px] font-bold py-1.5 rounded-xl text-cyan-300 flex items-center justify-center gap-1.5 orbitron-font shadow-inner">
                     <i class="fa-solid fa-terminal text-cyan-400"></i> Sector Briefing
                 </button>
+
+                <!-- Return to Main Campaign Button (Active in Daily / Random Modes) -->
+                <button id="btn-return-campaign"
+                    class="hidden btn-action w-full bg-gradient-to-r from-cyan-700 via-blue-600 to-indigo-600 hover:from-cyan-600 hover:to-indigo-500 text-white border border-cyan-400/60 text-[11px] font-bold py-2 rounded-xl flex items-center justify-center gap-1.5 orbitron-font shadow-lg shadow-cyan-600/30 transition-all">
+                    <i class="fa-solid fa-house text-cyan-200"></i>
+                    <span id="btn-return-campaign-text">Return to Main Game</span>
+                </button>
             </div>
 
             <!-- Active Threat Scanner -->
@@ -1224,6 +1231,11 @@
                     class="btn-action w-full bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold py-2.5 rounded-xl border border-cyan-500/30 text-xs flex items-center justify-center gap-2">
                     <i class="fa-solid fa-arrow-rotate-right"></i> Replay This Stage
                 </button>
+                <button id="btn-victory-return-campaign"
+                    class="btn-action w-full bg-gradient-to-r from-cyan-950 to-blue-950 hover:from-cyan-900 hover:to-blue-900 text-cyan-300 font-bold py-2.5 rounded-xl border border-cyan-500/40 text-xs flex items-center justify-center gap-2 transition-all">
+                    <i class="fa-solid fa-house"></i>
+                    <span id="btn-victory-return-campaign-text">Return to Main Campaign</span>
+                </button>
             </div>
         </div>
     </div>
@@ -1292,6 +1304,10 @@
             <button id="btn-launch-daily" class="btn-action w-full bg-gradient-to-r from-amber-600 via-orange-600 to-yellow-600 hover:from-amber-500 hover:to-yellow-500 text-white font-bold py-3 rounded-2xl border border-amber-400/50 shadow-xl shadow-amber-600/30 orbitron-font text-sm flex items-center justify-center gap-2">
                 <i class="fa-solid fa-play"></i>
                 <span id="btn-launch-daily-text">INFILTRATE TODAY'S PROTOCOL</span>
+            </button>
+            <button id="btn-daily-return-campaign" class="btn-action w-full bg-slate-800/90 hover:bg-slate-700 text-cyan-300 font-bold py-2.5 rounded-2xl border border-cyan-500/30 orbitron-font text-xs flex items-center justify-center gap-2 transition-all">
+                <i class="fa-solid fa-house"></i>
+                <span>RETURN TO MAIN CAMPAIGN</span>
             </button>
         </div>
     </div>
@@ -2253,8 +2269,9 @@
                         dayCol.style.cursor = 'pointer';
                         dayCol.title = `Click to infiltrate protocol for ${dStr}`;
                         dayCol.onclick = () => {
-                            const modal = document.getElementById('modal-daily-hack');
-                            if (modal) modal.classList.add('hidden');
+                            if (typeof window.hideModal === 'function') {
+                                window.hideModal('modal-daily-hack');
+                            }
                             if (window.game) {
                                 window.game.loadDailyLevel(dStr);
                                 if (audio && audio.playWarp) audio.playWarp();
@@ -2265,6 +2282,9 @@
                                     window.game.particles.floatingText(window.game.canvas.width / 2, 45, `DAILY [${dStr}] LOADED`, '#f59e0b');
                                     window.game.particles.ripple(cx, cy, '#f59e0b');
                                 }
+                            }
+                            if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                                document.activeElement.blur();
                             }
                         };
                         calGrid.appendChild(dayCol);
@@ -4949,6 +4969,10 @@
                 this.killer = null;
                 this.stageStartTime = Date.now();
 
+                if (typeof window.hideAllModals === 'function') {
+                    window.hideAllModals();
+                }
+
                 this.updateHUD();
                 this.updatePrevNextButtons();
             }
@@ -5056,6 +5080,19 @@
                     } else {
                         modeBadge.innerText = 'CAMPAIGN';
                         modeBadge.className = 'bg-cyan-950 text-cyan-300 border border-cyan-500/40 text-[10px] font-bold px-2 py-0.5 rounded-md orbitron-font';
+                    }
+                }
+
+                const btnReturnCampaign = document.getElementById('btn-return-campaign');
+                const btnReturnText = document.getElementById('btn-return-campaign-text');
+                if (btnReturnCampaign) {
+                    if (this.currentMode !== MODE_CAMPAIGN) {
+                        btnReturnCampaign.classList.remove('hidden');
+                        if (btnReturnText) {
+                            btnReturnText.innerText = `Return to Main Game (Stage ${this.currentLevelIndex + 1})`;
+                        }
+                    } else {
+                        btnReturnCampaign.classList.add('hidden');
                     }
                 }
 
@@ -9028,8 +9065,26 @@
                 el.classList.add('hidden', 'modal-hidden');
                 el.style.setProperty('display', 'none', 'important');
             }
+            if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                document.activeElement.blur();
+            }
         }
         window.hideModal = hideModal;
+
+        function hideAllModals() {
+            const allModalIds = ['modal-daily-hack', 'modal-achievements', 'modal-sector-briefing', 'modal-levels', 'modal-random', 'modal-victory-random', 'modal-editor-json'];
+            allModalIds.forEach(id => hideModal(id));
+        }
+        window.hideAllModals = hideAllModals;
+
+        function isAnyModalOpen() {
+            const allModalIds = ['modal-daily-hack', 'modal-achievements', 'modal-sector-briefing', 'modal-levels', 'modal-random', 'modal-victory-random', 'modal-editor-json'];
+            return allModalIds.some(id => {
+                const el = document.getElementById(id);
+                return el && !el.classList.contains('hidden') && el.style.display !== 'none';
+            });
+        }
+        window.isAnyModalOpen = isAnyModalOpen;
 
         function bootCyberGame() {
             if (window.__loloCyberBooted) return;
@@ -9112,6 +9167,11 @@
                 if (e.key === 'Enter') {
                     e.preventDefault();
                     goToNextLevel();
+                    return;
+                }
+
+                // If any modal is currently displayed, do not process character movement
+                if (typeof isAnyModalOpen === 'function' && isAnyModalOpen()) {
                     return;
                 }
 
@@ -9325,7 +9385,10 @@
                     if (isUnlocked) {
                         btn.onclick = () => {
                             game.loadLevel(i - 1);
-                            modalLevels.classList.add('hidden');
+                            hideModal(modalLevels);
+                            if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                                document.activeElement.blur();
+                            }
                         };
                     }
                     grid100.appendChild(btn);
@@ -9366,8 +9429,25 @@
                 };
             }
 
+            const handleDailyModalClose = () => {
+                hideModal(modalDaily);
+                if (game) {
+                    if (game.isStageCompleted) {
+                        game.isStageCompleted = false;
+                        if (game.currentMode === 'daily') {
+                            game.loadDailyLevel(game.dailyDate);
+                        } else {
+                            game.loadLevel(game.currentLevelIndex);
+                        }
+                    }
+                }
+                if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                    document.activeElement.blur();
+                }
+            };
+
             if (btnCloseDaily && modalDaily) {
-                btnCloseDaily.onclick = () => hideModal(modalDaily);
+                btnCloseDaily.onclick = handleDailyModalClose;
             }
 
             if (btnLaunchDaily && modalDaily) {
@@ -9386,18 +9466,19 @@
                 };
             }
 
-            if (btnReplayDaily && modalDaily) {
-                btnReplayDaily.onclick = (e) => {
+            const btnDailyReturn = document.getElementById('btn-daily-return-campaign');
+            if (btnDailyReturn && modalDaily) {
+                btnDailyReturn.onclick = (e) => {
                     hideModal(modalDaily);
-                    game.loadDailyLevel();
-                    if (audio && audio.playWarp) audio.playWarp();
-                    if (game.particles) {
-                        const cellSize = game.canvas.width / (game.grid.length || GRID_SIZE);
-                        const cx = (game.lolo.renderX + 0.5) * cellSize;
-                        const cy = (game.lolo.renderY + 0.5) * cellSize;
-                        game.particles.floatingText(game.canvas.width / 2, 45, "DAILY PROTOCOL REPLAY", '#f59e0b');
-                        game.particles.ripple(cx, cy, '#f59e0b');
-                    }
+                    game.loadLevel(game.currentLevelIndex);
+                    blurButtonEvent(e);
+                };
+            }
+
+            const btnReturnCampaign = document.getElementById('btn-return-campaign');
+            if (btnReturnCampaign) {
+                btnReturnCampaign.onclick = (e) => {
+                    game.loadLevel(game.currentLevelIndex);
                     blurButtonEvent(e);
                 };
             }
@@ -9472,6 +9553,8 @@
                         if (e.target === m) {
                             if (id === 'modal-victory-random' && typeof window.handleVictoryClose === 'function') {
                                 window.handleVictoryClose();
+                            } else if (id === 'modal-daily-hack') {
+                                handleDailyModalClose();
                             } else {
                                 hideModal(m);
                             }
@@ -9488,6 +9571,12 @@
                             const mv = document.getElementById('modal-victory-random');
                             if (mv && !mv.classList.contains('hidden') && mv.style.display !== 'none') {
                                 window.handleVictoryClose();
+                                return;
+                            }
+                        } else if (id === 'modal-daily-hack') {
+                            const md = document.getElementById('modal-daily-hack');
+                            if (md && !md.classList.contains('hidden') && md.style.display !== 'none') {
+                                handleDailyModalClose();
                                 return;
                             }
                         }
@@ -10442,6 +10531,19 @@
                     }
                 }
 
+                const btnVictoryReturn = document.getElementById('btn-victory-return-campaign');
+                const btnVictoryReturnText = document.getElementById('btn-victory-return-campaign-text');
+                if (btnVictoryReturn) {
+                    if (isDaily || !isCampaign) {
+                        btnVictoryReturn.classList.remove('hidden');
+                        if (btnVictoryReturnText) {
+                            btnVictoryReturnText.innerText = `Return to Main Campaign (Stage ${gameInstance.currentLevelIndex + 1})`;
+                        }
+                    } else {
+                        btnVictoryReturn.classList.add('hidden');
+                    }
+                }
+
                 if (typeof window.render100GridGlobal === 'function') {
                     window.render100GridGlobal();
                 }
@@ -10449,6 +10551,15 @@
                 showModal(modalVictory);
                 if (audio && audio.playWin) audio.playWin();
             };
+
+            const btnVictoryReturn = document.getElementById('btn-victory-return-campaign');
+            if (btnVictoryReturn && modalVictory) {
+                btnVictoryReturn.onclick = (e) => {
+                    hideModal(modalVictory);
+                    game.loadLevel(game.currentLevelIndex);
+                    blurButtonEvent(e);
+                };
+            }
 
             window.showRandomVictory = window.showVictoryModal;
             window.showCampaignVictory = window.showVictoryModal;
@@ -10469,7 +10580,9 @@
 
             document.getElementById('btn-victory-replay-random').onclick = () => {
                 hideModal(modalVictory);
-                if (game.activeLevelData) {
+                if (game.currentMode === 'daily') {
+                    game.loadDailyLevel(game.dailyDate);
+                } else if (game.activeLevelData) {
                     game.initLevelFromData(game.activeLevelData);
                 }
             };
@@ -10477,6 +10590,7 @@
             const handleVictoryClose = () => {
                 hideModal(modalVictory);
                 if (game.isStageCompleted) {
+                    game.isStageCompleted = false;
                     if (game.currentMode === 'campaign') {
                         if (game.currentLevelIndex < 99) {
                             game.loadLevel(game.currentLevelIndex + 1);
@@ -10484,12 +10598,11 @@
                             game.initLevelFromData(game.activeLevelData);
                         }
                     } else if (game.currentMode === 'daily') {
-                        DailyHackManager.renderModalUI();
-                        showModal('modal-daily-hack');
+                        game.loadDailyLevel(game.dailyDate);
                     } else if (game.currentMode === 'random') {
                         window.nextRandomProtocol();
                     } else {
-                        game.isStageCompleted = false;
+                        game.loadLevel(game.currentLevelIndex);
                     }
                 }
             };
@@ -11341,38 +11454,40 @@
 
             // URL Param Seed, Stage & Challenge Auto-Loader
             try {
-                const params = new URLSearchParams(window.location.search);
-                const urlStage = parseInt(params.get('stage'), 10);
-                const urlView = params.get('view');
-                const urlSeed = params.get('seed');
-                const urlUnlock = params.get('unlock');
-                const urlDiff = params.get('diff') || 'medium';
-                const urlGrid = parseInt(params.get('grid'), 10) || 11;
-                const urlDaily = params.get('daily');
-                
-                if (urlUnlock) {
-                    game.unlockedLevel = 100;
-                    if (typeof render100Grid === 'function') render100Grid();
-                }
-                if (urlDaily || urlView === 'daily') {
-                    game.loadDailyLevel();
-                } else if (urlStage >= 1 && urlStage <= 100) {
-                    game.loadLevel(urlStage - 1);
-                } else if (urlSeed) {
-                    const generatedLevel = LoloRandomGenerator.generate(urlDiff, urlSeed, urlGrid);
-                    if (generatedLevel) {
-                        game.loadRandomLevel(urlDiff, urlSeed, generatedLevel);
+                if (typeof window !== 'undefined' && window.location && window.location.search) {
+                    const params = new URLSearchParams(window.location.search);
+                    const urlStage = parseInt(params.get('stage'), 10);
+                    const urlView = params.get('view');
+                    const urlSeed = params.get('seed');
+                    const urlUnlock = params.get('unlock');
+                    const urlDiff = params.get('diff') || 'medium';
+                    const urlGrid = parseInt(params.get('grid'), 10) || 11;
+                    const urlDaily = params.get('daily');
+                    
+                    if (urlUnlock) {
+                        game.unlockedLevel = 100;
+                        if (typeof render100Grid === 'function') render100Grid();
                     }
-                }
-                if (urlView === 'editor') {
-                    panelEditor.classList.remove('hidden');
-                } else if (urlView === 'levels') {
-                    showModal(modalLevels);
-                } else if (urlView === 'random') {
-                    showModal(modalRandom);
-                } else if (urlView === 'achievements') {
-                    showModal(modalAchievements);
-                    achievements.renderGrid();
+                    if (urlDaily || urlView === 'daily') {
+                        game.loadDailyLevel();
+                    } else if (urlStage >= 1 && urlStage <= 100) {
+                        game.loadLevel(urlStage - 1);
+                    } else if (urlSeed) {
+                        const generatedLevel = LoloRandomGenerator.generate(urlDiff, urlSeed, urlGrid);
+                        if (generatedLevel) {
+                            game.loadRandomLevel(urlDiff, urlSeed, generatedLevel);
+                        }
+                    }
+                    if (urlView === 'editor') {
+                        panelEditor.classList.remove('hidden');
+                    } else if (urlView === 'levels') {
+                        showModal(modalLevels);
+                    } else if (urlView === 'random') {
+                        showModal(modalRandom);
+                    } else if (urlView === 'achievements') {
+                        showModal(modalAchievements);
+                        achievements.renderGrid();
+                    }
                 }
             } catch (e) {
                 console.warn('URL param parse error:', e);

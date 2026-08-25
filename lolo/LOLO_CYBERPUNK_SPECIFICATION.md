@@ -278,10 +278,15 @@ Generated purely via native Web Audio API oscillators and gain nodes (zero exter
 2. **Text Field Immunity**: Keystroke handlers check `document.activeElement` and bypass progression when the player is editing in JSON inputs or custom seed textareas.
 
 ### 9.3 CRT Preset State Machine & Layout Stability
-- **State Values**: `'subtle'` (default on), `'heavy'`, `'off'`.
-- **State Transition Sequence**: $\text{Subtle} \xrightarrow{\text{click}} \text{Off} \xrightarrow{\text{click}} \text{Heavy} \xrightarrow{\text{click}} \text{Subtle}$.
-- **Persistence**: Saved synchronously to `localStorage.getItem('lolo_cyber_crt_mode')` on state change; restored immediately upon early script load (`initCrtToggle`).
-- **Layout Invariance**: The button container enforces `min-w-[108px] sm:min-w-[114px]` and `pointer-events-none` on inner child spans to guarantee zero horizontal shift of adjacent header controls.
+- **States**: `subtle` (default), `heavy`, `off`.
+- **State Transition Cycle**: $\text{Subtle} \to \text{Off} \to \text{Heavy} \to \text{Subtle}$.
+- **Storage**: Key `lolo_cyber_crt_mode` persisted synchronously to `localStorage`.
+- **Layout Invariance**: Action buttons specify a fixed minimum width (`min-w-[108px] sm:min-w-[114px] shrink-0 justify-center`) and internal `pointer-events-none` to guarantee zero layout shifts when label text updates.
+
+### 9.4 Mode Transition & Main Campaign Return Invariant
+- **Tactical Dossier Return Button**: When the operative is engaged in `daily` or `random` mode, the Tactical Dossier HUD dynamically reveals `#btn-return-campaign` displaying `Return to Main Game (Stage X)`.
+- **Victory Modal Direct Navigation**: Upon victory in a Daily Protocol or Random Simulation, the modal exposes `#btn-victory-return-campaign` alongside replay and calendar actions.
+- **Daily Protocol Modal Direct Navigation**: The Daily Hack protocol popup provides `#btn-daily-return-campaign` to allow immediate return to the campaign without requiring replaying.
 
 ---
 
