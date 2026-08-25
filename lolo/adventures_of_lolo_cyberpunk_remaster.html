@@ -12933,6 +12933,7 @@
                     if (urlDaily || urlView === 'daily') {
                         game.loadDailyLevel();
                     } else if (urlStage >= 1 && urlStage <= 100) {
+                        game.unlockedLevel = Math.max(game.unlockedLevel || 1, urlStage);
                         game.loadLevel(urlStage - 1);
                     } else if (urlSeed) {
                         const generatedLevel = LoloRandomGenerator.generate(urlDiff, urlSeed, urlGrid);
@@ -12941,10 +12942,16 @@
                         }
                     }
                     if (urlView === 'editor') {
+                        game.isEditorMode = true;
                         panelEditor.classList.remove('hidden');
+                        updatePaletteUI();
+                        syncDirectionToggles();
+                        updateEditorTelemetry();
                     } else if (urlView === 'levels') {
                         showModal(modalLevels);
                     } else if (urlView === 'random') {
+                        generateAndDisplayLevel(true);
+                        renderSeedHistoryUI();
                         showModal(modalRandom);
                     } else if (urlView === 'achievements') {
                         showModal(modalAchievements);
