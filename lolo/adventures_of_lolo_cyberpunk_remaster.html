@@ -1348,10 +1348,30 @@
                     <div class="bg-slate-950/70 border border-cyan-500/30 rounded-2xl p-3 space-y-2">
                         <span
                             class="text-[11px] font-bold text-cyan-300 orbitron-font uppercase tracking-wider flex items-center gap-1.5">
-                            <i class="fa-solid fa-cubes text-cyan-400"></i> 6. Interactive Objects &amp; Dynamics
+                            <i class="fa-solid fa-cubes text-cyan-400"></i> 6. Terrain Biomes &amp; Interactive Objects
                         </span>
 
                         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px] font-semibold">
+                            <label
+                                class="flex items-center gap-1.5 bg-slate-900/80 p-2 rounded-xl border border-slate-800 cursor-pointer hover:border-emerald-500/40">
+                                <input type="checkbox" id="chk-random-grass" checked class="accent-emerald-400">
+                                <span>🌿 Meadow Grass</span>
+                            </label>
+                            <label
+                                class="flex items-center gap-1.5 bg-slate-900/80 p-2 rounded-xl border border-slate-800 cursor-pointer hover:border-amber-500/40">
+                                <input type="checkbox" id="chk-random-sand" checked class="accent-amber-400">
+                                <span>🏖️ Dune Sand</span>
+                            </label>
+                            <label
+                                class="flex items-center gap-1.5 bg-slate-900/80 p-2 rounded-xl border border-slate-800 cursor-pointer hover:border-blue-500/40">
+                                <input type="checkbox" id="chk-random-water" checked class="accent-blue-400">
+                                <span>🌊 Water Canals</span>
+                            </label>
+                            <label
+                                class="flex items-center gap-1.5 bg-slate-900/80 p-2 rounded-xl border border-slate-800 cursor-pointer hover:border-emerald-500/40">
+                                <input type="checkbox" id="chk-random-trees" checked class="accent-emerald-400">
+                                <span>🌲 Cyber Trees</span>
+                            </label>
                             <label
                                 class="flex items-center gap-1.5 bg-slate-900/80 p-2 rounded-xl border border-slate-800 cursor-pointer hover:border-cyan-500/40">
                                 <input type="checkbox" id="chk-random-portals" checked class="accent-cyan-400">
@@ -1391,7 +1411,9 @@
                                         class="fa-solid fa-mountain-sun text-emerald-400"></i> Biome:</span>
                                 <select id="select-random-biome"
                                     class="bg-slate-900 border border-emerald-500/30 rounded-lg px-2 py-1 text-emerald-300 font-bold outline-none flex-1">
-                                    <option value="all" selected>Full Cyber Synth (All)</option>
+                                    <option value="all" selected>Full Cyber Synth (All Biomes)</option>
+                                    <option value="meadow">Lush Meadow (Grass Focus)</option>
+                                    <option value="dunes">Desert Dunes (Sand Focus)</option>
                                     <option value="canals">Plasma Canals (Water Focus)</option>
                                     <option value="foliage">Cover Hedges (Trees Focus)</option>
                                 </select>
@@ -4139,6 +4161,87 @@
             return [];
         }
 
+        // Universal Level Sanitizer: Eliminates ANY nested/overlapping items on the same grid cell
+        function sanitizeLevelEntities(levelData) {
+            if (!levelData || !levelData.grid) return levelData;
+            const size = (levelData.grid && levelData.grid.length) || levelData.gridSize || GRID_SIZE;
+
+            // 1. Sanitize Lolo
+            if (levelData.lolo) {
+                levelData.lolo.x = Math.max(1, Math.min(size - 2, Number(levelData.lolo.x) || 1));
+                levelData.lolo.y = Math.max(1, Math.min(size - 2, Number(levelData.lolo.y) || 1));
+                levelData.grid[levelData.lolo.y][levelData.lolo.x] = TILE_FLOOR;
+            }
+
+            const occupied = new Set();
+            if (levelData.lolo) {
+                occupied.add(`${levelData.lolo.x},${levelData.lolo.y}`);
+            }
+
+            // Door and Chest coordinates are locked
+            for (let r = 0; r < size; r++) {
+                for (let c = 0; c < size; c++) {
+                    const t = levelData.grid[r][c];
+                    if (t === TILE_CHEST_CLOSED || t === TILE_CHEST_OPENED || t === TILE_DOOR_CLOSED || t === TILE_DOOR_OPEN) {
+                        occupied.add(`${c},${r}`);
+                    }
+                }
+            }
+
+            // 2. Sanitize Blocks
+            const cleanBlocks = [];
+            const blockPositions = new Set();
+            (levelData.blocks || []).forEach(b => {
+                if (!b || typeof b.x !== 'number' || typeof b.y !== 'number') return;
+                const bx = Math.max(1, Math.min(size - 2, b.x));
+                const by = Math.max(1, Math.min(size - 2, b.y));
+                const key = `${bx},${by}`;
+                if (occupied.has(key) || blockPositions.has(key)) return;
+
+                const curTile = levelData.grid[by][bx];
+                if (curTile === TILE_HEART || curTile === TILE_HEART_AMMO) return; // Don't squash hearts with blocks
+
+                levelData.grid[by][bx] = TILE_FLOOR;
+                blockPositions.add(key);
+                occupied.add(key);
+                cleanBlocks.push({ ...b, x: bx, y: by });
+            });
+            levelData.blocks = cleanBlocks;
+
+            // 3. Sanitize Enemies
+            const cleanEnemies = [];
+            const enemyPositions = new Set();
+            (levelData.enemies || []).forEach(e => {
+                if (!e || typeof e.x !== 'number' || typeof e.y !== 'number') return;
+                const ex = Math.max(1, Math.min(size - 2, e.x));
+                const ey = Math.max(1, Math.min(size - 2, e.y));
+                const key = `${ex},${ey}`;
+                if (occupied.has(key) || enemyPositions.has(key)) return;
+
+                const curTile = levelData.grid[ey][ex];
+                if (curTile === TILE_HEART || curTile === TILE_HEART_AMMO) return; // Don't spawn enemy on heart
+
+                levelData.grid[ey][ex] = TILE_FLOOR;
+                enemyPositions.add(key);
+                occupied.add(key);
+                cleanEnemies.push({ ...e, x: ex, y: ey });
+            });
+            levelData.enemies = cleanEnemies;
+
+            // 4. Final safety sweep: Clear ANY non-floor tile under all blocks, enemies, and Lolo
+            for (const b of levelData.blocks) {
+                levelData.grid[b.y][b.x] = TILE_FLOOR;
+            }
+            for (const e of levelData.enemies) {
+                levelData.grid[e.y][e.x] = TILE_FLOOR;
+            }
+            if (levelData.lolo) {
+                levelData.grid[levelData.lolo.y][levelData.lolo.x] = TILE_FLOOR;
+            }
+
+            return levelData;
+        }
+
         /* Mathematical BFS Solvability Engine */
         class LoloMathSolver {
             static countBits(n) {
@@ -4148,6 +4251,7 @@
             }
 
             static solve(levelData, maxStates = 75000) {
+                sanitizeLevelEntities(levelData);
                 const boardSize = (levelData.grid && levelData.grid.length) || levelData.gridSize || GRID_SIZE;
                 const grid = levelData.grid.map(row => [...row]);
                 const startLolo = { x: levelData.lolo.x, y: levelData.lolo.y };
@@ -5811,17 +5915,36 @@
                     }
                 }
 
-                // Decorative Terrain with unique seed variations
-                const decorCount = rng.range(2, Math.max(3, 2 + Math.floor(size / 5)));
+                // Decorative Terrain with biome, grass, sand, and user options
+                const allowGrass = options ? (options.includeGrass !== false) : true;
+                const allowSand = options ? (options.includeSand !== false) : true;
+                const biome = options ? (options.biome || 'all') : 'all';
+
+                const decorCount = rng.range(3, Math.max(4, 3 + Math.floor(size / 3)));
                 for (let d = 0; d < decorCount; d++) {
                     const tx = rng.range(2, size - 3);
                     const ty = rng.range(2, size - 3);
                     if (tx !== midX && grid[ty][tx] === TILE_FLOOR && !blocks.some(b => b.x === tx && b.y === ty) && !enemies.some(e => e.x === tx && e.y === ty)) {
-                        grid[ty][tx] = (d % 2 === 0) ? TILE_SAND : TILE_GRASS;
+                        if (biome === 'meadow' && allowGrass) {
+                            grid[ty][tx] = TILE_GRASS;
+                        } else if (biome === 'dunes' && allowSand) {
+                            grid[ty][tx] = TILE_SAND;
+                        } else {
+                            if (allowGrass && allowSand) {
+                                grid[ty][tx] = (d % 2 === 0) ? TILE_SAND : TILE_GRASS;
+                            } else if (allowGrass) {
+                                grid[ty][tx] = TILE_GRASS;
+                            } else if (allowSand) {
+                                grid[ty][tx] = TILE_SAND;
+                            }
+                        }
                     }
                 }
 
-                return { grid, lolo, blocks, enemies };
+                const rawFallback = { grid, lolo, blocks, enemies };
+                sanitizeLevelEntities(rawFallback);
+                rawFallback.solverResult = LoloMathSolver.solve(rawFallback, 50000);
+                return rawFallback;
             }
         }
 
@@ -5865,6 +5988,7 @@
                     blocks,
                     enemies
                 };
+                sanitizeLevelEntities(level);
                 level.solverResult = LoloMathSolver.solve(level, 10000);
                 return level;
             }
@@ -5886,13 +6010,14 @@
                 const seed = attempt === 0 ? baseSeed : `${baseSeed}-R${attempt}`;
                 const level = LoloRandomGenerator.generate(difficulty, seed, size, stageIndex, campaignOptions);
                 if (!level || !Array.isArray(level.grid) || !Array.isArray(level.enemies)) continue;
+                sanitizeLevelEntities(level);
                 if (!level.solverResult || !level.solverResult.solvable) continue;
                 if (level.enemies.length === 0) continue;
 
                 level.id = stageIndex;
                 level.name = `Stage ${stageIndex}`;
                 level.gridSize = size;
-                return level;
+                return sanitizeLevelEntities(level);
             }
 
             const fallback = LoloRandomGenerator.buildGuaranteedFallback(difficulty, `${baseSeed}-FALLBACK`, size, stageIndex, campaignOptions);
@@ -5900,7 +6025,7 @@
                 fallback.id = stageIndex;
                 fallback.name = `Stage ${stageIndex}`;
                 fallback.gridSize = size;
-                return fallback;
+                return sanitizeLevelEntities(fallback);
             }
 
             const forced = {
@@ -5911,7 +6036,7 @@
                 enemies: [{ type: 'snake', x: Math.floor(size / 2), y: Math.max(3, size - 4), dir: 'down' }],
                 solverResult: { solvable: true }
             };
-            return forced;
+            return sanitizeLevelEntities(forced);
         }
 
         const ALL_100_LEVELS = new Array(100).fill(null);
@@ -5919,7 +6044,7 @@
         function ensureCampaignLevel(stageIndex) {
             if (stageIndex < 1 || stageIndex > 100) return null;
             if (!ALL_100_LEVELS[stageIndex - 1]) {
-                ALL_100_LEVELS[stageIndex - 1] = buildCampaignLevel(stageIndex);
+                ALL_100_LEVELS[stageIndex - 1] = sanitizeLevelEntities(buildCampaignLevel(stageIndex));
             }
             return ALL_100_LEVELS[stageIndex - 1];
         }
@@ -12161,6 +12286,10 @@
                     allowedPrefabs: activePrefabs.length > 0 ? activePrefabs : null,
                     blockDensity: blockDensitySelect ? blockDensitySelect.value : 'balanced',
                     biome: biomeSelect ? biomeSelect.value : 'all',
+                    includeGrass: document.getElementById('chk-random-grass')?.checked ?? true,
+                    includeSand: document.getElementById('chk-random-sand')?.checked ?? true,
+                    includeWater: document.getElementById('chk-random-water')?.checked ?? true,
+                    includeTrees: document.getElementById('chk-random-trees')?.checked ?? true,
                     includePortals: document.getElementById('chk-random-portals')?.checked ?? true,
                     includeIce: document.getElementById('chk-random-ice')?.checked ?? true,
                     includeArrows: document.getElementById('chk-random-arrows')?.checked ?? true,
@@ -12983,8 +13112,8 @@
                 };
             }
 
-            // Interactive Tile Checkbox Handlers
-            ['chk-random-portals', 'chk-random-ice', 'chk-random-arrows', 'chk-random-cracked'].forEach(chkId => {
+            // Interactive Tile & Terrain Checkbox Handlers
+            ['chk-random-grass', 'chk-random-sand', 'chk-random-water', 'chk-random-trees', 'chk-random-portals', 'chk-random-ice', 'chk-random-arrows', 'chk-random-cracked'].forEach(chkId => {
                 const chk = document.getElementById(chkId);
                 if (chk) {
                     chk.onchange = () => scheduleRandomUpdate();
@@ -13558,6 +13687,8 @@
                     { type: 'tile', id: TILE_WALL, name: 'Wall', icon: 'fa-border-all', color: 'text-cyan-400', desc: 'Reinforced perimeter wall' },
                     { type: 'tile', id: TILE_TREE, name: 'Tree', icon: 'fa-tree', color: 'text-emerald-400', desc: 'Dense obstacle tree' },
                     { type: 'tile', id: TILE_WATER, name: 'Water', icon: 'fa-water', color: 'text-blue-400', desc: 'Water hazard passable via egg raft' },
+                    { type: 'tile', id: TILE_GRASS, name: 'Meadow Grass', icon: 'fa-seedling', color: 'text-emerald-300', desc: 'Organic lush meadow turf' },
+                    { type: 'tile', id: TILE_SAND, name: 'Dune Sand', icon: 'fa-mountain-sun', color: 'text-amber-300', desc: 'Warm wind-swept sand dunes' },
                     { type: 'tile', id: TILE_ICE, name: 'Mag-Lev Ice', icon: 'fa-snowflake', color: 'text-sky-300', desc: 'Frictionless slide track' },
                     { type: 'tile', id: TILE_CRACKED_WALL, name: 'Cracked Barrier', icon: 'fa-burst', color: 'text-cyan-300', desc: 'Vulnerable barrier destroyed by plasma blasts' },
                     { type: 'tile', id: TILE_ONE_WAY_UP, name: 'Gate (▲)', icon: 'fa-arrow-up', color: 'text-cyan-400', desc: 'One-way upward directional gate' },
