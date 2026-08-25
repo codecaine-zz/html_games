@@ -275,14 +275,20 @@
                 <i class="fa-solid fa-music text-pink-400 text-xs pl-1"></i>
                 <select id="select-bgm"
                     class="bg-transparent text-xs font-bold text-pink-300 focus:outline-none cursor-pointer pr-1">
-                    <option value="0" class="bg-slate-900 text-pink-300">Track 1: Cyber Pulse</option>
-                    <option value="1" class="bg-slate-900 text-pink-300">Track 2: Quantum Rush</option>
-                    <option value="2" class="bg-slate-900 text-pink-300">Track 3: Synth Chill</option>
-                    <option value="3" class="bg-slate-900 text-pink-300">Track 4: Neon Overdrive</option>
-                    <option value="4" class="bg-slate-900 text-pink-300">Track 5: Hypergrid Arc</option>
-                    <option value="5" class="bg-slate-900 text-pink-300">Track 6: Matrix Solace</option>
-                    <option value="6" class="bg-slate-900 text-pink-300">Track 7: Retro Byte Surge</option>
-                    <option value="7" class="bg-slate-900 text-pink-300">Track 8: Orbital Protocol</option>
+                    <option value="0" class="bg-slate-900 text-pink-300">Track 1: Cyber Pulse (Synthwave)</option>
+                    <option value="1" class="bg-slate-900 text-pink-300">Track 2: Neo-Drift (Acid Electro)</option>
+                    <option value="2" class="bg-slate-900 text-pink-300">Track 3: Neon Rain (Lo-Fi Chill)</option>
+                    <option value="3" class="bg-slate-900 text-pink-300">Track 4: 8-Bit Overdrive (Chiptune)</option>
+                    <option value="4" class="bg-slate-900 text-pink-300">Track 5: Grid Break (Cyber D&B)</option>
+                    <option value="5" class="bg-slate-900 text-pink-300">Track 6: Deep Void (Ambient Space)</option>
+                    <option value="6" class="bg-slate-900 text-pink-300">Track 7: Quantum Funk (Nu-Disco)</option>
+                    <option value="7" class="bg-slate-900 text-pink-300">Track 8: Boss Protocol (Dark Synth)</option>
+                    <option value="8" class="bg-slate-900 text-cyan-300 font-bold">★ Classic: Tetris (Korobeiniki 8-Bit)</option>
+                    <option value="9" class="bg-slate-900 text-cyan-300 font-bold">★ Classic: Super Mario (Overworld)</option>
+                    <option value="10" class="bg-slate-900 text-cyan-300 font-bold">★ Classic: Zelda (Heroic Legend)</option>
+                    <option value="11" class="bg-slate-900 text-cyan-300 font-bold">★ Classic: Mega Man 2 (Dr. Wily)</option>
+                    <option value="12" class="bg-slate-900 text-cyan-300 font-bold">★ Classic: Castlevania (Vampire Killer)</option>
+                    <option value="13" class="bg-slate-900 text-cyan-300 font-bold">★ Classic: Street Fighter (Guile's Theme)</option>
                 </select>
                 <button id="btn-music-toggle"
                     class="btn-action bg-pink-600/80 hover:bg-pink-500 text-white text-xs p-1.5 rounded-lg border border-pink-400/50"
@@ -1789,35 +1795,35 @@
             buildAudioGraph() {
                 if (!this.ctx) return;
 
-                // 1. Master Dynamics Compressor / Limiter (warm analog punch + anti-clipping)
+                // 1. Transparent Studio Dynamics Compressor / Peak Limiter
                 this.compressor = this.ctx.createDynamicsCompressor();
-                this.compressor.threshold.setValueAtTime(-14, this.ctx.currentTime);
-                this.compressor.knee.setValueAtTime(24, this.ctx.currentTime);
-                this.compressor.ratio.setValueAtTime(8, this.ctx.currentTime);
-                this.compressor.attack.setValueAtTime(0.003, this.ctx.currentTime);
-                this.compressor.release.setValueAtTime(0.2, this.ctx.currentTime);
+                this.compressor.threshold.setValueAtTime(-18, this.ctx.currentTime);
+                this.compressor.knee.setValueAtTime(15, this.ctx.currentTime);
+                this.compressor.ratio.setValueAtTime(4.0, this.ctx.currentTime);
+                this.compressor.attack.setValueAtTime(0.005, this.ctx.currentTime);
+                this.compressor.release.setValueAtTime(0.15, this.ctx.currentTime);
 
                 // 2. Master Gain
                 this.masterGain = this.ctx.createGain();
-                this.masterGain.gain.setValueAtTime(0.85, this.ctx.currentTime);
+                this.masterGain.gain.setValueAtTime(0.75, this.ctx.currentTime);
 
                 // 3. Submix Buses
                 this.sfxBus = this.ctx.createGain();
-                this.sfxBus.gain.setValueAtTime(0.9, this.ctx.currentTime);
+                this.sfxBus.gain.setValueAtTime(0.85, this.ctx.currentTime);
 
                 this.bgmBus = this.ctx.createGain();
-                this.bgmBus.gain.setValueAtTime(0.7, this.ctx.currentTime);
+                this.bgmBus.gain.setValueAtTime(0.55, this.ctx.currentTime);
 
                 // 4. Stereo Feedback Delay Send (Adds atmospheric space to synths & warps)
                 this.delaySend = this.ctx.createDelay();
                 this.delaySend.delayTime.setValueAtTime(0.24, this.ctx.currentTime);
 
                 this.delayFeedback = this.ctx.createGain();
-                this.delayFeedback.gain.setValueAtTime(0.32, this.ctx.currentTime);
+                this.delayFeedback.gain.setValueAtTime(0.28, this.ctx.currentTime);
 
                 this.delayFilter = this.ctx.createBiquadFilter();
                 this.delayFilter.type = 'lowpass';
-                this.delayFilter.frequency.setValueAtTime(2600, this.ctx.currentTime);
+                this.delayFilter.frequency.setValueAtTime(2400, this.ctx.currentTime);
 
                 // Delay Feedback Loop
                 this.delaySend.connect(this.delayFilter);
@@ -1836,15 +1842,12 @@
                 if (!this.ctx || this.noiseBuffer) return;
                 try {
                     const sampleRate = this.ctx.sampleRate || 44100;
-                    const bufferSize = sampleRate * 2; // 2 seconds pre-baked noise
+                    const bufferSize = sampleRate * 2; // 2 seconds pre-baked balanced noise
                     this.noiseBuffer = this.ctx.createBuffer(1, bufferSize, sampleRate);
                     const output = this.noiseBuffer.getChannelData(0);
-                    let lastOut = 0.0;
                     for (let i = 0; i < bufferSize; i++) {
-                        const white = Math.random() * 2 - 1;
-                        // Pink noise filter curve for richer organic drum & impact sounds
-                        output[i] = (lastOut + (0.04 * white)) / 1.04;
-                        lastOut = output[i];
+                        // Zero DC offset balanced noise scaled for clean mix headroom
+                        output[i] = (Math.random() * 2 - 1) * 0.35;
                     }
                 } catch (e) { }
             }
@@ -2544,7 +2547,7 @@
                 } catch (e) { }
             }
 
-            /* --- Lookahead Sample-Accurate Multi-Voice BGM Engine --- */
+            /* --- Lookahead Sample-Accurate Multi-Genre BGM Engine --- */
 
             startBGM(trackIndex = 0) {
                 this.currentBgmTrack = parseInt(trackIndex, 10);
@@ -2556,76 +2559,159 @@
                     this.ctx.resume();
                 }
 
-                // 8 Cyberpunk Synthwave & Chiptune Master Tracks
+                // 8 Completely Distinct Musical Genres & Sonic Identities
                 this.tracks = [
-                    // Track 0: Cyber Pulse (128 BPM - Driving Retro Synthwave)
+                    // Track 0: Cyber Pulse (120 BPM - Classic 80s Outrun Synthwave)
                     {
-                        bpm: 128,
-                        bass: [110, 110, 130.81, 110, 146.83, 110, 130.81, 123.47, 110, 110, 146.83, 110, 164.81, 146.83, 130.81, 123.47],
-                        lead: [220, 261.63, 329.63, 261.63, 392, 329.63, 261.63, 246.94, 220, 329.63, 440, 392, 329.63, 293.66, 261.63, 246.94],
-                        arp: [440, 523.25, 659.25, 523.25, 783.99, 659.25, 523.25, 493.88, 440, 659.25, 880, 783.99, 659.25, 587.33, 523.25, 493.88],
-                        perc: [1, 0, 2, 3, 1, 0, 2, 1, 1, 3, 2, 0, 1, 1, 2, 4]
+                        name: 'Cyber Pulse',
+                        style: 'synthwave',
+                        bpm: 120,
+                        bass: [110, 110, 110, 110, 130.81, 130.81, 110, 110, 146.83, 146.83, 110, 110, 123.47, 123.47, 130.81, 123.47],
+                        lead: [440, 0, 523.25, 0, 659.25, 0, 587.33, 0, 440, 0, 659.25, 0, 783.99, 659.25, 587.33, 523.25],
+                        arp: [880, 1046.5, 1318.51, 1046.5, 880, 1046.5, 1318.51, 1046.5, 880, 1174.66, 1318.51, 1174.66, 987.77, 1046.5, 1174.66, 987.77],
+                        perc: [1, 3, 2, 3, 1, 3, 2, 3, 1, 3, 2, 3, 1, 3, 2, 4]
                     },
-                    // Track 1: Quantum Rush (142 BPM - Fast High-Energy Puzzle Bounce)
+                    // Track 1: Neo-Drift (146 BPM - Fast 303 Acid Electro Rave)
                     {
-                        bpm: 142,
-                        bass: [146.83, 146.83, 174.61, 146.83, 196, 174.61, 146.83, 130.81, 146.83, 174.61, 220, 196, 174.61, 146.83, 130.81, 110],
-                        lead: [293.66, 349.23, 440, 349.23, 523.25, 440, 349.23, 329.63, 293.66, 440, 587.33, 523.25, 440, 349.23, 329.63, 293.66],
-                        arp: [587.33, 698.46, 880, 698.46, 1046.5, 880, 698.46, 659.25, 587.33, 880, 1174.66, 1046.5, 880, 698.46, 659.25, 587.33],
+                        name: 'Neo-Drift',
+                        style: 'acid',
+                        bpm: 146,
+                        bass: [82.41, 164.81, 82.41, 196.00, 82.41, 220.00, 196.00, 82.41, 164.81, 82.41, 246.94, 220.00, 196.00, 164.81, 146.83, 164.81],
+                        lead: [329.63, 0, 0, 329.63, 0, 392.00, 0, 0, 440.00, 0, 0, 440.00, 493.88, 0, 392.00, 0],
+                        arp: [659.25, 783.99, 880.00, 987.77, 1046.50, 987.77, 880.00, 783.99, 659.25, 880.00, 987.77, 1174.66, 1318.51, 1174.66, 987.77, 783.99],
+                        perc: [1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 2, 4]
+                    },
+                    // Track 2: Neon Rain (82 BPM - Warm Lo-Fi Chill & Electric Piano)
+                    {
+                        name: 'Neon Rain',
+                        style: 'lofi',
+                        bpm: 82,
+                        bass: [65.41, 0, 0, 65.41, 73.42, 0, 0, 73.42, 87.31, 0, 0, 87.31, 82.41, 0, 73.42, 0],
+                        lead: [261.63, 0, 329.63, 0, 392.00, 0, 523.25, 0, 293.66, 0, 349.23, 0, 440.00, 0, 523.25, 0],
+                        arp: [1046.50, 0, 1318.51, 0, 0, 1567.98, 0, 0, 1174.66, 0, 1396.91, 0, 0, 1760.00, 0, 0],
+                        perc: [1, 3, 0, 3, 2, 3, 0, 1, 0, 3, 1, 3, 2, 3, 0, 3]
+                    },
+                    // Track 3: 8-Bit Overdrive (162 BPM - Pure Authentic Retro NES Chiptune)
+                    {
+                        name: '8-Bit Overdrive',
+                        style: 'chiptune',
+                        bpm: 162,
+                        bass: [130.81, 0, 130.81, 164.81, 196.00, 0, 196.00, 164.81, 220.00, 0, 220.00, 196.00, 174.61, 164.81, 146.83, 130.81],
+                        lead: [523.25, 523.25, 659.25, 783.99, 1046.50, 783.99, 659.25, 523.25, 698.46, 698.46, 880.00, 1046.50, 1318.51, 1046.50, 880.00, 698.46],
+                        arp: [1046.50, 1318.51, 1567.98, 2093.00, 1567.98, 1318.51, 1046.50, 1318.51, 1396.91, 1760.00, 2093.00, 2637.02, 2093.00, 1760.00, 1396.91, 1760.00],
+                        perc: [1, 3, 2, 3, 1, 1, 2, 3, 1, 3, 2, 3, 1, 2, 2, 3]
+                    },
+                    // Track 4: Grid Break (172 BPM - High-Speed Liquid Drum & Bass)
+                    {
+                        name: 'Grid Break',
+                        style: 'dnb',
+                        bpm: 172,
+                        bass: [55.00, 55.00, 55.00, 55.00, 65.41, 65.41, 65.41, 65.41, 73.42, 73.42, 73.42, 73.42, 61.74, 61.74, 61.74, 61.74],
+                        lead: [440.00, 0, 0, 0, 523.25, 0, 0, 0, 587.33, 0, 0, 0, 659.25, 587.33, 523.25, 493.88],
+                        arp: [880.00, 0, 1046.50, 880.00, 0, 1174.66, 1046.50, 0, 1318.51, 0, 1174.66, 1046.50, 880.00, 987.77, 1046.50, 880.00],
+                        perc: [1, 3, 3, 3, 2, 3, 3, 2, 3, 3, 1, 3, 2, 3, 2, 4]
+                    },
+                    // Track 5: Deep Void (66 BPM - Atmospheric Cosmic Space & Shimmer Bells)
+                    {
+                        name: 'Deep Void',
+                        style: 'ambient',
+                        bpm: 66,
+                        bass: [43.65, 0, 0, 0, 43.65, 0, 0, 0, 48.99, 0, 0, 0, 38.89, 0, 0, 0],
+                        lead: [349.23, 0, 440.00, 0, 523.25, 0, 659.25, 0, 392.00, 0, 489.99, 0, 587.33, 0, 783.99, 0],
+                        arp: [1396.91, 0, 1760.00, 0, 2093.00, 0, 2637.02, 0, 1567.98, 0, 1975.53, 0, 2349.32, 0, 3135.96, 0],
+                        perc: [1, 0, 0, 0, 0, 0, 0, 3, 1, 0, 0, 0, 0, 0, 0, 4]
+                    },
+                    // Track 6: Quantum Funk (118 BPM - Bouncy Nu-Disco & Slap Bass)
+                    {
+                        name: 'Quantum Funk',
+                        style: 'funk',
+                        bpm: 118,
+                        bass: [73.42, 0, 146.83, 0, 73.42, 87.31, 0, 98.00, 110.00, 0, 220.00, 0, 130.81, 146.83, 0, 110.00],
+                        lead: [293.66, 293.66, 0, 349.23, 0, 440.00, 0, 523.25, 587.33, 0, 523.25, 0, 440.00, 392.00, 349.23, 293.66],
+                        arp: [587.33, 0, 698.46, 587.33, 0, 880.00, 0, 1046.50, 1174.66, 0, 1046.50, 0, 880.00, 698.46, 0, 587.33],
+                        perc: [1, 4, 2, 4, 1, 4, 2, 4, 1, 4, 2, 4, 1, 1, 2, 4]
+                    },
+                    // Track 7: Boss Protocol (132 BPM - Darkwave / Cinematic Cyber Horror)
+                    {
+                        name: 'Boss Protocol',
+                        style: 'darkwave',
+                        bpm: 132,
+                        bass: [65.41, 65.41, 69.30, 65.41, 77.78, 65.41, 69.30, 65.41, 65.41, 65.41, 87.31, 77.78, 69.30, 65.41, 61.74, 65.41],
+                        lead: [261.63, 0, 277.18, 0, 311.13, 0, 349.23, 0, 261.63, 0, 349.23, 0, 392.00, 349.23, 311.13, 277.18],
+                        arp: [1046.50, 1108.73, 1046.50, 1108.73, 1244.51, 1046.50, 1108.73, 1046.50, 1396.91, 1244.51, 1108.73, 1046.50, 987.77, 1046.50, 1108.73, 987.77],
+                        perc: [1, 3, 1, 3, 2, 3, 1, 3, 1, 3, 1, 1, 2, 3, 2, 4]
+                    },
+                    // Track 8: Tetris / Korobeiniki (144 BPM - Classic 8-Bit NES Russian Folk)
+                    {
+                        name: 'Tetris Korobeiniki',
+                        style: 'chiptune',
+                        bpm: 144,
+                        bass: [110, 82.41, 110, 82.41, 146.83, 110, 146.83, 110, 164.81, 123.47, 164.81, 123.47, 110, 82.41, 110, 82.41],
+                        lead: [659.25, 493.88, 523.25, 587.33, 523.25, 493.88, 440.00, 0, 440.00, 523.25, 659.25, 0, 587.33, 523.25, 493.88, 0],
+                        arp: [1318.51, 987.77, 1046.50, 1174.66, 1046.50, 987.77, 880.00, 0, 880.00, 1046.50, 1318.51, 0, 1174.66, 1046.50, 987.77, 0],
+                        perc: [1, 3, 2, 3, 1, 3, 2, 3, 1, 3, 2, 3, 1, 3, 2, 4]
+                    },
+                    // Track 9: Super Mario Bros (100 BPM - Iconic Overworld Ragtime)
+                    {
+                        name: 'Super Mario Overworld',
+                        style: 'chiptune',
+                        bpm: 100,
+                        bass: [130.81, 0, 196.00, 0, 130.81, 0, 174.61, 0, 196.00, 0, 164.81, 0, 130.81, 0, 196.00, 0],
+                        lead: [659.25, 659.25, 0, 659.25, 0, 523.25, 659.25, 0, 783.99, 0, 0, 0, 392.00, 0, 0, 0],
+                        arp: [1046.50, 1318.51, 1567.98, 2093.00, 1046.50, 1318.51, 1567.98, 2093.00, 783.99, 987.77, 1174.66, 1567.98, 392.00, 523.25, 659.25, 783.99],
+                        perc: [1, 0, 2, 1, 0, 2, 1, 0, 1, 0, 2, 1, 0, 2, 2, 4]
+                    },
+                    // Track 10: The Legend of Zelda (124 BPM - Heroic Overworld Adventure)
+                    {
+                        name: 'Hyrule Legend',
+                        style: 'synthwave',
+                        bpm: 124,
+                        bass: [116.54, 116.54, 116.54, 116.54, 116.54, 116.54, 130.81, 146.83, 155.56, 174.61, 174.61, 174.61, 174.61, 174.61, 185.00, 207.65],
+                        lead: [466.16, 0, 349.23, 0, 466.16, 466.16, 523.25, 587.33, 622.25, 698.46, 0, 0, 698.46, 698.46, 739.99, 830.61],
+                        arp: [932.33, 0, 698.46, 0, 932.33, 932.33, 1046.50, 1174.66, 1244.51, 1396.91, 0, 0, 1396.91, 1396.91, 1479.98, 1661.22],
+                        perc: [1, 3, 2, 3, 1, 3, 2, 3, 1, 3, 2, 3, 1, 1, 2, 4]
+                    },
+                    // Track 11: Mega Man 2 (152 BPM - Dr. Wily Stage 1 Rock Anthem)
+                    {
+                        name: 'Dr. Wily Castle',
+                        style: 'dnb',
+                        bpm: 152,
+                        bass: [73.42, 73.42, 73.42, 73.42, 87.31, 87.31, 98.00, 103.83, 98.00, 87.31, 73.42, 73.42, 87.31, 98.00, 87.31, 73.42],
+                        lead: [587.33, 587.33, 0, 698.46, 0, 783.99, 0, 830.61, 783.99, 698.46, 587.33, 0, 698.46, 783.99, 698.46, 587.33],
+                        arp: [1174.66, 1174.66, 0, 1396.91, 0, 1567.98, 0, 1661.22, 1567.98, 1396.91, 1174.66, 0, 1396.91, 1567.98, 1396.91, 1174.66],
                         perc: [1, 3, 2, 3, 1, 3, 2, 1, 1, 3, 2, 3, 1, 1, 2, 4]
                     },
-                    // Track 2: Synth Chill (105 BPM - Atmospheric Futuristic Flow)
+                    // Track 12: Castlevania (138 BPM - Vampire Killer Gothic Groove)
                     {
-                        bpm: 105,
-                        bass: [98, 98, 110, 98, 130.81, 110, 98, 87.31, 98, 110, 130.81, 110, 146.83, 130.81, 110, 98],
-                        lead: [196, 220, 261.63, 220, 293.66, 261.63, 220, 196, 261.63, 293.66, 349.23, 329.63, 293.66, 261.63, 220, 196],
-                        arp: [392, 440, 523.25, 440, 587.33, 523.25, 440, 392, 523.25, 587.33, 698.46, 659.25, 587.33, 523.25, 440, 392],
-                        perc: [1, 0, 0, 3, 2, 0, 1, 0, 1, 0, 0, 3, 2, 0, 1, 4]
-                    },
-                    // Track 3: Neon Overdrive (134 BPM - Pumping Cyberpunk Action Synth)
-                    {
-                        bpm: 134,
-                        bass: [110, 130.81, 146.83, 110, 164.81, 146.83, 130.81, 110, 123.47, 146.83, 164.81, 123.47, 174.61, 164.81, 146.83, 123.47],
-                        lead: [440, 523.25, 587.33, 440, 659.25, 587.33, 523.25, 440, 493.88, 587.33, 659.25, 493.88, 698.46, 659.25, 587.33, 493.88],
-                        arp: [880, 1046.5, 1174.66, 880, 1318.51, 1174.66, 1046.5, 880, 987.77, 1174.66, 1318.51, 987.77, 1396.91, 1318.51, 1174.66, 987.77],
-                        perc: [1, 3, 2, 1, 1, 3, 2, 1, 1, 3, 2, 1, 1, 2, 2, 4]
-                    },
-                    // Track 4: Hypergrid Arc (138 BPM - Melodic Arcade Chiptune Anthem)
-                    {
+                        name: 'Vampire Killer',
+                        style: 'darkwave',
                         bpm: 138,
-                        bass: [130.81, 164.81, 196, 164.81, 220, 196, 164.81, 146.83, 130.81, 174.61, 220, 174.61, 246.94, 220, 174.61, 146.83],
-                        lead: [523.25, 659.25, 783.99, 659.25, 880, 783.99, 659.25, 587.33, 523.25, 698.46, 880, 698.46, 987.77, 880, 698.46, 587.33],
-                        arp: [1046.5, 1318.51, 1567.98, 1318.51, 1760, 1567.98, 1318.51, 1174.66, 1046.5, 1396.91, 1760, 1396.91, 1975.53, 1760, 1396.91, 1174.66],
-                        perc: [1, 3, 2, 1, 1, 3, 2, 3, 1, 3, 2, 1, 1, 1, 2, 4]
+                        bass: [73.42, 146.83, 73.42, 146.83, 87.31, 82.41, 73.42, 69.30, 73.42, 146.83, 82.41, 164.81, 87.31, 174.61, 98.00, 110.00],
+                        lead: [587.33, 0, 587.33, 0, 698.46, 659.25, 587.33, 554.37, 587.33, 0, 659.25, 0, 698.46, 0, 783.99, 880.00],
+                        arp: [1174.66, 0, 1174.66, 0, 1396.91, 1318.51, 1174.66, 1108.73, 1174.66, 0, 1318.51, 0, 1396.91, 0, 1567.98, 1760.00],
+                        perc: [1, 3, 2, 3, 1, 3, 2, 1, 1, 3, 2, 3, 1, 1, 2, 4]
                     },
-                    // Track 5: Matrix Solace (98 BPM - Deep Ambient Cyber Odyssey)
+                    // Track 13: Street Fighter II (130 BPM - Guile's Theme)
                     {
-                        bpm: 98,
-                        bass: [87.31, 87.31, 98, 87.31, 110, 98, 87.31, 82.41, 87.31, 98, 110, 130.81, 110, 98, 87.31, 82.41],
-                        lead: [349.23, 392, 440, 392, 523.25, 440, 392, 329.63, 349.23, 440, 523.25, 659.25, 523.25, 440, 392, 329.63],
-                        arp: [698.46, 783.99, 880, 783.99, 1046.5, 880, 783.99, 659.25, 698.46, 880, 1046.5, 1318.51, 1046.5, 880, 783.99, 659.25],
-                        perc: [1, 0, 0, 3, 2, 0, 0, 3, 1, 0, 1, 3, 2, 0, 0, 4]
-                    },
-                    // Track 6: Retro Byte Surge (146 BPM - Upbeat 8-Bit Retro Synth)
-                    {
-                        bpm: 146,
-                        bass: [164.81, 164.81, 196, 164.81, 220, 196, 164.81, 146.83, 164.81, 220, 246.94, 220, 261.63, 246.94, 220, 196],
-                        lead: [659.25, 783.99, 880, 783.99, 987.77, 880, 783.99, 587.33, 659.25, 880, 987.77, 1046.5, 987.77, 880, 783.99, 659.25],
-                        arp: [1318.51, 1567.98, 1760, 1567.98, 1975.53, 1760, 1567.98, 1174.66, 1318.51, 1760, 1975.53, 2093, 1975.53, 1760, 1567.98, 1318.51],
-                        perc: [1, 3, 2, 1, 1, 3, 2, 1, 1, 3, 2, 1, 2, 1, 2, 4]
-                    },
-                    // Track 7: Orbital Protocol (126 BPM - Sci-Fi Cyber Synthwave Anthem)
-                    {
-                        bpm: 126,
-                        bass: [123.47, 123.47, 146.83, 123.47, 164.81, 146.83, 123.47, 110, 123.47, 164.81, 196, 164.81, 174.61, 164.81, 146.83, 110],
-                        lead: [493.88, 587.33, 659.25, 587.33, 783.99, 659.25, 587.33, 440, 493.88, 659.25, 783.99, 659.25, 698.46, 659.25, 587.33, 440],
-                        arp: [987.77, 1174.66, 1318.51, 1174.66, 1567.98, 1318.51, 1174.66, 880, 987.77, 1318.51, 1567.98, 1318.51, 1396.91, 1318.51, 1174.66, 880],
-                        perc: [1, 3, 2, 0, 1, 3, 2, 1, 1, 3, 2, 0, 1, 1, 2, 4]
+                        name: "Guile's Theme",
+                        style: 'funk',
+                        bpm: 130,
+                        bass: [77.78, 155.56, 77.78, 155.56, 87.31, 174.61, 98.00, 196.00, 77.78, 155.56, 87.31, 174.61, 116.54, 103.83, 98.00, 87.31],
+                        lead: [622.25, 698.46, 783.99, 0, 783.99, 698.46, 622.25, 587.33, 622.25, 698.46, 783.99, 0, 932.33, 830.61, 783.99, 698.46],
+                        arp: [1244.51, 1396.91, 1567.98, 0, 1567.98, 1396.91, 1244.51, 1174.66, 1244.51, 1396.91, 1567.98, 0, 1864.66, 1661.22, 1567.98, 1396.91],
+                        perc: [1, 4, 2, 4, 1, 4, 2, 4, 1, 4, 2, 4, 1, 1, 2, 4]
                     }
                 ];
 
                 const currentTrack = this.tracks[this.currentBgmTrack] || this.tracks[0];
                 this.stepDuration = (60 / currentTrack.bpm / 2); // 8th note duration
+
+                // Dynamically sync delay feedback time to song BPM
+                if (this.delaySend && this.ctx) {
+                    const syncedDelay = Math.min(0.45, Math.max(0.12, 60 / currentTrack.bpm / 2));
+                    this.delaySend.delayTime.setValueAtTime(syncedDelay, this.ctx.currentTime);
+                }
+
                 this.bgmStep = 0;
                 this.nextNoteTime = this.ctx.currentTime + 0.05;
 
@@ -2652,141 +2738,587 @@
                 const leadFreq = track.lead[idx];
                 const arpFreq = track.arp ? track.arp[idx] : 0;
                 const percHit = track.perc ? track.perc[idx] : 0;
+                const style = track.style || 'synthwave';
 
-                // Voice 1: Dual-Oscillator Resonant VCF Bass Synth
+                /* =========================================================================
+                   VOICE 1: GENRE-CUSTOMIZED BASS SYNTHESIS (Clean, De-Clicked)
+                   ========================================================================= */
                 if (bassFreq > 0) {
-                    const bOsc1 = this.ctx.createOscillator();
-                    const bOsc2 = this.ctx.createOscillator();
-                    const filter = this.ctx.createBiquadFilter();
-                    const gain = this.ctx.createGain();
+                    if (style === 'acid') {
+                        // TB-303 Resonant Acid Bass (Tuned Q to prevent filter distortion)
+                        const osc = this.ctx.createOscillator();
+                        const filter = this.ctx.createBiquadFilter();
+                        const gain = this.ctx.createGain();
 
-                    bOsc1.type = 'sawtooth';
-                    bOsc1.frequency.setValueAtTime(bassFreq, time);
+                        osc.type = 'sawtooth';
+                        osc.frequency.setValueAtTime(bassFreq, time);
 
-                    bOsc2.type = 'square';
-                    bOsc2.frequency.setValueAtTime(bassFreq * 0.5, time); // Sub-bass octave
+                        filter.type = 'lowpass';
+                        filter.Q.setValueAtTime(3.8, time);
+                        filter.frequency.setValueAtTime(bassFreq * 7, time);
+                        filter.frequency.exponentialRampToValueAtTime(bassFreq * 1.2, time + duration * 0.85);
 
-                    filter.type = 'lowpass';
-                    filter.Q.setValueAtTime(3.5, time);
-                    filter.frequency.setValueAtTime(bassFreq * 6, time);
-                    filter.frequency.exponentialRampToValueAtTime(bassFreq * 1.5, time + duration * 0.85);
+                        gain.gain.setValueAtTime(0.0001, time);
+                        gain.gain.linearRampToValueAtTime(0.05, time + 0.006);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, time + duration * 0.9);
 
-                    gain.gain.setValueAtTime(0.001, time);
-                    gain.gain.linearRampToValueAtTime(0.055, time + 0.006);
-                    gain.gain.exponentialRampToValueAtTime(0.001, time + duration * 0.95);
+                        osc.connect(filter);
+                        filter.connect(gain);
+                        gain.connect(this.bgmBus);
 
-                    bOsc1.connect(filter);
-                    bOsc2.connect(filter);
-                    filter.connect(gain);
-                    gain.connect(this.bgmBus);
+                        osc.start(time);
+                        osc.stop(time + duration * 0.9);
+                    } else if (style === 'lofi') {
+                        // Warm Deep Sine Sub-Bass
+                        const osc = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
 
-                    bOsc1.start(time);
-                    bOsc2.start(time);
-                    bOsc1.stop(time + duration * 0.95);
-                    bOsc2.stop(time + duration * 0.95);
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(bassFreq, time);
+
+                        gain.gain.setValueAtTime(0.0001, time);
+                        gain.gain.linearRampToValueAtTime(0.065, time + 0.02);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, time + duration * 1.5);
+
+                        osc.connect(gain);
+                        gain.connect(this.bgmBus);
+
+                        osc.start(time);
+                        osc.stop(time + duration * 1.5);
+                    } else if (style === 'chiptune') {
+                        // NES Smooth Triangle Bass
+                        const osc = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
+
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(bassFreq, time);
+
+                        gain.gain.setValueAtTime(0.0001, time);
+                        gain.gain.linearRampToValueAtTime(0.055, time + 0.004);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, time + duration * 0.85);
+
+                        osc.connect(gain);
+                        gain.connect(this.bgmBus);
+
+                        osc.start(time);
+                        osc.stop(time + duration * 0.85);
+                    } else if (style === 'dnb') {
+                        // Heavy Reese Bass (Dual Detuned Saws + Sine Sub)
+                        const osc1 = this.ctx.createOscillator();
+                        const osc2 = this.ctx.createOscillator();
+                        const sub = this.ctx.createOscillator();
+                        const filter = this.ctx.createBiquadFilter();
+                        const gain = this.ctx.createGain();
+
+                        osc1.type = 'sawtooth';
+                        osc1.frequency.setValueAtTime(bassFreq, time);
+                        osc1.detune.setValueAtTime(-10, time);
+
+                        osc2.type = 'sawtooth';
+                        osc2.frequency.setValueAtTime(bassFreq, time);
+                        osc2.detune.setValueAtTime(10, time);
+
+                        sub.type = 'sine';
+                        sub.frequency.setValueAtTime(bassFreq * 0.5, time);
+
+                        filter.type = 'lowpass';
+                        filter.frequency.setValueAtTime(450, time);
+
+                        gain.gain.setValueAtTime(0.0001, time);
+                        gain.gain.linearRampToValueAtTime(0.055, time + 0.01);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, time + duration * 1.6);
+
+                        osc1.connect(filter);
+                        osc2.connect(filter);
+                        sub.connect(filter);
+                        filter.connect(gain);
+                        gain.connect(this.bgmBus);
+
+                        osc1.start(time);
+                        osc2.start(time);
+                        sub.start(time);
+                        osc1.stop(time + duration * 1.6);
+                        osc2.stop(time + duration * 1.6);
+                        sub.stop(time + duration * 1.6);
+                    } else if (style === 'funk') {
+                        // FM Slap Bass (Triangle + Soft Square)
+                        const osc1 = this.ctx.createOscillator();
+                        const osc2 = this.ctx.createOscillator();
+                        const filter = this.ctx.createBiquadFilter();
+                        const gain = this.ctx.createGain();
+
+                        osc1.type = 'triangle';
+                        osc1.frequency.setValueAtTime(bassFreq, time);
+
+                        osc2.type = 'square';
+                        osc2.frequency.setValueAtTime(bassFreq * 2, time);
+
+                        filter.type = 'lowpass';
+                        filter.frequency.setValueAtTime(1000, time);
+                        filter.frequency.exponentialRampToValueAtTime(220, time + duration * 0.6);
+
+                        gain.gain.setValueAtTime(0.0001, time);
+                        gain.gain.linearRampToValueAtTime(0.055, time + 0.004);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, time + duration * 0.7);
+
+                        osc1.connect(filter);
+                        osc2.connect(filter);
+                        filter.connect(gain);
+                        gain.connect(this.bgmBus);
+
+                        osc1.start(time);
+                        osc2.start(time);
+                        osc1.stop(time + duration * 0.7);
+                        osc2.stop(time + duration * 0.7);
+                    } else if (style === 'ambient') {
+                        // Meditative Deep Sine Drone
+                        const osc = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
+
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(bassFreq, time);
+
+                        gain.gain.setValueAtTime(0.0001, time);
+                        gain.gain.linearRampToValueAtTime(0.06, time + 0.05);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, time + duration * 2.2);
+
+                        osc.connect(gain);
+                        gain.connect(this.bgmBus);
+
+                        osc.start(time);
+                        osc.stop(time + duration * 2.2);
+                    } else if (style === 'darkwave') {
+                        // Distorted Saw Drone
+                        const osc1 = this.ctx.createOscillator();
+                        const osc2 = this.ctx.createOscillator();
+                        const filter = this.ctx.createBiquadFilter();
+                        const gain = this.ctx.createGain();
+
+                        osc1.type = 'sawtooth';
+                        osc1.frequency.setValueAtTime(bassFreq, time);
+                        osc2.type = 'square';
+                        osc2.frequency.setValueAtTime(bassFreq * 0.5, time);
+
+                        filter.type = 'lowpass';
+                        filter.frequency.setValueAtTime(650, time);
+                        filter.Q.setValueAtTime(2.0, time);
+
+                        gain.gain.setValueAtTime(0.0001, time);
+                        gain.gain.linearRampToValueAtTime(0.05, time + 0.01);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, time + duration * 1.2);
+
+                        osc1.connect(filter);
+                        osc2.connect(filter);
+                        filter.connect(gain);
+                        gain.connect(this.bgmBus);
+
+                        osc1.start(time);
+                        osc2.start(time);
+                        osc1.stop(time + duration * 1.2);
+                        osc2.stop(time + duration * 1.2);
+                    } else {
+                        // Classic Synthwave Saw Bass
+                        const osc1 = this.ctx.createOscillator();
+                        const osc2 = this.ctx.createOscillator();
+                        const filter = this.ctx.createBiquadFilter();
+                        const gain = this.ctx.createGain();
+
+                        osc1.type = 'sawtooth';
+                        osc1.frequency.setValueAtTime(bassFreq, time);
+                        osc2.type = 'square';
+                        osc2.frequency.setValueAtTime(bassFreq * 0.5, time);
+
+                        filter.type = 'lowpass';
+                        filter.Q.setValueAtTime(2.5, time);
+                        filter.frequency.setValueAtTime(bassFreq * 4.5, time);
+                        filter.frequency.exponentialRampToValueAtTime(bassFreq * 1.4, time + duration * 0.85);
+
+                        gain.gain.setValueAtTime(0.0001, time);
+                        gain.gain.linearRampToValueAtTime(0.048, time + 0.006);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, time + duration * 0.95);
+
+                        osc1.connect(filter);
+                        osc2.connect(filter);
+                        filter.connect(gain);
+                        gain.connect(this.bgmBus);
+
+                        osc1.start(time);
+                        osc2.start(time);
+                        osc1.stop(time + duration * 0.95);
+                        osc2.stop(time + duration * 0.95);
+                    }
                 }
 
-                // Voice 2: Lead Synth Melody with Stereo Send
-                if (leadFreq > 0 && (stepIndex % 2 === 0)) {
-                    const lOsc = this.ctx.createOscillator();
-                    const filter = this.ctx.createBiquadFilter();
-                    const gain = this.ctx.createGain();
+                /* =========================================================================
+                   VOICE 2: GENRE-CUSTOMIZED LEAD & HARMONY SYNTHESIS
+                   ========================================================================= */
+                if (leadFreq > 0) {
+                    if (style === 'lofi') {
+                        // Warm Detuned Rhodes / Electric Piano
+                        const osc1 = this.ctx.createOscillator();
+                        const osc2 = this.ctx.createOscillator();
+                        const filter = this.ctx.createBiquadFilter();
+                        const gain = this.ctx.createGain();
 
-                    lOsc.type = 'triangle';
-                    lOsc.frequency.setValueAtTime(leadFreq, time);
+                        osc1.type = 'triangle';
+                        osc1.frequency.setValueAtTime(leadFreq, time);
+                        osc1.detune.setValueAtTime(-5, time);
 
-                    filter.type = 'lowpass';
-                    filter.frequency.setValueAtTime(leadFreq * 4, time);
+                        osc2.type = 'sine';
+                        osc2.frequency.setValueAtTime(leadFreq * 2, time);
+                        osc2.detune.setValueAtTime(5, time);
 
-                    gain.gain.setValueAtTime(0.001, time);
-                    gain.gain.linearRampToValueAtTime(0.045, time + 0.01);
-                    gain.gain.exponentialRampToValueAtTime(0.001, time + duration * 1.6);
+                        filter.type = 'lowpass';
+                        filter.frequency.setValueAtTime(1400, time);
 
-                    lOsc.connect(filter);
-                    filter.connect(gain);
-                    gain.connect(this.bgmBus);
-                    gain.connect(this.delaySend);
+                        gain.gain.setValueAtTime(0.0001, time);
+                        gain.gain.linearRampToValueAtTime(0.038, time + 0.015);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, time + duration * 2.0);
 
-                    lOsc.start(time);
-                    lOsc.stop(time + duration * 1.6);
+                        osc1.connect(filter);
+                        osc2.connect(filter);
+                        filter.connect(gain);
+                        gain.connect(this.bgmBus);
+                        gain.connect(this.delaySend);
+
+                        osc1.start(time);
+                        osc2.start(time);
+                        osc1.stop(time + duration * 2.0);
+                        osc2.stop(time + duration * 2.0);
+                    } else if (style === 'chiptune') {
+                        // 8-Bit De-Clicked Square Lead
+                        const osc = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
+
+                        osc.type = 'square';
+                        osc.frequency.setValueAtTime(leadFreq, time);
+
+                        gain.gain.setValueAtTime(0.0001, time);
+                        gain.gain.linearRampToValueAtTime(0.026, time + 0.003);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, time + duration * 0.85);
+
+                        osc.connect(gain);
+                        gain.connect(this.bgmBus);
+
+                        osc.start(time);
+                        osc.stop(time + duration * 0.85);
+                    } else if (style === 'acid') {
+                        // Gritty Saw Rave Stab
+                        const osc1 = this.ctx.createOscillator();
+                        const osc2 = this.ctx.createOscillator();
+                        const filter = this.ctx.createBiquadFilter();
+                        const gain = this.ctx.createGain();
+
+                        osc1.type = 'sawtooth';
+                        osc1.frequency.setValueAtTime(leadFreq, time);
+                        osc2.type = 'sawtooth';
+                        osc2.frequency.setValueAtTime(leadFreq * 1.5, time);
+
+                        filter.type = 'bandpass';
+                        filter.frequency.setValueAtTime(2000, time);
+                        filter.Q.setValueAtTime(1.5, time);
+
+                        gain.gain.setValueAtTime(0.0001, time);
+                        gain.gain.linearRampToValueAtTime(0.03, time + 0.004);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, time + duration * 0.7);
+
+                        osc1.connect(filter);
+                        osc2.connect(filter);
+                        filter.connect(gain);
+                        gain.connect(this.bgmBus);
+                        gain.connect(this.delaySend);
+
+                        osc1.start(time);
+                        osc2.start(time);
+                        osc1.stop(time + duration * 0.7);
+                        osc2.stop(time + duration * 0.7);
+                    } else if (style === 'ambient') {
+                        // Shimmering Space Pad
+                        const osc1 = this.ctx.createOscillator();
+                        const osc2 = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
+
+                        osc1.type = 'sine';
+                        osc1.frequency.setValueAtTime(leadFreq, time);
+                        osc2.type = 'triangle';
+                        osc2.frequency.setValueAtTime(leadFreq * 2, time);
+
+                        gain.gain.setValueAtTime(0.0001, time);
+                        gain.gain.linearRampToValueAtTime(0.032, time + 0.06);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, time + duration * 2.8);
+
+                        osc1.connect(gain);
+                        osc2.connect(gain);
+                        gain.connect(this.bgmBus);
+                        gain.connect(this.delaySend);
+
+                        osc1.start(time);
+                        osc2.start(time);
+                        osc1.stop(time + duration * 2.8);
+                        osc2.stop(time + duration * 2.8);
+                    } else if (style === 'funk') {
+                        // Bright Funky Brass Stabs
+                        const osc1 = this.ctx.createOscillator();
+                        const osc2 = this.ctx.createOscillator();
+                        const filter = this.ctx.createBiquadFilter();
+                        const gain = this.ctx.createGain();
+
+                        osc1.type = 'sawtooth';
+                        osc1.frequency.setValueAtTime(leadFreq, time);
+                        osc2.type = 'triangle';
+                        osc2.frequency.setValueAtTime(leadFreq, time);
+
+                        filter.type = 'lowpass';
+                        filter.frequency.setValueAtTime(2800, time);
+                        filter.frequency.exponentialRampToValueAtTime(700, time + duration * 0.8);
+
+                        gain.gain.setValueAtTime(0.0001, time);
+                        gain.gain.linearRampToValueAtTime(0.036, time + 0.006);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, time + duration * 0.9);
+
+                        osc1.connect(filter);
+                        osc2.connect(filter);
+                        filter.connect(gain);
+                        gain.connect(this.bgmBus);
+                        gain.connect(this.delaySend);
+
+                        osc1.start(time);
+                        osc2.start(time);
+                        osc1.stop(time + duration * 0.9);
+                        osc2.stop(time + duration * 0.9);
+                    } else if (style === 'darkwave') {
+                        // Gothic Cathedral Organ Chords
+                        const osc1 = this.ctx.createOscillator();
+                        const osc2 = this.ctx.createOscillator();
+                        const filter = this.ctx.createBiquadFilter();
+                        const gain = this.ctx.createGain();
+
+                        osc1.type = 'sawtooth';
+                        osc1.frequency.setValueAtTime(leadFreq, time);
+                        osc2.type = 'square';
+                        osc2.frequency.setValueAtTime(leadFreq * 0.5, time);
+
+                        filter.type = 'lowpass';
+                        filter.frequency.setValueAtTime(1200, time);
+
+                        gain.gain.setValueAtTime(0.0001, time);
+                        gain.gain.linearRampToValueAtTime(0.035, time + 0.015);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, time + duration * 1.8);
+
+                        osc1.connect(filter);
+                        osc2.connect(filter);
+                        filter.connect(gain);
+                        gain.connect(this.bgmBus);
+                        gain.connect(this.delaySend);
+
+                        osc1.start(time);
+                        osc2.start(time);
+                        osc1.stop(time + duration * 1.8);
+                        osc2.stop(time + duration * 1.8);
+                    } else {
+                        // Classic Synthwave Nostalgic Lead
+                        const osc = this.ctx.createOscillator();
+                        const filter = this.ctx.createBiquadFilter();
+                        const gain = this.ctx.createGain();
+
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(leadFreq, time);
+
+                        filter.type = 'lowpass';
+                        filter.frequency.setValueAtTime(leadFreq * 3.2, time);
+
+                        gain.gain.setValueAtTime(0.0001, time);
+                        gain.gain.linearRampToValueAtTime(0.038, time + 0.01);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, time + duration * 1.6);
+
+                        osc.connect(filter);
+                        filter.connect(gain);
+                        gain.connect(this.bgmBus);
+                        gain.connect(this.delaySend);
+
+                        osc.start(time);
+                        osc.stop(time + duration * 1.6);
+                    }
                 }
 
-                // Voice 3: Arpeggio Chime
-                if (arpFreq > 0 && (stepIndex % 2 === 1)) {
-                    const aOsc = this.ctx.createOscillator();
-                    const gain = this.ctx.createGain();
+                /* =========================================================================
+                   VOICE 3: GENRE-CUSTOMIZED ARPEGGIATOR / CHIME / MOTIF
+                   ========================================================================= */
+                if (arpFreq > 0) {
+                    if (style === 'ambient') {
+                        // Long-Decay Shimmering Glass Bell
+                        const osc = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(arpFreq, time);
 
-                    aOsc.type = 'sine';
-                    aOsc.frequency.setValueAtTime(arpFreq, time);
+                        gain.gain.setValueAtTime(0.0001, time);
+                        gain.gain.linearRampToValueAtTime(0.02, time + 0.005);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, time + duration * 3.0);
 
-                    gain.gain.setValueAtTime(0.001, time);
-                    gain.gain.linearRampToValueAtTime(0.026, time + 0.005);
-                    gain.gain.exponentialRampToValueAtTime(0.001, time + duration * 0.8);
+                        osc.connect(gain);
+                        gain.connect(this.bgmBus);
+                        gain.connect(this.delaySend);
 
-                    aOsc.connect(gain);
-                    gain.connect(this.bgmBus);
-                    gain.connect(this.delaySend);
+                        osc.start(time);
+                        osc.stop(time + duration * 3.0);
+                    } else if (style === 'chiptune') {
+                        // Snappy 8-Bit Rapid Arpeggio with Anti-Click Fade
+                        const osc = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
+                        osc.type = 'square';
+                        osc.frequency.setValueAtTime(arpFreq, time);
 
-                    aOsc.start(time);
-                    aOsc.stop(time + duration * 0.8);
+                        gain.gain.setValueAtTime(0.0001, time);
+                        gain.gain.linearRampToValueAtTime(0.016, time + 0.002);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, time + duration * 0.45);
+
+                        osc.connect(gain);
+                        gain.connect(this.bgmBus);
+
+                        osc.start(time);
+                        osc.stop(time + duration * 0.45);
+                    } else if (style === 'darkwave') {
+                        // Staccato High-Tension Alarm
+                        const osc = this.ctx.createOscillator();
+                        const filter = this.ctx.createBiquadFilter();
+                        const gain = this.ctx.createGain();
+                        osc.type = 'sawtooth';
+                        osc.frequency.setValueAtTime(arpFreq, time);
+
+                        filter.type = 'bandpass';
+                        filter.frequency.setValueAtTime(1600, time);
+
+                        gain.gain.setValueAtTime(0.0001, time);
+                        gain.gain.linearRampToValueAtTime(0.02, time + 0.003);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, time + duration * 0.5);
+
+                        osc.connect(filter);
+                        filter.connect(gain);
+                        gain.connect(this.bgmBus);
+                        gain.connect(this.delaySend);
+
+                        osc.start(time);
+                        osc.stop(time + duration * 0.5);
+                    } else {
+                        // Melodic Chime Arpeggio with Delay
+                        const osc = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(arpFreq, time);
+
+                        gain.gain.setValueAtTime(0.0001, time);
+                        gain.gain.linearRampToValueAtTime(0.02, time + 0.005);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, time + duration * 0.8);
+
+                        osc.connect(gain);
+                        gain.connect(this.bgmBus);
+                        gain.connect(this.delaySend);
+
+                        osc.start(time);
+                        osc.stop(time + duration * 0.8);
+                    }
                 }
 
-                // Voice 4: Percussion Kit (1: Kick, 2: Snare, 3: Closed Hat, 4: Open Hat)
+                /* =========================================================================
+                   VOICE 4: GENRE-CUSTOMIZED PERCUSSION (Clean, Pop-Free & Anti-Static)
+                   ========================================================================= */
                 if (percHit > 0) {
                     if (percHit === 1) {
-                        // 808 Pitch-Drop Sub Kick
+                        // KICK DRUM
                         const kOsc = this.ctx.createOscillator();
                         const kGain = this.ctx.createGain();
-                        kOsc.type = 'sine';
-                        kOsc.frequency.setValueAtTime(140, time);
-                        kOsc.frequency.exponentialRampToValueAtTime(38, time + 0.08);
 
-                        kGain.gain.setValueAtTime(0.24, time);
-                        kGain.gain.exponentialRampToValueAtTime(0.001, time + 0.18);
+                        if (style === 'acid' || style === 'darkwave') {
+                            // Punchy 909 Kick
+                            kOsc.type = 'sine';
+                            kOsc.frequency.setValueAtTime(150, time);
+                            kOsc.frequency.exponentialRampToValueAtTime(42, time + 0.07);
+                            kGain.gain.setValueAtTime(0.0001, time);
+                            kGain.gain.linearRampToValueAtTime(0.2, time + 0.002);
+                            kGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.16);
+                        } else if (style === 'lofi' || style === 'ambient') {
+                            // Soft Mellow Thump Kick
+                            kOsc.type = 'sine';
+                            kOsc.frequency.setValueAtTime(95, time);
+                            kOsc.frequency.exponentialRampToValueAtTime(35, time + 0.09);
+                            kGain.gain.setValueAtTime(0.0001, time);
+                            kGain.gain.linearRampToValueAtTime(0.14, time + 0.003);
+                            kGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.18);
+                        } else {
+                            // 808 Sub Kick
+                            kOsc.type = 'sine';
+                            kOsc.frequency.setValueAtTime(130, time);
+                            kOsc.frequency.exponentialRampToValueAtTime(38, time + 0.08);
+                            kGain.gain.setValueAtTime(0.0001, time);
+                            kGain.gain.linearRampToValueAtTime(0.18, time + 0.002);
+                            kGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.18);
+                        }
 
                         kOsc.connect(kGain);
                         kGain.connect(this.bgmBus);
                         kOsc.start(time);
                         kOsc.stop(time + 0.18);
                     } else if (percHit === 2) {
-                        // Punchy Snare (Noise + Tone body)
-                        const sOsc = this.ctx.createOscillator();
-                        const sGain = this.ctx.createGain();
-                        sOsc.type = 'triangle';
-                        sOsc.frequency.setValueAtTime(180, time);
-                        sOsc.frequency.exponentialRampToValueAtTime(80, time + 0.06);
-                        sGain.gain.setValueAtTime(0.08, time);
-                        sGain.gain.exponentialRampToValueAtTime(0.001, time + 0.06);
-                        sOsc.connect(sGain);
-                        sGain.connect(this.bgmBus);
-                        sOsc.start(time);
-                        sOsc.stop(time + 0.06);
+                        // SNARE / CLAP / RIMSHOT
+                        if (style === 'lofi') {
+                            // Soft Lo-Fi Rimshot
+                            const osc = this.ctx.createOscillator();
+                            const gain = this.ctx.createGain();
+                            osc.type = 'triangle';
+                            osc.frequency.setValueAtTime(320, time);
+                            osc.frequency.exponentialRampToValueAtTime(120, time + 0.035);
+                            gain.gain.setValueAtTime(0.0001, time);
+                            gain.gain.linearRampToValueAtTime(0.045, time + 0.002);
+                            gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.035);
+                            osc.connect(gain);
+                            gain.connect(this.bgmBus);
+                            osc.start(time);
+                            osc.stop(time + 0.035);
+                        } else {
+                            // Snare Tone Body
+                            const sOsc = this.ctx.createOscillator();
+                            const sGain = this.ctx.createGain();
+                            sOsc.type = 'triangle';
+                            sOsc.frequency.setValueAtTime(175, time);
+                            sOsc.frequency.exponentialRampToValueAtTime(80, time + 0.06);
+                            sGain.gain.setValueAtTime(0.0001, time);
+                            sGain.gain.linearRampToValueAtTime(0.055, time + 0.002);
+                            sGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.06);
+                            sOsc.connect(sGain);
+                            sGain.connect(this.bgmBus);
+                            sOsc.start(time);
+                            sOsc.stop(time + 0.06);
 
-                        const noise = this.getNoiseSource();
-                        if (noise) {
-                            const filter = this.ctx.createBiquadFilter();
-                            const nGain = this.ctx.createGain();
-                            filter.type = 'bandpass';
-                            filter.frequency.setValueAtTime(1800, time);
-                            nGain.gain.setValueAtTime(0.06, time);
-                            nGain.gain.exponentialRampToValueAtTime(0.001, time + 0.09);
-                            noise.connect(filter);
-                            filter.connect(nGain);
-                            nGain.connect(this.bgmBus);
-                            noise.start(time);
-                            noise.stop(time + 0.09);
+                            // Snare Noise Snap (Clean, smoothed attack)
+                            const noise = this.getNoiseSource();
+                            if (noise) {
+                                const filter = this.ctx.createBiquadFilter();
+                                const nGain = this.ctx.createGain();
+                                filter.type = style === 'chiptune' ? 'highpass' : 'bandpass';
+                                filter.frequency.setValueAtTime(style === 'chiptune' ? 3500 : 1600, time);
+                                nGain.gain.setValueAtTime(0.0001, time);
+                                nGain.gain.linearRampToValueAtTime(0.04, time + 0.002);
+                                nGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.08);
+                                noise.connect(filter);
+                                filter.connect(nGain);
+                                nGain.connect(this.bgmBus);
+                                noise.start(time);
+                                noise.stop(time + 0.08);
+                            }
                         }
                     } else if (percHit === 3 || percHit === 4) {
-                        // Closed / Open Hi-Hat
+                        // HI-HATS (3: Closed, 4: Open - Smooth anti-click attack)
                         const noise = this.getNoiseSource();
                         if (noise) {
                             const filter = this.ctx.createBiquadFilter();
                             const hGain = this.ctx.createGain();
-                            const hatDur = percHit === 4 ? 0.09 : 0.035;
+                            const hatDur = percHit === 4 ? (style === 'funk' ? 0.1 : 0.075) : 0.028;
                             filter.type = 'highpass';
-                            filter.frequency.setValueAtTime(6500, time);
-                            hGain.gain.setValueAtTime(percHit === 4 ? 0.035 : 0.022, time);
-                            hGain.gain.exponentialRampToValueAtTime(0.001, time + hatDur);
+                            filter.frequency.setValueAtTime(style === 'lofi' ? 5000 : 6500, time);
+                            hGain.gain.setValueAtTime(0.0001, time);
+                            hGain.gain.linearRampToValueAtTime(percHit === 4 ? 0.022 : 0.013, time + 0.0015);
+                            hGain.gain.exponentialRampToValueAtTime(0.0001, time + hatDur);
                             noise.connect(filter);
                             filter.connect(hGain);
                             hGain.connect(this.bgmBus);
