@@ -19,6 +19,19 @@
 
 As Operative Lolo, your mission is to navigate through security sectors, outsmart automated killer sentries, manipulate high-tech tactical push-blocks, collect Energy Cores to unlock Data Chests, and extract via the Cyber Gateway.
 
+### 🔍 Random Lab Filters Beyond CRT
+
+The project supports multiple layers of filtering beyond the CRT scanline preset:
+
+- Terrain filters: grass, sand, water, trees, portals, ice, arrow gates, cracked walls
+- Enemy filters: toggle which hostile archetypes are allowed in a synthesized chamber
+- Block filters: include or exclude alloy, heavy, reflector, holo, bomb, magnetic, sticky, fragile, and decoy blocks
+- Prefab filters: enable specific tactical construction patterns and chamber layouts
+- Difficulty and density controls: easy/medium/hard, light/heavy/balanced block density, biome-specific generation
+- Visual modifiers: CRT, theme palettes, HUD overlays, and post-processing toggles
+
+This makes the Random Lab a true custom-build system rather than a single CRT-only effect toggle.
+
 ---
 
 ## 📸 Screenshots & Visual Tour

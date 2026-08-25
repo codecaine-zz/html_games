@@ -15,6 +15,19 @@
 All ports, engine implementations, and modifications must strictly satisfy these core runtime invariants:
 
 1. **Deterministic Single-Step Movement & Simulation**: Player movement executes precisely 1 tile per keystroke with smooth interpolated rendering (`renderX`, `renderY` lerp); quantum portal teleportation immediately snaps visual rendering coordinates to prevent cross-screen gliding artifacts.
+
+### 1.2 Procedural Generator Filter Matrix (Beyond CRT)
+
+The procedural chamber engine is not limited to CRT visual toggles. It supports multiple independent filter layers that affect synthesis behavior and solvability constraints.
+
+- **Terrain filters**: `includeGrass`, `includeSand`, `includeWater`, `includeTrees`, `includePortals`, `includeIce`, `includeArrows`, `includeCracked`
+- **Enemy selection filters**: `allowedEnemies` in the random lab and editor synthesis options; only selected hostile archetypes are eligible for placement
+- **Block selection filters**: `allowedBlocks` restricts which tactical block archetypes can appear in a generated chamber
+- **Prefab selection filters**: `allowedPrefabs` includes or excludes specialized strategic chamber layouts
+- **Difficulty / density controls**: `difficulty`, `gridSize`, `blockDensity`, and `biome` combine to alter chamber generation patterns while preserving solvability constraints
+- **Visual filters**: CRT mode (`subtle`, `heavy`, `off`), theme switching, and HUD overlays remain independent from the generation logic
+
+The synthesis pipeline treats these filter sets as generation constraints, not as aesthetic-only toggles. All generated layouts must still satisfy the same deterministic solvability and uniqueness guarantees as the canonical random generator.
 2. **Strict Blocker State Enforcement**: Closed Data Chests (`TILE_CHEST_CLOSED`) and Exit Gateways (`TILE_DOOR_CLOSED`) are impassable collision barriers until heart/chest conditions are unlocked.
 3. **100% Campaign Uniqueness & Solvability**: All 100 campaign stages possess unique layout signatures (`getLevelLayoutSignature`) and are mathematically proven solvable by `LoloMathSolver`.
 4. **Deterministic Simulation Play Engine**:

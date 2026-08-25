@@ -13,10 +13,12 @@ const elementMap = new Map();
 const makeCtx = () => ({
     fillRect: () => {}, clearRect: () => {}, beginPath: () => {}, arc: () => {}, fill: () => {}, stroke: () => {},
     moveTo: () => {}, lineTo: () => {}, fillText: () => {}, save: () => {}, restore: () => {},
-    setTransform: () => {}, translate: () => {}, scale: () => {}, clear: () => {}, closePath: () => {},
-    rect: () => {}, drawImage: () => {}, measureText: () => ({ width: 0 }), setLineDash: () => {},
+    setTransform: () => {}, translate: () => {}, scale: () => {}, rotate: () => {}, clear: () => {}, closePath: () => {},
+    rect: () => {}, strokeRect: () => {}, drawImage: () => {}, measureText: () => ({ width: 0 }), setLineDash: () => {},
+    quadraticCurveTo: () => {}, bezierCurveTo: () => {}, ellipse: () => {},
+    createRadialGradient: () => ({ addColorStop: () => {} }), createLinearGradient: () => ({ addColorStop: () => {} }),
     canvas: { width: 640, height: 640 }, fillStyle: '', strokeStyle: '', lineWidth: 1, shadowBlur: 0, font: '',
-    textAlign: '', textBaseline: '', globalAlpha: 1, shadowColor: ''
+    textAlign: '', textBaseline: '', globalAlpha: 1, shadowColor: '', lineCap: 'butt', lineJoin: 'miter'
 });
 const makeElement = () => ({
     style: { setProperty: () => {}, removeProperty: () => {}, getPropertyValue: () => '' },

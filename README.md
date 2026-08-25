@@ -17,6 +17,19 @@
 
 As Operative Lolo, your mission is to navigate through security sectors, outsmart automated killer sentries, manipulate high-tech tactical push-blocks, collect Energy Cores to unlock Data Chests, and conquer 100 handcrafted stages.
 
+### 🔍 Expanded Filter System
+
+The game includes more than the CRT scanline toggle. The procedural lab and editor support layered filter controls for:
+
+- Terrain toggles: meadow grass, dune sand, water canals, cyber trees, portals, mag-lev ice, one-way arrow gates, cracked walls
+- Enemy roster filters: select which hostile archetypes are allowed in a generated chamber
+- Block roster filters: toggle alloy/heavy/reflector/holo/bomb/magnetic/sticky/fragile/decoy blocks
+- Prefab inclusion filters: choose which tactical layouts are eligible for synthesis
+- Difficulty and biome selectors: easy/medium/hard, block-density tuning, biome-specific generation
+- Visual filters: CRT subtle/heavy/off plus theme presets and HUD overlays
+
+These filters work together to create custom playable chambers while keeping generated levels mathematically solvable.
+
 ---
 
 ## 📸 Screenshots & Visual Tour
